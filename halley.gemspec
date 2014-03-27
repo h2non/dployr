@@ -4,8 +4,8 @@ require 'halley/version'
 Gem::Specification.new do |s|
   s.name        = "halley"
   s.version     = Halley::VERSION
-  s.summary     = "Multicloud management with asteroids"
-  s.description = "Ruby utility that simplifies the multicloud management"
+  s.summary     = "Multicloud management with asteroids made simple"
+  s.description = "Ruby utility that simplifies the multicloud management and provides rich features"
   s.authors     = ["Tomas Aparicio"]
   s.homepage    = "http://github.com/innotech/halley"
   s.license     = "MIT"
