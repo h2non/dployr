@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w[README.md]
 
   s.add_dependency "fog", "~> 1.0"
-  s.add_dependency "commander", "~> 4.1"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", "~> 2"
