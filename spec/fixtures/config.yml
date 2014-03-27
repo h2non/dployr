@@ -1,0 +1,7 @@
+servers:
+  default:
+    host: my.server
+    provider: aws
+    auth:
+      token: some-key
+

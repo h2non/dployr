@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+command = ARGV[0]
+options = {}
+
+opt_parser = OptionParser.new do |opt|
+  opt.banner   = "  Usage: halley <command> [options]"
+  opt.separator  ""
+  opt.separator  "  Commands"
+  opt.separator  ""
+  opt.separator  "    up        start instances"
+  opt.separator  "    halt      stop instances"
+  opt.separator  "    status    retrieve the instances status"
+  opt.separator  "    provision instance provisioning"
+  opt.separator  "    test      run remote test in instances"
+  opt.separator  "    deploy    start, provision and test running instances"
+  opt.separator  ""
+  opt.separator  "  Options"
+  opt.separator  ""
+
+  opt.on("-e", "--environment ENV", "environment to pass to the instances") do |e|
+    options[:environment] = e
+  end
+
+  opt.on("-h", "--help", "help") do
+    puts opt_parser
+  end
+
+  opt.separator  ""
+end
+
+opt_parser.parse!
+
+case command
+when "up"
+  puts "call #{options.inspect}"
+when "halt"
+  puts "call stop on options #{options.inspect}"
+when "status"
+  puts "call restart on options #{options.inspect}"
+when "provision"
+  puts "call restart on options #{options.inspect}"
+when "test"
+  puts "call restart on options #{options.inspect}"
+when "deploy"
+  puts "call restart on options #{options.inspect}"
+else
+  puts opt_parser
+end
