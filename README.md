@@ -4,9 +4,9 @@
 [gemnasium]: https://gemnasium.com/innotech/halley
 [gem]: http://rubygems.org/gems/halley
 
-> Multicloud management with asteroids
+> Multicloud management made simple with asteroids
 
-> **spoiler!** funny work in progress
+> **Spoiler! Funny work in progress**
 
 ## About
 
