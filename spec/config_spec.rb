@@ -26,8 +26,7 @@ describe Halley::Config do
         let(:expected) { File.join fixtures, filename }
 
         before do
-          @base = File.join File.dirname(__FILE__), 'fixtures'
-          Dir.chdir @base
+          Dir.chdir fixtures
         end
 
         it { Halley::Config.discover.should_not be_empty }
