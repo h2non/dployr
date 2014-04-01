@@ -8,6 +8,15 @@
 
 > **Spoiler! Funny work in progress**
 
+<table>
+<tr>
+<td><b>Version</b></td><td>alpha</td>
+</tr>
+<tr>
+<td><b>Stage</b></td><td>WIP</td>
+</tr>
+</table>
+
 ## About
 
 A Ruby utility that simplifies cloud management across different providers

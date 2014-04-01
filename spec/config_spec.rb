@@ -19,7 +19,7 @@ describe Halley::Config do
 
     describe "current directory" do
       context "when cannot discover" do
-        it { Halley::Config.discover.should be(nil) }
+        it { Halley::Config.discover.should eql nil }
       end
 
       context "when discover" do
@@ -47,7 +47,7 @@ describe Halley::Config do
           Dir.chdir File.join fixtures, 'config', 'subfolder', 'nested'
         end
 
-        it { Halley::Config.discover.should eql(expected) }
+        it { Halley::Config.discover.should eql expected }
 
         after do
           Dir.chdir pwd

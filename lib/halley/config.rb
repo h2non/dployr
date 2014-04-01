@@ -3,13 +3,13 @@ require 'yaml'
 module Halley
   module Config
 
-    FILENAME = "Halleyfile"
+    FILENAME = 'Halleyfile'
 
-    def read_yaml file_path
+    def read_yaml(file_path)
       YAML.load_file file_path
     end
 
-    def discover dir = Dir.pwd
+    def discover(dir = Dir.pwd)
       path = nil
       (0..5).each do |n|
         lookpath = File.join dir, ('../' * n), FILENAME

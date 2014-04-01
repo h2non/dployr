@@ -1,3 +1,5 @@
 require 'halley/version'
-require 'halley/config'
+require 'halley/runner'
 require 'halley/provider'
+require 'halley/config'
+require 'halley/config/instance'
