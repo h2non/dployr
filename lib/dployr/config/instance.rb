@@ -38,15 +38,15 @@ module Dployr
       end
 
       def set_auth(auth)
-        @auth = auth if auth.is_a?(Hash)
+        @auth = auth if auth.is_a? Hash
       end
 
       def add_script(script)
-        @scripts << script if script.is_a?(Array)
+        @scripts << script if script.is_a? Array
       end
 
       def set_scripts(scripts)
-        @scripts = scripts if scripts.is_a?(Array)
+        @scripts = scripts if scripts.is_a? Array
       end
 
       def set_providers
@@ -54,7 +54,7 @@ module Dployr
       end
 
       def add_provider(provider)
-        @providers << provider if provider.is_a?(Hash)
+        @providers << provider if provider.is_a? Hash
       end
 
       def get_provider(index)

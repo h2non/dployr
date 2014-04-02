@@ -1,7 +1,7 @@
 require 'yaml'
 
 module Dployr
-  module Config
+  module ConfigFile
 
     FILENAME = 'Dployfile'
 
