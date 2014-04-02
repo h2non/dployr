@@ -1,21 +1,10 @@
+require 'yaml'
+
 module Dployr
   module Config
-    class File
-
-      attr_reader :path
+    module File
 
       FILENAME = 'Dployfile'
-
-      def initialize(options)
-        @path = discover options.path
-        @load
-      end
-
-      private
-
-      def load
-        @path
-      end
 
       def read_yaml(file_path)
         YAML.load_file file_path
@@ -32,6 +21,8 @@ module Dployr
         end
         path
       end
+
+      module_function :read_yaml, :discover
 
     end
   end

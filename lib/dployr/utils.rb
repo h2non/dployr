@@ -1,5 +1,5 @@
 module Dployr
-  module Helper
+  module Utils
 
     module_function
 

@@ -12,7 +12,7 @@ module Dployr
         yield self if block_given?
       end
 
-      def set_values(params)
+      def configure(params)
         if params.is_a?(Hash)
           set_attributes params.attributes if params.attributes
           set_providers params.providers if params.providers

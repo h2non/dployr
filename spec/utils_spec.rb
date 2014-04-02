@@ -1,6 +1,7 @@
 require 'spec_helper'
+require 'dployr/utils'
 
-describe Dployr::Helper do
+describe Dployr::Utils do
 
   describe :merge do
 
@@ -9,7 +10,7 @@ describe Dployr::Helper do
         x = { :a => 10, :b => 20 }
         y = { :a => 100, :c => 200 }
         z = { :c => 300, :d => 400 }
-        @result = Dployr::Helper.merge x, y, z
+        @result = Dployr::Utils.merge x, y, z
       end
 
       it "should override the :a value" do
