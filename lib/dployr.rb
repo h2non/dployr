@@ -1,0 +1,5 @@
+require 'dployr/version'
+require 'dployr/runner'
+require 'dployr/provider'
+require 'dployr/config'
+require 'dployr/config/instance'

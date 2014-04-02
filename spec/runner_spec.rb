@@ -9,7 +9,7 @@ describe "Fog::Runner" do
     }
 
     it "should create basic tests" do
-      Halley::Server.new do |s|
+      Dployr::Server.new do |s|
         s.set attrs
         #puts s.get.to_s
       end

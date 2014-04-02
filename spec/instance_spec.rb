@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Halley::Config::Instance do
+describe Dployr::Config::Instance do
 
   describe "Instance" do
 
     describe "instance configuration" do
 
       let(:instance) {
-        Halley::Config::Instance.new
+        Dployr::Config::Instance.new
       }
 
       describe "setting attributes" do

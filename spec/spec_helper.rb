@@ -1,3 +1,3 @@
 require 'rubygems'
-require 'halley'
-require 'halley/helper'
+require 'dployr'
+require 'dployr/helper'

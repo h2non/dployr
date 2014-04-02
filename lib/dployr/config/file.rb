@@ -1,10 +1,10 @@
-module Halley
+module Dployr
   module Config
     class File
 
       attr_reader :path
 
-      FILENAME = 'Halleyfile'
+      FILENAME = 'Dployfile'
 
       def initialize(options)
         @path = discover options.path

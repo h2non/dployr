@@ -1,6 +1,6 @@
 require 'fog'
 
-module Halley
+module Dployr
   class Provider
 
     attr_reader :options

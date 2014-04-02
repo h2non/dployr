@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Halley::Helper do
+describe Dployr::Helper do
 
   describe :merge do
 
@@ -9,7 +9,7 @@ describe Halley::Helper do
         x = { :a => 10, :b => 20 }
         y = { :a => 100, :c => 200 }
         z = { :c => 300, :d => 400 }
-        @result = Halley::Helper.merge x, y, z
+        @result = Dployr::Helper.merge x, y, z
       end
 
       it "should override the :a value" do

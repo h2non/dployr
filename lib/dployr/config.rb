@@ -1,9 +1,9 @@
 require 'yaml'
 
-module Halley
+module Dployr
   module Config
 
-    FILENAME = 'Halleyfile'
+    FILENAME = 'Dployfile'
 
     def read_yaml(file_path)
       YAML.load_file file_path

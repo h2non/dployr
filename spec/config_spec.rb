@@ -1,25 +1,25 @@
 require 'spec_helper'
 
-describe Halley::Config do
+describe Dployr::Config do
 
   describe :read_yaml do
     it "should expose the read method" do
-      Halley::Config.respond_to?(:read_yaml).should be_true
+      Dployr::Config.respond_to?(:read_yaml).should be_true
     end
 
     it "should read the file contents" do
-      Halley::Config.read_yaml(File.dirname(__FILE__) + '/fixtures/config.yml').should have(1).item
+      Dployr::Config.read_yaml(File.dirname(__FILE__) + '/fixtures/config.yml').should have(1).item
     end
   end
 
   describe :discover do
     let(:pwd) { Dir.pwd }
-    let(:filename) { Halley::Config::FILENAME }
+    let(:filename) { Dployr::Config::FILENAME }
     let(:fixtures) { File.join File.dirname(__FILE__), 'fixtures' }
 
     describe "current directory" do
       context "when cannot discover" do
-        it { Halley::Config.discover.should eql nil }
+        it { Dployr::Config.discover.should eql nil }
       end
 
       context "when discover" do
@@ -29,9 +29,9 @@ describe Halley::Config do
           Dir.chdir fixtures
         end
 
-        it { Halley::Config.discover.should_not be_empty }
+        it { Dployr::Config.discover.should_not be_empty }
 
-        it { Halley::Config.discover.should eql expected }
+        it { Dployr::Config.discover.should eql expected }
 
         after do
           Dir.chdir pwd
@@ -47,7 +47,7 @@ describe Halley::Config do
           Dir.chdir File.join fixtures, 'config', 'subfolder', 'nested'
         end
 
-        it { Halley::Config.discover.should eql expected }
+        it { Dployr::Config.discover.should eql expected }
 
         after do
           Dir.chdir pwd

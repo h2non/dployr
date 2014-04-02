@@ -1,4 +1,4 @@
-module Halley
+module Dployr
   module Helper
 
     module_function

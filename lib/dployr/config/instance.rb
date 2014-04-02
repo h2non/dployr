@@ -1,4 +1,4 @@
-module Halley
+module Dployr
   module Config
     class Instance
 

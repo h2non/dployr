@@ -1,5 +1,0 @@
-require 'halley/version'
-require 'halley/runner'
-require 'halley/provider'
-require 'halley/config'
-require 'halley/config/instance'

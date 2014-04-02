@@ -1,4 +1,4 @@
-module Halley
+module Dployr
 
   class Runner
 

@@ -1,19 +1,19 @@
 $:.push File.expand_path("../lib", __FILE__)
-require 'halley/version'
+require 'Dployr/version'
 
 Gem::Specification.new do |s|
-  s.name        = "halley"
-  s.version     = Halley::VERSION
-  s.summary     = "Multicloud management made simple with asteroids"
-  s.description = "Ruby utility that simplifies the multicloud management and provides rich features"
+  s.name        = "dployr"
+  s.version     = Dployr::VERSION
+  s.summary     = "Multicloud management and deployment made simple with asteroids"
+  s.description = "Command-line utility that simplifies multicloud management and deployment with build-in rich features"
   s.authors     = ["Tomas Aparicio"]
-  s.homepage    = "http://github.com/innotech/halley"
+  s.homepage    = "https://github.com/innotech/dployr"
   s.license     = "MIT"
-  s.rubyforge_project = "halley"
+  s.rubyforge_project = "dployr"
 
   s.bindir        = "bin"
   s.require_paths = "lib"
-  s.executables   = ["halley"]
+  s.executables   = ["dployr"]
 
   s.rdoc_options     = ["--charset=UTF-8"]
   s.extra_rdoc_files = %w[README.md]

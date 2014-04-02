@@ -1,8 +1,8 @@
-# halley [![Build Status](https://secure.travis-ci.org/innotech/halley.png?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/halley.png)][gemnasium] [![Gem](https://badge.fury.io/js/halley.png)][gem]
+# dployr [![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/dployr.png)][gemnasium] [![Gem](https://badge.fury.io/js/dployr.png)][gem]
 
-[travis]: http://travis-ci.org/innotech/halley
-[gemnasium]: https://gemnasium.com/innotech/halley
-[gem]: http://rubygems.org/gems/halley
+[travis]: http://travis-ci.org/innotech/dployr
+[gemnasium]: https://gemnasium.com/innotech/dployr
+[gem]: http://rubygems.org/gems/dployr
 
 > Multicloud management made simple with asteroids
 
@@ -26,7 +26,7 @@ A Ruby utility that simplifies cloud management across different providers
 ## Installation
 
 ```
-$ gem install halley
+$ gem install dployr
 ```
 
 ## Features
@@ -45,7 +45,7 @@ To run the development rake tasks, you also need to have `bundler` installed.
 
 Clone/fork this repository
 ```
-$ git clone git@github.com:innotech/halley.git && cd halley
+$ git clone git@github.com:innotech/dployr.git && cd dployr
 ```
 
 Install required dependencies

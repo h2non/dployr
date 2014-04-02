@@ -1,4 +1,4 @@
-module Halley
+module Dployr
   module Config
     class Runner
       # something cool will be here!

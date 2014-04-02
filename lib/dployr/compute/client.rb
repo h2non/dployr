@@ -1,6 +1,6 @@
 require 'fog'
 
-module Halley
+module Dployr
   module Compute
     class Client
 
