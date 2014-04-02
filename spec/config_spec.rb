@@ -13,8 +13,10 @@ describe Dployr::Config do
   end
 
   describe :discover do
+
     let(:pwd) { Dir.pwd }
     let(:filename) { Dployr::Config::FILENAME }
+    let(:tmpdir) { File.join File.dirname(__FILE__), 'fixtures', '.tmp' }
     let(:fixtures) { File.join File.dirname(__FILE__), 'fixtures' }
 
     describe "current directory" do
@@ -44,14 +46,17 @@ describe Dployr::Config do
         let(:expected) { File.join fixtures, filename }
 
         before do
-          Dir.chdir File.join fixtures, 'config', 'subfolder', 'nested'
+          FileUtils.mkdir_p File.join tmpdir, 'sample'
+          Dir.chdir File.join tmpdir, 'sample'
+        end
+
+        after do
+          Dir.chdir pwd
+          FileUtils.rm_rf tmpdir
         end
 
         it { Dployr::Config.discover.should eql expected }
 
-        after do
-          Dir.chdir pwd
-        end
       end
     end
 

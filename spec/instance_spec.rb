@@ -56,10 +56,6 @@ describe Dployr::Config::Instance do
               instance.add_provider provider
             end
 
-            it "should add a new provider" do
-              puts instance.get_provider(0).has_key? :aws
-            end
-
             subject { instance.get_provider(0) }
             it {
               should be_a Hash
