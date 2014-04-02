@@ -98,11 +98,7 @@ describe Dployr::Utils do
       }
 
       before do
-        begin
-          @result = Dployr::Utils.template "%{salutation}, my name is %{name}", data
-        rescue Exception => e
-          puts e.to_s
-        end
+        @result = Dployr::Utils.template "%{salutation}, my name is %{name}", data
       end
 
       it "should replace both values" do
