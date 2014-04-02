@@ -4,6 +4,7 @@ module Dployr
     def initialize(options)
       @defaults = {}
       @machines = []
+      yield self if block_given?
     end
 
     def set_defaults(config)
