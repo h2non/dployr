@@ -4,7 +4,7 @@ require 'dployr/version'
 Gem::Specification.new do |s|
   s.name        = "dployr"
   s.version     = Dployr::VERSION
-  s.summary     = "Multicloud management and deployment made simple with asteroids"
+  s.summary     = "Multicloud management and deployment with asteroids made simple"
   s.description = "Command-line utility that simplifies multicloud management and deployment with build-in rich features"
   s.authors     = ["Tomas Aparicio"]
   s.homepage    = "https://github.com/innotech/dployr"
