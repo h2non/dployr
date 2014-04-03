@@ -26,24 +26,21 @@ module Dployr
       config = {}
       instance = get_instance name
 
-      setter = lambda do |k|
+      instance.instance_variables.each do |k|
         key = k.to_s.gsub('@', '')
-        if @default and has @default, key
-          config[key] = deep_merge get_by_key(instance, key), get_by_key(@default, key)
-        else
-          config[key] = get_by_key(instance, key)
+        config[key] = val = instance.instance_variable_get k
+        if @default
+          def_val = @default.instance_variable_get k
+          config[key] =
+            if def_val.is_a? Hash
+              deep_merge(def_val, val)
+            elsif def_val.is_a? Array
+              def_val.concat(val).compact.uniq
+            end
         end
       end
 
-      instance.instance_variables.each { |k| setter.call k }
-      if instance
-        if @default
-          config['attributes'] = deep_merge instance.attributes, @default.attributes
-        else
-          config['attributes'] = instance.attributes
-        end
-      end
-      instance
+      config
     end
 
     def get_instance(name)

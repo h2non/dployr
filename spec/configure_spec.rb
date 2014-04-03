@@ -72,8 +72,7 @@ describe Dployr::Configure do
 
       settings = {
         :attributes => {
-          :name => "machine",
-          :instance_type => "m1.small"
+          :name => "zeus"
         },
         :scripts => [
           "path" => "setup.sh"
@@ -99,7 +98,6 @@ describe Dployr::Configure do
       end
 
       describe "add new instance" do
-
         let(:instance) { config.get_instance :zeus }
 
         context "when was added" do
@@ -109,7 +107,7 @@ describe Dployr::Configure do
 
           it "should have valid attributes" do
             instance.attributes.should be_a Hash
-            instance.attributes.should have(2).items
+            instance.attributes.should have(1).items
           end
 
           it "should have scripts" do
@@ -130,20 +128,35 @@ describe Dployr::Configure do
     end
 
     describe "getting config" do
-
       let(:zeus) { config.get_config :zeus }
 
+      it "should exists and be a valid" do
+        zeus.should be_a Hash
+      end
+
       describe "attributes" do
-        it "should exists and be a valid" do
-          zeus.attributes.should be_a Hash
+        it "should overwrite the name" do
+          zeus['attributes'][:name].should eql 'zeus'
         end
 
-        it "should overrite the name" do
-          puts zeus.attributes.name
-          zeus.attributes.name.should be_a Hash
+        it "should have the default instance type" do
+          zeus['attributes'][:instance_type].should eql 'm1.small'
         end
       end
 
+      describe "scripts" do
+        it "should have two scripts" do
+          zeus['scripts'].should have(2).items
+        end
+
+        it "should have the default script" do
+          zeus['scripts'][0]['path'].should eql 'configure.sh'
+        end
+
+        it "should have the instance specific script" do
+          zeus['scripts'][1]['path'].should eql 'setup.sh'
+        end
+      end
     end
 
   end
