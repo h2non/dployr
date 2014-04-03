@@ -4,13 +4,13 @@
 [gemnasium]: https://gemnasium.com/innotech/dployr
 [gem]: http://rubygems.org/gems/dployr
 
-> Multicloud management made simple with asteroids
+> Multicloud management and deployment made simple with asteroids
 
 > **Spoiler! Funny work in progress**
 
 <table>
 <tr>
-<td><b>Version</b></td><td>alpha</td>
+<td><b>Version</b></td><td>beta</td>
 </tr>
 <tr>
 <td><b>Stage</b></td><td>WIP</td>
@@ -27,6 +27,14 @@ A Ruby utility that simplifies cloud management across different providers
 
 ```
 $ gem install dployr
+```
+
+Or add it as dependency in your `Gemfile` or `.gemspec` file
+```
+# gemspec
+spec.add_dependency 'dployr', '>= 2.2.0'
+# Gemfile
+gem 'dployr', '>= 0.1.0'
 ```
 
 ## Features

@@ -8,7 +8,7 @@ describe Dployr::ConfigFile do
     end
 
     it "should read the file contents" do
-      Dployr::ConfigFile.read_yaml(File.dirname(__FILE__) + '/fixtures/config.yml').should have(1).item
+      Dployr::ConfigFile.read_yaml(File.dirname(__FILE__) + '/fixtures/Dployfile.yml').should have(1).item
     end
   end
 

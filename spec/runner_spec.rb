@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "Fog::Runner" do
-
   describe "basic" do
 
     let(:attrs) {
@@ -16,5 +15,4 @@ describe "Fog::Runner" do
     end
 
   end
-
 end

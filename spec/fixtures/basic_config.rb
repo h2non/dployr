@@ -1,10 +1,10 @@
 
 Defaults = {
-  "attributes" => [
+  "attributes" => {
     "prefix" => "triki-dev",
     "username" => "innotechdev",
     "private_key_path" => "~/pems/innotechdev.pem"
-  ],
+  },
   "authentication" => {
     :private_key_path => "~/.ssh/id_rsa",
     :public_key_path => "~/.ssh/id_rsa.pub",
@@ -16,11 +16,11 @@ Defaults = {
   ],
   "providers" => [
     "aws" => {
-      "attributes" => [
+      "attributes" => {
         "instance_type" => "m1.small"
-      ],
+      },
       "scripts" => [],
-      "regions" => [
+      "regions" => {
         # AWS Ireland a
         "eu-west-1a" => {
           "attributes" => [
@@ -60,7 +60,7 @@ Defaults = {
         }
       ]
     }
-  ]
+  }
 }
 
 MachineTypes = {

@@ -1,5 +1,5 @@
 $:.push File.expand_path("../lib", __FILE__)
-require 'Dployr/version'
+require 'dployr/version'
 
 Gem::Specification.new do |s|
   s.name        = "dployr"
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w[README.md]
 
   s.add_dependency "fog", "~> 1.0"
+  s.add_dependency "deep_merge", "~> 1.0.1"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", "~> 2"

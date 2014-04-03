@@ -3,8 +3,64 @@ require 'dployr/utils'
 
 describe Dployr::Utils do
 
-  describe :merge do
+  describe :has do
 
+    context "when exists" do
+      let(:hash) {
+        { "key" => "val", :key => "another" }
+      }
+
+      it "should exist a string key" do
+        Dployr::Utils.has(hash, 'key').should be_true
+      end
+
+      it "should exist a symbol key" do
+        Dployr::Utils.has(hash, :key).should be_true
+      end
+    end
+
+    context "when not exists" do
+      it "should exist a string key" do
+        Dployr::Utils.has(hash, 'key').should be_false
+      end
+
+      it "should exist a symbol key" do
+        Dployr::Utils.has(hash, :key).should be_false
+      end
+    end
+  end
+
+  describe :get_by_key do
+    context "when exists" do
+      let(:hash) {
+        { "key" => "val", :key => "another", :str => "text" }
+      }
+
+      it "should get a value by string key" do
+        Dployr::Utils.get_by_key(hash, 'key').should eql "val"
+      end
+
+      it "should get a value by symbol key" do
+        Dployr::Utils.get_by_key(hash, :key).should eql "another"
+      end
+
+      it "should get a value by symbol key" do
+        Dployr::Utils.get_by_key(hash, "str").should eql "text"
+      end
+    end
+
+    context "when not exists" do
+      it "should get a value by string key" do
+        Dployr::Utils.get_by_key({}, 'key').should eql nil
+      end
+
+      it "should get a value by symbol key" do
+        Dployr::Utils.get_by_key({}, :key).should eql nil
+      end
+    end
+  end
+
+  describe :merge do
     describe "multiple hashes with one level" do
       before do
         x = { :a => 10, :b => 20 }
@@ -30,6 +86,23 @@ describe Dployr::Utils do
       end
     end
 
+    describe "nested hashes with strings and arrays" do
+      before do
+        x = { :a => 10, :b => { :a => [1], :b => "b" } }
+        y = { :a => 100, :b => { :a => [2,3], :c => "c" } }
+        @result = Dployr::Utils.merge x, y
+      end
+
+      it "should override the :a value" do
+        @result[:a].should eq 100
+      end
+
+      context "merge :b" do
+        subject { @result[:b] }
+        it { should be_a Hash }
+        it { should have(2).items }
+      end
+    end
   end
 
   describe :replace_values do
@@ -73,7 +146,6 @@ describe Dployr::Utils do
       end
 
       it "should replace the name" do
-        puts @result.to_s
         @result.should eql "My name is John"
       end
     end
