@@ -133,8 +133,15 @@ describe Dployr::Configure do
 
       let(:zeus) { config.get_config :zeus }
 
-      it "should generate " do
-        zeus.attributes.should be_a Hash
+      describe "attributes" do
+        it "should exists and be a valid" do
+          zeus.attributes.should be_a Hash
+        end
+
+        it "should overrite the name" do
+          puts zeus.attributes.name
+          zeus.attributes.name.should be_a Hash
+        end
       end
 
     end
