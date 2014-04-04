@@ -3,7 +3,7 @@ module Dployr
 
     module_function
 
-    MERGE_OPTIONS = { :merge_hash_arrays => true, :knockout_prefix => true }
+    MERGE_OPTIONS = { merge_hash_arrays: true, knockout_prefix: true }
 
     def has(hash, key)
       if hash.is_a? Hash
