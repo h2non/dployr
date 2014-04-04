@@ -34,11 +34,11 @@ describe Dployr::Config::Instance do
         describe "setting providers" do
           let(:provider) do
             {
-              :attributes => {
-                :instance_type => "m1.small"
+              attributes: {
+                instance_type: "m1.small"
               },
-              :scripts => [],
-              :regions => {}
+              scripts: [],
+              regions: {}
             }
           end
 

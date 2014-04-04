@@ -25,9 +25,8 @@ module Dployr
     def get_config(name)
       config = {}
       instance = get_instance name
-
       instance.instance_variables.each do |k|
-        key = k.to_s.gsub('@', '')
+        key = k.to_s.gsub '@', ''
         config[key] = val = instance.instance_variable_get k
         if @default
           def_val = @default.instance_variable_get k
@@ -39,7 +38,6 @@ module Dployr
             end
         end
       end
-
       config
     end
 
@@ -54,6 +52,10 @@ module Dployr
         i.name = name
         i.configure config
       end if config.is_a? Hash
+    end
+
+    def merge_provider(instance)
+
     end
 
   end

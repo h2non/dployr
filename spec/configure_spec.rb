@@ -9,26 +9,26 @@ describe Dployr::Configure do
     describe "default values" do
       let(:defaults) do
         {
-          :attributes => {
-            :name => "example",
-            :instance_type => "m1.small"
+          attributes: {
+            name: "example",
+            instance_type: "m1.small"
           },
-          :scripts => [
-            "path" => "configure.sh"
+          scripts: [
+            { path: "configure.sh" }
           ],
-          :providers => {
-            :aws => {
-              :attributes => {
-                "instance_type" => "m1.small"
+          providers: {
+            aws: {
+              attributes: {
+                instance_type: "m1.small"
               },
-              :scripts => [
-                "path" => "router.sh"
+              scripts: [
+                { path: "router.sh" }
               ],
-              :regions => {
+              regions: {
                 "eu-west-1a" => {
-                  :attributes => [
-                    "keypair" => "vagrant-aws-ireland"
-                  ]
+                  attributes: {
+                    keypair: "vagrant-aws-ireland"
+                  }
                 }
               }
             }
@@ -71,24 +71,24 @@ describe Dployr::Configure do
     describe "instance" do
 
       settings = {
-        :attributes => {
-          :name => "zeus"
+        attributes: {
+          name: "zeus"
         },
-        :scripts => [
-          "path" => "setup.sh"
+        scripts: [
+          { path: "setup.sh" }
         ],
-        :providers => {
-          :aws => {
-            :attributes => [
-              "instance_type" => "m1.small"
-            ],
-            :regions => [
+        providers: {
+          aws: {
+            attributes: {
+              instance_type: "m1.small"
+            },
+            regions: {
               "europe-west1-a" => {
-                :attributes => [
-                  "keypair" => "vagrant-aws-ireland"
-                ]
+                attributes: {
+                  keypair: "vagrant-aws-ireland"
+                }
               }
-            ]
+            }
           }
         }
       }
@@ -150,11 +150,11 @@ describe Dployr::Configure do
         end
 
         it "should have the default script" do
-          zeus['scripts'][0]['path'].should eql 'configure.sh'
+          zeus['scripts'][0][:path].should eql 'configure.sh'
         end
 
         it "should have the instance specific script" do
-          zeus['scripts'][1]['path'].should eql 'setup.sh'
+          zeus['scripts'][1][:path].should eql 'setup.sh'
         end
       end
     end

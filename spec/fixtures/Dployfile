@@ -1,15 +1,10 @@
 
 Dployr::Configure.new do |i|
   i.set_default {
-      :type => "adasd"
+      type: "adasd"
     }
 
   i.add_machine "sample", {
-    :type => "test"
+    type: "test"
   }
-
-  i.save {
-
-  }
-
 end

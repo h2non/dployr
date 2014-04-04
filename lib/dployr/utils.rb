@@ -7,7 +7,7 @@ module Dployr
 
     def has(hash, key)
       if hash.is_a? Hash
-        if hash.has_key? key or hash.has_key? key.to_sym
+        if hash.key? key or hash.key? key.to_sym
           return true
         end
       end
@@ -33,9 +33,9 @@ module Dployr
     def template(str, data)
       raise ArgumentError.new 'Data must be a hash' unless data.is_a? Hash
       str.gsub(/%\{(\w+)\}/) do
-        if data.has_key? $1
+        if data.key? $1
           data[$1]
-        elsif data.has_key? $1.to_sym
+        elsif data.key? $1.to_sym
           data[$1.to_sym]
         else
           ''

@@ -4,10 +4,9 @@ require 'dployr/utils'
 describe Dployr::Utils do
 
   describe :has do
-
     context "when exists" do
       let(:hash) {
-        { "key" => "val", :key => "another" }
+        { key: "val", key: "another" }
       }
 
       it "should exist a string key" do
@@ -33,7 +32,7 @@ describe Dployr::Utils do
   describe :get_by_key do
     context "when exists" do
       let(:hash) {
-        { "key" => "val", :key => "another", :str => "text" }
+        { "key" => "val", key: "another", "str" => "text" }
       }
 
       it "should get a value by string key" do
@@ -63,9 +62,9 @@ describe Dployr::Utils do
   describe :merge do
     describe "multiple hashes with one level" do
       before do
-        x = { :a => 10, :b => 20 }
-        y = { :a => 100, :c => 200 }
-        z = { :c => 300, :d => 400 }
+        x = { a: 10, b: 20 }
+        y = { a: 100, c: 200 }
+        z = { c: 300, d: 400 }
         @result = Dployr::Utils.merge x, y, z
       end
 
@@ -88,8 +87,8 @@ describe Dployr::Utils do
 
     describe "nested hashes with strings and arrays" do
       before do
-        x = { :a => 10, :b => { :a => [1], :b => "b" } }
-        y = { :a => 100, :b => { :a => [2,3], :c => "c" } }
+        x = { a: 10, b: { a: [1], b: "b" } }
+        y = { a: 100, b: { a: [2,3], c: "c" } }
         @result = Dployr::Utils.merge x, y
       end
 
@@ -108,7 +107,7 @@ describe Dployr::Utils do
   describe :replace_values do
     describe "replacement using hash" do
       let(:data) {
-        { :name => "John" }
+        { name: "John" }
       }
 
       before do
@@ -122,7 +121,7 @@ describe Dployr::Utils do
 
     describe "non existent values" do
       let(:data) {
-        { :salutation => "Hi" }
+        { salutation: "Hi" }
       }
 
       it "should replace raise an error if value do not exists" do
@@ -138,7 +137,7 @@ describe Dployr::Utils do
   describe :template do
     describe "replacement using hash" do
       let(:data) {
-        { :name => "John" }
+        { name: "John" }
       }
 
       before do
@@ -152,7 +151,7 @@ describe Dployr::Utils do
 
     describe "multiple values" do
       let(:data) {
-        { :name => "John", :salutation => "Hi" }
+        { name: "John", salutation: "Hi" }
       }
 
       before do
@@ -166,7 +165,7 @@ describe Dployr::Utils do
 
     describe "non existent values" do
       let(:data) {
-        { :salutation => "Hi" }
+        { salutation: "Hi" }
       }
 
       before do
@@ -183,14 +182,14 @@ describe Dployr::Utils do
     describe "multi-type hash" do
       let(:hash) {
         {
-          :text => { :name => "My name is %{name}" },
-          :array => [ "Another %{name}", { :type => "%{type}"} ],
-          :nonexistent => "sample %{value}"
+          text: { name: "My name is %{name}" },
+          array: [ "Another %{name}", { type: "%{type}"} ],
+          nonexistent: "sample %{value}"
         }
       }
 
       let(:values) {
-        { :name => "Beaker", :type => "muppet" }
+        { name: "Beaker", type: "muppet" }
       }
 
       before do

@@ -10,9 +10,9 @@ describe "Fog" do
 
     let(:fog) do
       Fog::Compute.new({
-        :provider                 => 'AWS',
-        :aws_access_key_id        => 'key',
-        :aws_secret_access_key    => 'secret'
+        provider                 : 'AWS',
+        aws_access_key_id        : 'key',
+        aws_secret_access_key    : 'secret'
       })
     end
 

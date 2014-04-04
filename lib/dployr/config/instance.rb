@@ -27,6 +27,15 @@ module Dployr
         end
       end
 
+      def get_values
+        {
+          attributes: @attributes,
+          authentication: @authentication,
+          scripts: @scripts,
+          providers: @providers
+        }
+      end
+
       def set_attribute(key, value)
         @attributes[key] = value
       end
