@@ -177,7 +177,44 @@ describe Dployr::Utils do
         @result.should eql "Hi, my name is "
       end
     end
+  end
 
+  describe :traverse_map do
+    describe "multi-type hash" do
+      let(:hash) {
+        {
+          :text => { :name => "My name is %{name}" },
+          :array => [ "Another %{name}", { :type => "%{type}"} ],
+          :nonexistent => "sample %{value}"
+        }
+      }
+
+      let(:values) {
+        { :name => "Beaker", :type => "muppet" }
+      }
+
+      before do
+        @result = Dployr::Utils.traverse_map(hash) do |str|
+          Dployr::Utils.template(str, values)
+        end
+      end
+
+      it "should replace the name" do
+        @result[:text][:name].should eql "My name is Beaker"
+      end
+
+      it "should replace the value in an array" do
+        @result[:array][0].should eql "Another Beaker"
+      end
+
+      it "should replace the value from the nested hash in array" do
+        @result[:array][1][:type].should eql "muppet"
+      end
+
+      it "should remove nonexistent template values" do
+        @result[:nonexistent].should eql "sample "
+      end
+    end
   end
 
 end

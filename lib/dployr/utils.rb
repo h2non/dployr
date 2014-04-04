@@ -44,7 +44,19 @@ module Dployr
     end
 
     def replace_values(str, data)
-      str % data if data.is_a?(Hash) or data.is_a?(Array)
+      str % data if data.is_a? Hash or data.is_a? Array
+    end
+
+    def traverse_map(hash, &block)
+      case hash
+      when String
+        hash = yield hash
+      when Array
+        hash.map! {|item| traverse_map item, &block}
+      when Hash
+        hash.each {|k, v| hash[k] = traverse_map v, &block }
+      end
+      hash
     end
 
   end
