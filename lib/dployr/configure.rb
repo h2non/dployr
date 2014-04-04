@@ -74,7 +74,7 @@ module Dployr
       providers = values[:providers]
       providers.each do |key, provider|
         provider.each do |tkey, tval|
-          unless tkey == 'regions'
+          unless tkey.to_sym == :regions
             sval = get_by_key values, tkey
             if sval
               if tval.is_a? Array
