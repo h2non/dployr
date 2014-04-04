@@ -6,13 +6,13 @@ module Dployr
 
       include Dployr::Utils
 
-      attr_reader :attributes, :providers, :auth, :scripts
+      attr_reader :attributes, :providers, :authentication, :scripts
       attr_accessor :name
 
       def initialize
         @name = 'unnamed'
         @attributes = {}
-        @auth = {}
+        @authentication = {}
         @scripts = []
         @providers = {}
         yield self if block_given?
@@ -22,7 +22,7 @@ module Dployr
         if config.is_a? Hash
           set_attributes get_by_key config, :attributes if has config, :attributes
           set_providers get_by_key config, :providers if has config, :providers
-          set_auth get_by_key config, :auth if has config, :auth
+          set_auth get_by_key config, :authentication if has config, :authentication
           set_scripts get_by_key config, :scripts if has config, :scripts
         end
       end
@@ -52,6 +52,10 @@ module Dployr
         @scripts << script if script.is_a? Hash
       end
 
+      def add_auth(key, value)
+        @authentication[key] = value if key
+      end
+
       def add_provider(name, provider)
         @providers[name] = provider if provider.is_a? Hash
       end
@@ -67,7 +71,7 @@ module Dployr
       private
 
       def set_auth(auth)
-        @auth = auth if auth.is_a? Hash
+        @authentication = auth if auth.is_a? Hash
       end
 
       def set_providers(providers)

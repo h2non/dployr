@@ -25,7 +25,7 @@ module Dployr
       target
     end
 
-    def deep_merge(target, *origins)
+    def deep_merge(target = {}, *origins)
       origins.each { |h| target.deep_merge! h, MERGE_OPTIONS }
       target
     end

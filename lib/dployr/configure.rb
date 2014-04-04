@@ -22,22 +22,21 @@ module Dployr
       @instances.last
     end
 
-    def get_config(name)
+    def get_config_all(name, attributes = {})
+      config = []
+      @instances.each do |i| 
+        config << get_config(i.name, attributes)
+      end
+      config
+    end
+
+    def get_config(name, attributes = {})
       config = {}
       instance = get_instance name
-      instance.instance_variables.each do |k|
-        key = k.to_s.gsub '@', ''
-        config[key] = val = instance.instance_variable_get k
-        if @default
-          def_val = @default.instance_variable_get k
-          config[key] =
-            if def_val.is_a? Hash
-              deep_merge(def_val, val)
-            elsif def_val.is_a? Array
-              def_val.concat(val).compact.uniq
-            end
-        end
-      end
+      ArgumentError.new "Instance do not exists" unless instance
+      values = instance.get_values
+      config.merge! merge_defaults values
+      config = merge_providers config
       config
     end
 
@@ -54,8 +53,41 @@ module Dployr
       end if config.is_a? Hash
     end
 
-    def merge_provider(instance)
+    def merge_defaults(values)
+      config = {}
+      default = @default.get_values if @default
+      values.each do |key, val|
+        def_val = get_by_key default, key
+        config[key] =
+          if not defined? default
+            val
+          elsif def_val.is_a? Hash
+            deep_merge(def_val, val)
+          elsif def_val.is_a? Array
+            def_val.concat(val).compact.uniq
+          end
+      end
+      config
+    end
 
+    def merge_providers(values)
+      providers = values[:providers]
+      providers.each do |key, provider|
+        provider.each do |tkey, tval|
+          unless tkey == 'regions'
+            sval = get_by_key values, tkey
+            if sval
+              if tval.is_a? Array
+                tval.concat sval
+              elsif tval.is_a? Hash
+                provider[tkey] = deep_merge(tval, sval) if sval
+              end
+            end
+          end
+          # to do: merge regions
+        end if providers[key].is_a? Hash
+      end
+      values
     end
 
   end
