@@ -22,7 +22,7 @@ describe Dployr::Configure do
                 instance_type: "m1.small"
               },
               scripts: [
-                { path: "router.sh" }
+                { path: "router.sh" }
               ],
               regions: {
                 "eu-west-1a" => {
@@ -270,7 +270,6 @@ describe Dployr::Configure do
                 end
 
                 it "should have the name attribute" do
-                  puts region[:attributes]
                   region[:attributes][:name].should eql "zeus"
                 end
 
@@ -284,6 +283,28 @@ describe Dployr::Configure do
 
                 it "should have the keypair attribute" do
                   region[:attributes][:keypair].should eql "vagrant-aws-ireland"
+                end
+              end
+
+              describe "scripts" do
+                it "should exists" do
+                  region[:scripts].should be_a Array
+                end
+
+                it "should have a valid number" do
+                  region[:scripts].should have(3).items
+                end
+
+                it "should have the proper first script" do
+                  region[:scripts][0][:path].should eql "configure.sh"
+                end
+
+                it "should have the proper second script" do
+                  region[:scripts][1][:path].should eql "setup.sh"
+                end
+
+                it "should have the proper third script" do
+                  region[:scripts][2][:path].should eql "router.sh"
                 end
               end
             end
