@@ -307,6 +307,25 @@ describe Dployr::Configure do
                   region[:scripts][2][:path].should eql "router.sh"
                 end
               end
+
+              describe "authentication" do
+                it "should exists" do
+                  region[:authentication].should be_a Hash
+                end
+
+                it "should have a valid number" do
+                  puts region[:authentication]
+                  region[:authentication].should have(2).items
+                end
+
+                it "should have a valid user" do
+                  region[:authentication][:user].should eql "admin"
+                end
+
+                it "should have a valid key_path" do
+                  region[:authentication][:key_path].should eql "path/to/key.pem"
+                end
+              end
             end
           end
         end
