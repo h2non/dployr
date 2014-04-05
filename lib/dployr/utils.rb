@@ -3,20 +3,28 @@ module Dployr
 
     module_function
 
-    MERGE_OPTIONS = { merge_hash_arrays: true, knockout_prefix: true }
+    MERGE_OPTIONS = { merge_hash_arrays: false, knockout_prefix: false }
 
     def has(hash, key)
-      if hash.is_a? Hash
-        if hash.key? key or hash.key? key.to_sym
-          return true
-        end
-      end
-      false
+      (hash.is_a? Hash and
+        (hash.key? key or hash.key? key.to_sym or hash.key? key.to_s))
     end
 
     def get_by_key(hash, key)
       if hash.is_a? Hash
         hash[key] or hash[key.to_sym] or hash[key.to_s]
+      end
+    end
+
+    def get_real_key(hash, key)
+      if hash.is_a? Hash
+        if hash.key? key
+          key
+        elsif hash.key? key.to_sym
+          key.to_sym
+        elsif hash.key? key.to_s
+          key.to_s
+        end
       end
     end
 
@@ -26,8 +34,14 @@ module Dployr
     end
 
     def deep_merge(target = {}, *origins)
-      origins.each { |h| target.deep_merge! h, MERGE_OPTIONS }
+      origins.each do |h|
+        target.deep_merge! h, MERGE_OPTIONS if h.is_a? Hash
+      end
       target
+    end
+
+    def deep_copy(o)
+      Marshal.load Marshal.dump o
     end
 
     def template(str, data)
@@ -54,7 +68,7 @@ module Dployr
       when Array
         hash.map! {|item| traverse_map item, &block}
       when Hash
-        hash.each {|k, v| hash[k] = traverse_map v, &block }
+        hash.each {|k, v| hash[k] = traverse_map v, &block}
       end
       hash
     end

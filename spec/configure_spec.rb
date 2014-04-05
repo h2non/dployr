@@ -156,6 +156,10 @@ describe Dployr::Configure do
           zeus[:scripts].should be_a Array
         end
 
+        it "should have a valid number" do
+          zeus[:scripts].should have(2).items
+        end
+
         it "should have the default script" do
           zeus[:scripts][0][:path].should eql 'configure.sh'
         end
@@ -191,7 +195,7 @@ describe Dployr::Configure do
 
         describe "aws" do
           it "should have the expected values" do
-            zeus[:providers][:aws].should have(3).items
+            zeus[:providers][:aws].should have(4).items
           end
 
           describe "attributes" do
@@ -216,6 +220,24 @@ describe Dployr::Configure do
             end
           end
 
+          describe "scripts" do
+            it "should exists" do
+              zeus[:providers][:aws][:scripts].should be_a Array
+            end
+
+            it "should have a valid number" do
+              zeus[:providers][:aws][:scripts].should have(3).items
+            end
+
+            it "should have a valid path" do
+              zeus[:providers][:aws][:scripts][0][:path].should eql "configure.sh"
+            end
+
+            it "should have a valid path" do
+              zeus[:providers][:aws][:scripts][1][:path].should eql "setup.sh"
+            end
+          end
+
           describe "regions" do
             it "should have valid regions" do
               zeus[:providers][:aws][:regions].should be_a Hash
@@ -237,13 +259,32 @@ describe Dployr::Configure do
               zeus[:providers][:aws][:regions]["eu-west-1a"].should be_a Hash
             end
 
-            describe "region config" do
-              let(:attributes) {
-                zeus[:providers][:aws][:regions]["eu-west-1a"][:attributes]
+            describe "eu-west-1a" do
+              let(:region) {
+                zeus[:providers][:aws][:regions]["eu-west-1a"]
               }
 
-              it "should have attributes" do
-                attributes.should be_a Hash
+              describe "attributes" do
+                it "should exists" do
+                  region[:attributes].should be_a Hash
+                end
+
+                it "should have the name attribute" do
+                  puts region[:attributes]
+                  region[:attributes][:name].should eql "zeus"
+                end
+
+                it "should have the instance_type attribute" do
+                  region[:attributes][:instance_type].should eql "m1.small"
+                end
+
+                it "should have the network_id attribute" do
+                  region[:attributes][:network_id].should eql "be457fca"
+                end
+
+                it "should have the keypair attribute" do
+                  region[:attributes][:keypair].should eql "vagrant-aws-ireland"
+                end
               end
             end
           end

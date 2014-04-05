@@ -28,12 +28,12 @@ module Dployr
       end
 
       def get_values
-        {
+        deep_copy({
           attributes: @attributes,
           authentication: @authentication,
           scripts: @scripts,
           providers: @providers
-        }
+        })
       end
 
       def set_attribute(key, value)

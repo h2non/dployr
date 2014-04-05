@@ -9,17 +9,23 @@ module Dployr
 
     def initialize
       @default = nil
+      @config = nil
       @instances = []
+      @merged = false
       yield self if block_given?
     end
 
     def set_default(config)
-      @default = create_instance(nil, config)
+      @default = create_instance(nil, config) if config.is_a? Hash
     end
 
     def add_instance(name, config)
       @instances << create_instance(name, config)
       @instances.last
+    end
+
+    def get_instance(name)
+      @instances.each { |i| return i if i.name == name }
     end
 
     def get_config_all(name, attributes = {})
@@ -31,17 +37,10 @@ module Dployr
     end
 
     def get_config(name, attributes = {})
-      config = {}
       instance = get_instance name
       ArgumentError.new "Instance do not exists" unless instance
       values = instance.get_values
-      config.merge! merge_defaults values
-      config = merge_providers config
-      config
-    end
-
-    def get_instance(name)
-      @instances.each { |i| return i if i.name == name }
+      merge_providers merge_defaults values
     end
 
     private
@@ -53,42 +52,41 @@ module Dployr
       end if config.is_a? Hash
     end
 
-    def merge_defaults(values)
-      config = {}
-      default = @default.get_values if @default
-      values.each do |key, val|
-        def_val = get_by_key default, key
-        config[key] =
-          if not defined? default
-            val
-          elsif def_val.is_a? Hash
-            deep_merge(def_val, val)
-          elsif def_val.is_a? Array
-            def_val.concat(val).compact.uniq
+    def merge_defaults(config)
+      config = deep_merge @default.get_values, config if @default
+      config
+    end
+
+    def merge_providers(config)
+      key = get_real_key config, :providers
+      if config[key].is_a? Hash
+        config[key].each do |name, provider|
+          provider = inherit_config provider, config
+          regions = get_by_key provider, (get_real_key provider, :regions)
+          if regions
+            regions.each {|_, region| inherit_config region, provider }
           end
+        end
       end
       config
     end
 
-    def merge_providers(values)
-      providers = values[:providers]
-      providers.each do |key, provider|
-        provider.each do |tkey, tval|
-          unless tkey.to_sym == :regions
-            sval = get_by_key values, tkey
-            if sval
-              if tval.is_a? Array
-                tval.concat sval
-              elsif tval.is_a? Hash
-                provider[tkey] = deep_merge(tval, sval) if sval
-              end
-            end
-          end
-          # to do: merge regions
-        end if providers[key].is_a? Hash
+    def inherit_config(child, parent)
+      keys = [ :attributes, :scripts, :authentication ]
+      keys.each do |type|
+        current = deep_copy(get_by_key parent, type)
+        source = get_by_key child, type
+        if type == :scripts
+          current = [] unless current.is_a? Array
+          current.concat source if source.is_a? Array
+          current = current.compact.uniq
+        else
+          current = {} unless current.is_a? Hash
+          current = deep_merge current, source
+        end
+        child[type] = current if current.length
       end
-      values
+      child
     end
-
   end
 end
