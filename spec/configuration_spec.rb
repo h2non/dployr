@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Dployr::Configure do
+describe Dployr::Configuration do
 
-  config = Dployr::Configure.new
+  config = Dployr::Configuration.new
 
   describe "setting config" do
     before :all do
@@ -353,7 +353,70 @@ describe Dployr::Configure do
             end
           end
         end
+      end
+    end
 
+    describe "get instance config" do
+      attributes = { name: "hera" }
+
+      describe "provider" do
+        before :all do
+          @config = config.get_provider :zeus, :aws, attributes
+        end
+
+        it "should exists the config" do
+          @config.should be_a Hash
+        end
+
+        it "should have one provider" do
+          @config.should have(4).items
+        end
+
+        it "should have two regions" do
+          @config[:regions].should have(2).items
+        end
+
+        describe "attributes" do
+          it "should exists" do
+            @config[:attributes].should be_a Hash
+          end
+
+          it "should have a valid name" do
+            @config[:attributes][:name].should eql "zeus"
+          end
+        end
+
+        describe "scripts" do
+          it "should exists" do
+            @config[:scripts].should be_a Array
+          end
+
+          it "should overwrite the argument" do
+            @config[:scripts][2][:args][0].should eql "hera"
+          end
+        end
+      end
+
+      describe "region" do
+        before :all do
+          @config = config.get_region :zeus, :aws, "eu-west-1a", attributes
+        end
+
+        it "should exists" do
+          @config.should be_a Hash
+        end
+
+        it "should have a valid number of keys" do
+          @config.should have(3).items
+        end
+
+        it "should have a attributes" do
+          @config[:attributes].should be_a Hash
+        end
+
+        it "should have a attributes" do
+          @config[:attributes].should be_a Hash
+        end
       end
     end
   end

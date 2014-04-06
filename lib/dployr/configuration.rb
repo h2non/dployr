@@ -1,7 +1,7 @@
 require 'dployr/utils'
 
 module Dployr
-  class Configure
+  class Configuration
 
     include Dployr::Utils
 
@@ -28,18 +28,36 @@ module Dployr
       @instances.each { |i| return i if i.name == name }
     end
 
-    def get_config_all(name, attributes = {})
-      config = []
-      @instances.each do |i| 
-        config << get_config(i.name, attributes)
+    def get_provider(name, provider, attributes = {})
+      config = get_config name, attributes
+      if config.is_a? Hash
+        config = config[get_real_key(config, :providers)]
+        if config.is_a? Hash
+          return config[get_real_key(config, provider)]
+        end
       end
-      config
+    end
+
+    def get_region(name, provider, region, attributes = {})
+      provider = get_provider name, provider, attributes
+      if provider.is_a? Hash
+        regions = get_by_key provider, :regions
+        return get_by_key regions, region
+      end
     end
 
     def get_config(name, attributes = {})
       instance = get_instance name
       ArgumentError.new "Instance do not exists" unless instance
       replace_variables(merge_config(instance), attributes)
+    end
+
+    def get_config_all(name, attributes = {})
+      config = []
+      @instances.each do |i| 
+        config << get_config(i.name, attributes)
+      end
+      config
     end
 
     private
@@ -52,7 +70,7 @@ module Dployr
     end
 
     def replace_variables(config, attributes)
-      attributes = attributes.merge get_all_attributes config
+      attributes = get_all_attributes(config).merge attributes
       traverse_map config do |str|
         replace_env_vars(template str, attributes)
       end
@@ -86,9 +104,7 @@ module Dployr
         config[key].each do |name, provider|
           provider = inherit_config provider, config
           regions = get_by_key provider, (get_real_key provider, :regions)
-          if regions
-            regions.each {|_, region| inherit_config region, provider }
-          end
+          regions.each {|_, region| inherit_config region, provider } if regions
         end
       end
       config
