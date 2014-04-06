@@ -32,7 +32,7 @@ $ gem install dployr
 Or add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '>= 2.2.0'
+spec.add_dependency 'dployr', '>= 0.1.0'
 # Gemfile
 gem 'dployr', '>= 0.1.0'
 ```
