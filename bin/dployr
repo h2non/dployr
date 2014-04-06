@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
+$LOAD_PATH.push File.expand_path("../../lib", __FILE__)
 require 'optparse'
+require 'dployr'
 
 command = ARGV[0]
 options = {}
@@ -16,13 +18,26 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  "    test      run remote test in instances"
   opt.separator  "    deploy    start, provision and test running instances"
   opt.separator  "    provision instance provisioning"
-  opt.separator  "    init      create a Dployrfile"
+  opt.separator  "    config    show the loaded config"
+  opt.separator  "    init      create a sample Dployrfile"
   opt.separator  ""
   opt.separator  "  Options"
   opt.separator  ""
 
-  opt.on("-e", "--environment ENV", "environment to pass to the instances") do |e|
-    options[:environment] = e
+  opt.on("-e", "--environment ENV", "environment to pass to the instances") do |v|
+    options[:environment] = v
+  end
+
+  opt.on("-a", "--attributes", "aditional attributes to pass to the configuration in matrix query format") do |v|
+    options[:attributes] = v
+  end
+
+  opt.on("-p", "--provider", "provider to use (allow multiple values comma-separated)") do |v|
+    options[:provider] = v
+  end
+
+  opt.on("-r", "--region", "region to use (allow multiple values comma-separated)") do |v|
+    options[:provider] = v
   end
 
   opt.on("-h", "--help", "help") do
@@ -47,8 +62,11 @@ when "test"
   puts "call restart on options #{options.inspect}"
 when "deploy"
   puts "call restart on options #{options.inspect}"
+when "config"
+  dployr = Dployr::Init.new
+  puts dployr.config.get_config_all
 when "init"
-  puts "create file"
+  Dployr::Config::Create.write_file
 else
   puts opt_parser
 end

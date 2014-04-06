@@ -1,7 +1,7 @@
 require 'deep_merge'
 require 'dployr/version'
 require 'dployr/init'
-#require 'dployr/config'
 require 'dployr/configuration'
+require 'dployr/config/create'
 require 'dployr/config/file_utils'
 require 'dployr/config/instance'
