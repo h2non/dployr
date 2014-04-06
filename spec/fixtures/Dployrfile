@@ -1,0 +1,15 @@
+
+Dployr::configure do |dployr|
+  dployr.config.set_default({
+    attributes: {
+      name: "zeus",
+      instance_type: "m1.medium"
+    }
+  })
+
+  dployr.config.add_instance('zeus', {
+    scripts: [
+      { path: 'path/to/script.sh' }
+    ]
+  })
+end

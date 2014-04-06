@@ -44,6 +44,15 @@ module Dployr
       Marshal.load Marshal.dump o
     end
 
+    def parse_matrix(str)
+      hash = {}
+      str.split(';').each do |val|
+        val = val.split '='
+        hash[val.first.strip] = val.last.strip
+      end if str.is_a? String
+      hash
+    end
+
     def template(str, data)
       raise ArgumentError.new 'Data must be a hash' unless data.is_a? Hash
       str.gsub(/%\{(\w+)\}/) do

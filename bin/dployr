@@ -13,9 +13,10 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  "    up        start instances"
   opt.separator  "    halt      stop instances"
   opt.separator  "    status    retrieve the instances status"
-  opt.separator  "    provision instance provisioning"
   opt.separator  "    test      run remote test in instances"
   opt.separator  "    deploy    start, provision and test running instances"
+  opt.separator  "    provision instance provisioning"
+  opt.separator  "    init      create a Dployrfile"
   opt.separator  ""
   opt.separator  "  Options"
   opt.separator  ""
@@ -46,6 +47,8 @@ when "test"
   puts "call restart on options #{options.inspect}"
 when "deploy"
   puts "call restart on options #{options.inspect}"
+when "init"
+  puts "create file"
 else
   puts opt_parser
 end

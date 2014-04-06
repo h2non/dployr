@@ -4,7 +4,7 @@ module Dployr
   module Config
     module FileUtils
 
-      FILENAME = 'Dployfile'
+      FILENAME = 'Dployrfile'
       EXTENSIONS = [ 'rb', 'yml', 'yaml' ]
 
       module_function
@@ -14,13 +14,14 @@ module Dployr
       end
 
       def discover(dir = Dir.pwd)
-        file_name = FILENAME
-        (0..5).each do |n|
-          [nil].concat(EXTENSIONS).each do |ext|
+        [nil].concat(EXTENSIONS).each do |ext|
+          (0..5).each do |n|
             file_name = FILENAME
             file_name += ".#{ext}" if ext
             file_path = File.join dir, ('../' * n), file_name
-            return File.expand_path file_path, dir if File.exists? file_path
+            if File.exists? file_path
+              return File.expand_path file_path, dir
+            end
           end
         end
         nil

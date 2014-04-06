@@ -28,6 +28,20 @@ module Dployr
       @instances.each { |i| return i if i.name == name }
     end
 
+    def get_config(name, attributes = {})
+      instance = get_instance name
+      ArgumentError.new "Instance do not exists" unless instance
+      replace_variables(merge_config(instance), replace_variables(attributes))
+    end
+
+    def get_config_all(attributes = {})
+      config = []
+      @instances.each do |i|
+        config << get_config(i.name, attributes)
+      end
+      config
+    end
+
     def get_provider(name, provider, attributes = {})
       config = get_config name, attributes
       if config.is_a? Hash
@@ -46,18 +60,11 @@ module Dployr
       end
     end
 
-    def get_config(name, attributes = {})
-      instance = get_instance name
-      ArgumentError.new "Instance do not exists" unless instance
-      replace_variables(merge_config(instance), attributes)
-    end
-
-    def get_config_all(name, attributes = {})
-      config = []
-      @instances.each do |i| 
-        config << get_config(i.name, attributes)
+    def each(type = :providers)
+      config = get_config_all
+      config.each do |i|
+        yield i if block_given?
       end
-      config
     end
 
     private
@@ -69,7 +76,7 @@ module Dployr
       end if config.is_a? Hash
     end
 
-    def replace_variables(config, attributes)
+    def replace_variables(config, attributes = {})
       attributes = get_all_attributes(config).merge attributes
       traverse_map config do |str|
         replace_env_vars(template str, attributes)

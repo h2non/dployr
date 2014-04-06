@@ -7,8 +7,8 @@ describe Dployr::Config::FileUtils do
       Dployr::Config::FileUtils.respond_to?(:read_yaml).should be_true
     end
 
-    it "should read the file contents" do
-      Dployr::Config::FileUtils.read_yaml(File.dirname(__FILE__) + '/fixtures/Dployfile.yml').should have(1).item
+    it "should have a valid number of items" do
+      Dployr::Config::FileUtils.read_yaml(File.dirname(__FILE__) + '/fixtures/Dployrfile.yml').should have(2).item
     end
   end
 

@@ -56,7 +56,5 @@ describe Dployr::Config::Instance do
         end
       end
     end
-
   end
-
 end
