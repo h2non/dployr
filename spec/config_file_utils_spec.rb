@@ -1,27 +1,26 @@
 require 'spec_helper'
 
-describe Dployr::ConfigFile do
+describe Dployr::Config::FileUtils do
 
   describe :read_yaml do
     it "should expose the read method" do
-      Dployr::ConfigFile.respond_to?(:read_yaml).should be_true
+      Dployr::Config::FileUtils.respond_to?(:read_yaml).should be_true
     end
 
     it "should read the file contents" do
-      Dployr::ConfigFile.read_yaml(File.dirname(__FILE__) + '/fixtures/Dployfile.yml').should have(1).item
+      Dployr::Config::FileUtils.read_yaml(File.dirname(__FILE__) + '/fixtures/Dployfile.yml').should have(1).item
     end
   end
 
   describe :discover do
-
     let(:pwd) { Dir.pwd }
-    let(:filename) { Dployr::ConfigFile::FILENAME }
+    let(:filename) { Dployr::Config::FileUtils::FILENAME }
     let(:tmpdir) { File.join File.dirname(__FILE__), 'fixtures', '.tmp' }
     let(:fixtures) { File.join File.dirname(__FILE__), 'fixtures' }
 
     describe "current directory" do
       context "when cannot discover" do
-        it { Dployr::ConfigFile.discover.should eql nil }
+        it { Dployr::Config::FileUtils.discover.should eql nil }
       end
 
       context "when discover" do
@@ -31,9 +30,9 @@ describe Dployr::ConfigFile do
           Dir.chdir fixtures
         end
 
-        it { Dployr::ConfigFile.discover.should_not be_empty }
+        it { Dployr::Config::FileUtils.discover.should_not be_empty }
 
-        it { Dployr::ConfigFile.discover.should eql expected }
+        it { Dployr::Config::FileUtils.discover.should eql expected }
 
         after do
           Dir.chdir pwd
@@ -55,11 +54,8 @@ describe Dployr::ConfigFile do
           FileUtils.rm_rf tmpdir
         end
 
-        it { Dployr::ConfigFile.discover.should eql expected }
-
+        it { Dployr::Config::FileUtils.discover.should eql expected }
       end
     end
-
   end
-
 end
