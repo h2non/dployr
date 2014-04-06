@@ -5,12 +5,21 @@ describe Dployr::Configure do
   config = Dployr::Configure.new
 
   describe "setting config" do
+    before :all do
+      ENV['DPLOYR'] = '0.1.0'
+    end
+
+    after :all do
+      ENV.delete 'DPLOYR'
+    end
+
     describe "default values" do
       let(:defaults) do
         {
           attributes: {
             name: "example",
-            instance_type: "m1.small"
+            instance_type: "m1.small",
+            version: "${DPLOYR}"
           },
           scripts: [
             { path: "configure.sh" }
@@ -22,7 +31,7 @@ describe Dployr::Configure do
                 instance_type: "m1.small"
               },
               scripts: [
-                { path: "router.sh" }
+                { path: "router.sh", args: ["%{name}"] }
               ],
               regions: {
                 "eu-west-1a" => {
@@ -48,7 +57,7 @@ describe Dployr::Configure do
 
           it "should have valid attributes" do
             config.default.attributes.should be_a Hash
-            config.default.attributes.should have(2).items
+            config.default.attributes.should have(3).items
           end
 
           it "should have scripts" do
@@ -204,7 +213,7 @@ describe Dployr::Configure do
             end
 
             it "should have a valid number of attributes" do
-              zeus[:providers][:aws][:attributes].should have(3).items
+              zeus[:providers][:aws][:attributes].should have(4).items
             end
 
             it "should have a valid instance_type" do
@@ -217,6 +226,12 @@ describe Dployr::Configure do
 
             it "should have a valid name" do
               zeus[:providers][:aws][:attributes][:name].should eql "zeus"
+            end
+
+            describe "templating" do
+              it "should have a version attribute" do
+                zeus[:providers][:aws][:attributes][:version].should eql "0.1.0"
+              end
             end
           end
 
@@ -235,6 +250,16 @@ describe Dployr::Configure do
 
             it "should have a valid path" do
               zeus[:providers][:aws][:scripts][1][:path].should eql "setup.sh"
+            end
+
+            it "should have a valid path" do
+              zeus[:providers][:aws][:scripts][2][:path].should eql "router.sh"
+            end
+
+            describe "templating" do
+              it "should replace the argument with the instance name" do
+                zeus[:providers][:aws][:scripts][2][:args][0].should eql "zeus"
+              end
             end
           end
 
