@@ -14,7 +14,7 @@ module Dployr
     dployr.config if dployr
   end
 
-  module_function :configure
+  module_function :configure, :config
 
   class Init
 
