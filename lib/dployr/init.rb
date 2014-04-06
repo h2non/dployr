@@ -1,4 +1,3 @@
-require 'singleton'
 require 'dployr/configuration'
 require 'dployr/config/file_utils'
 
