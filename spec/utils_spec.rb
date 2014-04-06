@@ -104,6 +104,36 @@ describe Dployr::Utils do
     end
   end
 
+  describe :replace_env_vars do
+    describe "environment variable" do
+      before :all do
+        ENV['DPLOYR'] = 'sample value'
+      end
+
+      before :all do
+        @result = Dployr::Utils.replace_env_vars "Env var: ${DPLOYR}"
+      end
+
+      after :all do
+        ENV.delete 'DPLOYR'
+      end
+
+      it "should replace the name" do
+        @result.should eql "Env var: sample value"
+      end
+    end
+
+    describe "nonexistent" do
+      before :all do
+        @result = Dployr::Utils.replace_env_vars "Env var: ${NONEXISTENT}"
+      end
+
+      it "should replace the name" do
+        @result.should eql "Env var: "
+      end
+    end
+  end
+
   describe :replace_values do
     describe "replacement using hash" do
       let(:data) {

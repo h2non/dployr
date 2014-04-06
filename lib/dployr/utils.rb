@@ -57,6 +57,16 @@ module Dployr
       end
     end
 
+    def replace_env_vars(str)
+      str.gsub(/\$\{(\w+)\}/) do
+        if ENV.key? $1
+          ENV[$1]
+        else
+          ''
+        end
+      end
+    end
+
     def replace_values(str, data)
       str % data if data.is_a? Hash or data.is_a? Array
     end

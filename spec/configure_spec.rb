@@ -314,7 +314,6 @@ describe Dployr::Configure do
                 end
 
                 it "should have a valid number" do
-                  puts region[:authentication]
                   region[:authentication].should have(2).items
                 end
 
