@@ -71,7 +71,7 @@ Options
 ```ruby
 Dployr::configure do |dployr|
 
-  dployr.config.set_default({
+  dployr.config.add_instance({
     attributes: {
       name: "example",
       instance_type: "m1.small",
@@ -100,6 +100,7 @@ Dployr::configure do |dployr|
       }
     }
   })
+
 end
 ```
 
