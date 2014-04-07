@@ -66,6 +66,43 @@ Options
 
 ```
 
+### Programmatic API
+
+```ruby
+Dployr::configure do |dployr|
+
+  dployr.config.set_default({
+    attributes: {
+      name: "example",
+      instance_type: "m1.small",
+      version: "${VERSION}"
+    },
+    scripts: [
+      { path: "configure.sh" }
+    ],
+    providers: {
+      aws: {
+        attributes: {
+          network_id: "be457fca",
+          instance_type: "m1.small",
+          "type-%{name}" => "small"
+        },
+        regions: {
+          "eu-west-1a" => {
+            attributes: {
+              keypair: "vagrant-aws-ireland"
+            },
+            scripts: [
+              { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
+            ]
+          }
+        }
+      }
+    }
+  })
+end
+```
+
 ## Features
 
 `Under design!`
