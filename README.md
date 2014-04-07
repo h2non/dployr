@@ -41,6 +41,12 @@ gem 'dployr', '>= 0.1.0'
 
 `Under design!`
 
+## Configuration file
+
+```yaml
+
+```
+
 ## Contributing
 
 Feel free to report any issue you experiment via Github issues.

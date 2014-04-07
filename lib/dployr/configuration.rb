@@ -78,9 +78,10 @@ module Dployr
 
     def replace_variables(config, attributes = {})
       attributes = get_all_attributes(config).merge attributes
-      traverse_map get_by_key(config, :providers) do |str|
-        replace_env_vars(template str, attributes)
-      end if has(config, :providers)
+      providers = get_by_key(config, :providers)
+      traverse_map providers do |str, key|
+        replace_env_vars template(str, attributes)
+      end if providers.is_a? Hash
       config
     end
 
@@ -109,14 +110,20 @@ module Dployr
       key = get_real_key config, :providers
       if config[key].is_a? Hash
         config[key].each do |name, provider|
-          provider = inherit_config provider, config
+          provider = replace_keywords 'provider', name, inherit_config(provider, config)
           regions = get_by_key provider, (get_real_key provider, :regions)
-          regions.each {|_, region|
-            inherit_config region, provider
-          } if regions
+          regions.each do |name, region|
+            regions[name] = replace_keywords 'region', name, inherit_config(region, provider)
+          end if regions
         end
       end
       config
+    end
+
+    def replace_keywords(keyword, value, hash)
+      traverse_map hash do |str|
+        str.gsub "${#{keyword.to_s}}", value.to_s
+      end if hash.is_a? Hash
     end
 
     def inherit_config(child, parent)

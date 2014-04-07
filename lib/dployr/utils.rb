@@ -53,15 +53,27 @@ module Dployr
       hash
     end
 
+    def parse_flags(str)
+      hash = {}
+      str.split(' ').each do |val|
+        val = val.split '='
+        hash[val.first.strip] = val.last.strip
+      end if str.is_a? String
+      hash
+    end
+
+    def replace_vars(str)
+      str.gsub(/\%\{(\w+)\}/) { yield $1 }
+    end
+
     def template(str, data)
       raise ArgumentError.new 'Data must be a hash' unless data.is_a? Hash
-      str.gsub(/%\{(\w+)\}/) do
-        if data.key? $1
-          data[$1]
-        elsif data.key? $1.to_sym
-          data[$1.to_sym]
+      replace_vars str do |match|
+        key = get_real_key data, match
+        if key
+          data[key]
         else
-          ''
+          raise ArgumentError.new "Missing template variable: #{match}"
         end
       end
     end
@@ -76,7 +88,7 @@ module Dployr
       end
     end
 
-    def replace_values(str, data)
+    def replace_placeholders(str, data)
       str % data if data.is_a? Hash or data.is_a? Array
     end
 
@@ -89,7 +101,7 @@ module Dployr
       when String
         hash = yield hash, key
       when Array
-        hash.map! {|item| traverse_mapper item, nil, &block}
+        hash.map! { |item| traverse_mapper item, nil, &block }
       when Hash
         buf = {}
         hash.each do |k, v|

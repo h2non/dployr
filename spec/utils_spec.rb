@@ -169,14 +169,14 @@ describe Dployr::Utils do
     end
   end
 
-  describe :replace_values do
+  describe :replace_placeholders do
     describe "replacement using hash" do
       let(:data) {
         { name: "John" }
       }
 
       before do
-        @result = Dployr::Utils.replace_values "My name is %{name}", data
+        @result = Dployr::Utils.replace_placeholders "My name is %{name}", data
       end
 
       it "should replace the name" do
@@ -191,9 +191,9 @@ describe Dployr::Utils do
 
       it "should replace raise an error if value do not exists" do
         begin
-          @result = Dployr::Utils.template "%{salutation}, my name is %{name}", data
+          @result = Dployr::Utils.replace_placeholders "%{salutation}, my name is %{name}", data
         rescue Exception => e
-          e.should_not be_empty
+          e.should be_instance_of KeyError
         end
       end
     end
@@ -233,12 +233,12 @@ describe Dployr::Utils do
         { salutation: "Hi" }
       }
 
-      before do
-        @result = Dployr::Utils.template "%{salutation}, my name is %{name}", data
-      end
-
-      it "should replace both values" do
-        @result.should eql "Hi, my name is "
+      it "should raise an exception error if do not exist the variable" do
+        begin
+          @result = Dployr::Utils.template "%{salutation}, my name is %{name}", data
+        rescue Exception => e
+          e.should be_instance_of ArgumentError
+        end
       end
     end
   end
@@ -249,7 +249,7 @@ describe Dployr::Utils do
         {
           text: { name: "My name is %{name}" },
           array: [ "Another %{name}", { type: "%{type}"} ],
-          nonexistent: "sample %{value}"
+          nonexistent: "this is %{name}"
         }
       }
 
@@ -259,7 +259,7 @@ describe Dployr::Utils do
 
       before do
         @result = Dployr::Utils.traverse_map(hash) do |str|
-          Dployr::Utils.template(str, values)
+          Dployr::Utils.template str, values
         end
       end
 
@@ -276,7 +276,7 @@ describe Dployr::Utils do
       end
 
       it "should remove nonexistent template values" do
-        @result[:nonexistent].should eql "sample "
+        @result[:nonexistent].should eql "this is Beaker"
       end
     end
   end

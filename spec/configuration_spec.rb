@@ -32,7 +32,7 @@ describe Dployr::Configuration do
                 "type-%{name}" => "small"
               },
               scripts: [
-                { path: "router.sh", args: ["%{name}"] }
+                { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
               ],
               regions: {
                 "eu-west-1a" => {
@@ -339,6 +339,16 @@ describe Dployr::Configuration do
 
                 it "should have the proper third script" do
                   region[:scripts][2][:path].should eql "router.sh"
+                end
+
+                describe "templating" do
+                  it "should replace the argument with the current region" do
+                    region[:scripts][2][:args][1].should eql "eu-west-1a"
+                  end
+
+                  it "should replace the argument with the current provider" do
+                    region[:scripts][2][:args][2].should eql "aws"
+                  end
                 end
               end
 
