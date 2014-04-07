@@ -1,3 +1,4 @@
+require 'yaml'
 require 'dployr/configuration'
 require 'dployr/config/file_utils'
 
@@ -13,7 +14,11 @@ module Dployr
     dployr.config if dployr
   end
 
-  module_function :configure, :config
+  def load(file_path)
+    YAML.load file_path
+  end
+
+  module_function :configure, :config, :load
 
   class Init
 

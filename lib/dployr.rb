@@ -1,3 +1,4 @@
+require 'yaml'
 require 'deep_merge'
 require 'dployr/version'
 require 'dployr/init'
