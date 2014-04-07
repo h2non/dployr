@@ -79,7 +79,29 @@ describe Dployr::Configuration do
     end
 
     describe "instance" do
-      settings = {
+
+      hera_config = {
+        attributes: {
+          name: "hera"
+        },
+        providers: {
+          gce: {
+            attributes: {
+              instance_type: "m1.small"
+            },
+            regions: {
+              "europe-west1-a" => {
+                attributes: {
+                  keypair: "vagrant-aws-ireland"
+                }
+              }
+            }
+          }
+        }
+      }
+
+      zeus_config = {
+        extends: "hera",
         attributes: {
           name: "zeus"
         },
@@ -107,7 +129,8 @@ describe Dployr::Configuration do
       }
 
       before :all do
-        config.add_instance :zeus, settings
+        config.add_instance :hera, hera_config
+        config.add_instance :zeus, zeus_config
       end
 
       describe "add new instance" do
@@ -196,7 +219,7 @@ describe Dployr::Configuration do
       describe "providers" do
         it "should exists" do
           zeus[:providers].should be_a Hash
-          zeus[:providers].should have(1).items
+          zeus[:providers].should have(2).items
         end
 
         it "should exists the aws provider config" do

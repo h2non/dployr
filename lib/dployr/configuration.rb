@@ -16,21 +16,22 @@ module Dployr
     end
 
     def set_default(config)
-      @default = create_instance(nil, config) if config.is_a? Hash
+      @default = create_instance('default', config) if config.is_a? Hash
     end
 
     def add_instance(name, config)
-      @instances << create_instance(name, config)
+      @instances << create_instance(name, config) if config.is_a? Hash
       @instances.last
     end
 
     def get_instance(name)
-      @instances.each { |i| return i if i.name == name }
+      @instances.each { |i| return i if i.name.to_s == name.to_s }
+      nil
     end
 
     def get_config(name, attributes = {})
       instance = get_instance name
-      ArgumentError.new "Instance do not exists" unless instance
+      raise ArgumentError.new "Instance '#{name.to_s}' do not exists" if instance.nil?
       replace_variables merge_config(instance), replace_variables(attributes)
     end
 
@@ -62,9 +63,7 @@ module Dployr
 
     def each(type = :providers)
       config = get_config_all
-      config.each do |i|
-        yield i if block_given?
-      end
+      config.each { |i| yield i if block_given? }
     end
 
     private
@@ -98,7 +97,7 @@ module Dployr
     end
 
     def merge_config(instance)
-      merge_providers merge_defaults instance.get_values
+      merge_providers merge_parents merge_defaults instance.get_values
     end
 
     def merge_defaults(config)
@@ -111,7 +110,7 @@ module Dployr
       if config[key].is_a? Hash
         config[key].each do |name, provider|
           provider = replace_keywords 'provider', name, inherit_config(provider, config)
-          regions = get_by_key provider, (get_real_key provider, :regions)
+          regions = get_by_key provider, get_real_key(provider, :regions)
           regions.each do |name, region|
             regions[name] = replace_keywords 'region', name, inherit_config(region, provider)
           end if regions
@@ -129,7 +128,7 @@ module Dployr
     def inherit_config(child, parent)
       keys = [ :attributes, :scripts, :authentication ]
       keys.each do |type|
-        current = deep_copy(get_by_key parent, type)
+        current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
         if type == :scripts
           current = [] unless current.is_a? Array
@@ -141,6 +140,16 @@ module Dployr
         end
         child[type] = current if current.length
       end
+      child
+    end
+
+    def merge_parents(child)
+      parents = get_by_key child, :parents
+      parents = [ parents ] if parents.is_a? String
+      parents.each do |parent|
+        parent = get_instance parent
+        child = deep_merge parent.get_values, child unless parent.nil?
+      end if parents.is_a? Array
       child
     end
   end

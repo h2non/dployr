@@ -6,7 +6,7 @@ module Dployr
 
       include Dployr::Utils
 
-      attr_reader :attributes, :providers, :authentication, :scripts
+      attr_reader :attributes, :providers, :authentication, :scripts, :parents
       attr_accessor :name
 
       def initialize
@@ -15,6 +15,7 @@ module Dployr
         @authentication = {}
         @scripts = []
         @providers = {}
+        @parents = []
         yield self if block_given?
       end
 
@@ -24,6 +25,7 @@ module Dployr
           set_providers get_by_key config, :providers if has config, :providers
           set_auth get_by_key config, :authentication if has config, :authentication
           set_scripts get_by_key config, :scripts if has config, :scripts
+          set_parents get_by_key config, :extends if has config, :extends
         end
       end
 
@@ -32,7 +34,8 @@ module Dployr
           attributes: @attributes,
           authentication: @authentication,
           scripts: @scripts,
-          providers: @providers
+          providers: @providers,
+          parents: @parents
         })
       end
 
@@ -84,6 +87,11 @@ module Dployr
 
       def set_attributes(attrs)
         @attributes = attrs if attrs.is_a? Hash
+      end
+
+      def set_parents(parents)
+        parents = [ parents ] if parents.is_a? String
+        @parents.concat parents if parents.is_a? Array
       end
 
     end

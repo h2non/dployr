@@ -43,6 +43,13 @@ gem 'dployr', '>= 0.1.0'
 
 ## Configuration file
 
+Supported config values
+
+- attributes
+- scripts
+- providers
+- authentication
+
 ```yaml
 
 ```
