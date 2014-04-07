@@ -110,14 +110,20 @@ end
 
 ## Configuration file
 
-Supported config values
+Configuration file must be called `Dployrfile`.
 
-- attributes
-- scripts
-- providers
-- authentication
-- extends
+It can be a standard Ruby file or a YAML file (you need to the `.yaml` extension in the file name)
 
+
+Each configuration level supports the followings members:
+- **attributes** `Object`
+- **scripts** `Array`
+- **providers** `Object`
+- **authentication** `Object`
+- **extends** `String|Array`
+
+
+Featured example configuration file (YAML)
 ```yaml
 ---
 default:
