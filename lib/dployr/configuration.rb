@@ -81,10 +81,9 @@ module Dployr
 
     def replace_variables(config, attributes = {})
       attributes = get_all_attributes(config).merge attributes
-      providers = get_by_key(config, :providers)
-      traverse_map providers do |str, key|
+      traverse_map config do |str, key|
         replace_env_vars template(str, attributes)
-      end if providers.is_a? Hash
+      end if config.is_a? Hash
       config
     end
 
