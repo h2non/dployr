@@ -8,6 +8,9 @@ Dployr::configure do |dployr|
   })
 
   dployr.config.add_instance('zeus', {
+    attributes: {
+      name: 'zeus'
+    },
     scripts: [
       { path: 'path/to/script.sh' }
     ]

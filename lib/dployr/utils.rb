@@ -1,9 +1,9 @@
 module Dployr
   module Utils
 
-    module_function
-
     MERGE_OPTIONS = { merge_hash_arrays: false, knockout_prefix: false }
+
+    module_function
 
     def has(hash, key)
       (hash.is_a? Hash and
@@ -81,13 +81,29 @@ module Dployr
     end
 
     def traverse_map(hash, &block)
+      traverse_mapper hash, nil, &block
+    end
+
+    def traverse_mapper(hash, key, &block)
       case hash
       when String
-        hash = yield hash
+        hash = yield hash, key
       when Array
-        hash.map! {|item| traverse_map item, &block}
+        hash.map! {|item| traverse_mapper item, nil, &block}
       when Hash
-        hash.each {|k, v| hash[k] = traverse_map v, &block}
+        buf = {}
+        hash.each do |k, v|
+          if k.is_a? String
+            new_key = yield k, k
+            if new_key != k
+              hash.delete k
+              buf[new_key] = traverse_mapper v, new_key, &block
+              next
+            end
+          end
+          hash[k] = traverse_mapper v, k, &block
+        end
+        hash.merge! buf
       end
       hash
     end

@@ -1,6 +1,7 @@
 ---
 default:
   attributes:
+    name: "%{name}"
     prefix: dev
     private_key_path: ~/pems/innotechdev.pem
     username: innotechdev
@@ -47,33 +48,44 @@ default:
     -
       args: "%{name}"
       path: ./vagrant-deploy-common/scripts/updatedns.sh
-zeus:
-  attributes:
-    prefix: zeus-dev
-  authentication:
-    private_key_path: ~/.ssh/id_rsa
-    public_key_path: ~/.ssh/id_rsa.pub
-    username: ubuntu
-  providers:
-    aws:
-      attributes:
-        instance_type: m1.medium
-    gce:
-      attributes:
-        instance_type: m1.large
-  scripts:
-    -
-      args:
-        - "%{name}"
-        - "%{type}%{index}"
-        - "%{domain}"
-      path: ./scripts/configure.sh
-    -
-      args:
-        - "%{hydra}"
-      path: ./scripts/configureListener.sh
-    -
-      args:
-        - "%{provider}-%{region}"
-        - "%{type}"
-      path: ./vagrant-deploy-common/scripts/hydraProbe.sh
+
+
+custom:
+  name: 1
+  web-server:
+    attributes:
+      prefix: zeus-dev
+    authentication:
+      private_key_path: ~/.ssh/id_rsa
+      public_key_path: ~/.ssh/id_rsa.pub
+      username: ubuntu
+    providers:
+      aws:
+        regions:
+        attributes:
+          instance_type: m1.medium
+      gce:
+        attributes:
+          instance_type: m1.large
+    scripts:
+      -
+        args:
+          - "%{name}"
+          - "%{type}"
+          - "%{domain}"
+        path: ./scripts/configure.sh
+      -
+        args:
+          - "%{hydra}"
+        path: ./scripts/configureListener.sh
+      -
+        args:
+          - "%{$provider}-%{region}"
+          - "%{type}"
+        path: ./vagrant-deploy-common/scripts/hydraProbe.sh
+
+#instances:
+#  zeus:
+#    include: ['web-server']
+#    attributes:
+#      name: zeus

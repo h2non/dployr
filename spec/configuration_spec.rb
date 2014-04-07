@@ -28,7 +28,8 @@ describe Dployr::Configuration do
             aws: {
               attributes: {
                 network_id: "be457fca",
-                instance_type: "m1.small"
+                instance_type: "m1.small",
+                "type-%{name}" => "small"
               },
               scripts: [
                 { path: "router.sh", args: ["%{name}"] }
@@ -87,7 +88,7 @@ describe Dployr::Configuration do
           key_path: "path/to/key.pem"
         },
         scripts: [
-          { path: "setup.sh", remote: true }
+          { path: "setup.sh", args: ["--id ${index}"], remote: true }
         ],
         providers: {
           aws: {
@@ -213,7 +214,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of attributes" do
-              zeus[:providers][:aws][:attributes].should have(4).items
+              zeus[:providers][:aws][:attributes].should have(5).items
             end
 
             it "should have a valid instance_type" do
@@ -231,6 +232,10 @@ describe Dployr::Configuration do
             describe "templating" do
               it "should have a version attribute" do
                 zeus[:providers][:aws][:attributes][:version].should eql "0.1.0"
+              end
+
+              it "should have a type key with valid replacement" do
+                zeus[:providers][:aws][:attributes]["type-zeus"].should eql "small"
               end
             end
           end
@@ -328,6 +333,10 @@ describe Dployr::Configuration do
                   region[:scripts][1][:path].should eql "setup.sh"
                 end
 
+                it "should have a valid index argument" do
+                  region[:scripts][1][:args][0].should eql "--id "
+                end
+
                 it "should have the proper third script" do
                   region[:scripts][2][:path].should eql "router.sh"
                 end
@@ -389,6 +398,10 @@ describe Dployr::Configuration do
         describe "scripts" do
           it "should exists" do
             @config[:scripts].should be_a Array
+          end
+
+          it "should have a valid number" do
+            @config[:scripts].should have(3).items
           end
 
           it "should overwrite the argument" do

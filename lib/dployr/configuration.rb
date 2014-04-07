@@ -31,7 +31,7 @@ module Dployr
     def get_config(name, attributes = {})
       instance = get_instance name
       ArgumentError.new "Instance do not exists" unless instance
-      replace_variables(merge_config(instance), replace_variables(attributes))
+      replace_variables merge_config(instance), replace_variables(attributes)
     end
 
     def get_config_all(attributes = {})
@@ -78,9 +78,9 @@ module Dployr
 
     def replace_variables(config, attributes = {})
       attributes = get_all_attributes(config).merge attributes
-      traverse_map config do |str|
+      traverse_map get_by_key(config, :providers) do |str|
         replace_env_vars(template str, attributes)
-      end
+      end if has(config, :providers)
       config
     end
 
@@ -111,7 +111,9 @@ module Dployr
         config[key].each do |name, provider|
           provider = inherit_config provider, config
           regions = get_by_key provider, (get_real_key provider, :regions)
-          regions.each {|_, region| inherit_config region, provider } if regions
+          regions.each {|_, region|
+            inherit_config region, provider
+          } if regions
         end
       end
       config
