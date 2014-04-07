@@ -1,11 +1,11 @@
 require 'yaml'
+require 'dployr/config/constants'
 
 module Dployr
   module Config
     module FileUtils
 
-      FILENAME = 'Dployrfile'
-      EXTENSIONS = [ 'rb', 'yml', 'yaml' ]
+      include Dployr::Config::Constants
 
       module_function
 
