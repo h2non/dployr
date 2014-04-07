@@ -49,6 +49,7 @@ Supported config values
 - scripts
 - providers
 - authentication
+- extends
 
 ```yaml
 

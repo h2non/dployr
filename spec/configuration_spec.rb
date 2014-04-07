@@ -87,12 +87,12 @@ describe Dployr::Configuration do
         providers: {
           gce: {
             attributes: {
-              instance_type: "m1.small"
+              instance_type: "m1.large"
             },
             regions: {
-              "europe-west1-a" => {
+              "los-angeles-ca" => {
                 attributes: {
-                  keypair: "vagrant-aws-ireland"
+                  keypair: "google"
                 }
               }
             }
@@ -224,6 +224,53 @@ describe Dployr::Configuration do
 
         it "should exists the aws provider config" do
           zeus[:providers][:aws].should be_a Hash
+        end
+
+        describe "inherited from parent" do
+          it "should exists the gce provider config" do
+            zeus[:providers][:gce].should be_a Hash
+          end
+
+          describe "gce" do
+            let(:gce) {
+              zeus[:providers][:gce]
+            }
+
+            it "should have a valid number of attributes" do
+              gce[:attributes].should have(3).items
+            end
+
+            it "should have the instance_type attributes" do
+              gce[:attributes][:instance_type].should eql "m1.large"
+            end
+
+            it "should have valid number of regions" do
+              gce[:regions].should have(1).items
+            end
+
+            it "should have a valid region" do
+              gce[:regions]["los-angeles-ca"].should be_a Hash
+            end
+
+            describe "los-angeles-ca region" do
+              let(:region) {
+                gce[:regions]["los-angeles-ca"]
+              }
+
+              it "should have a valid number of attributes" do
+                region[:attributes].should have(4).items
+              end
+
+              it "should have inherited scripts" do
+                region[:scripts].should have(2).items
+              end
+
+              it "should have inherited autentication" do
+                region[:authentication].should have(2).items
+              end
+            end
+          end
+
         end
 
         describe "aws" do
