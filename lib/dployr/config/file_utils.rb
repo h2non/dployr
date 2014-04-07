@@ -9,6 +9,10 @@ module Dployr
 
       module_function
 
+      def yaml_file?(str)
+        !(str =~ /\.y[a]?ml$/).nil?
+      end
+
       def read_yaml(file_path)
         YAML.load_file file_path
       end

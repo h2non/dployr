@@ -15,6 +15,10 @@ module Dployr
       yield self if block_given?
     end
 
+    def exists?
+      (!@default.nil? or @instances.length >= 1)
+    end
+
     def set_default(config)
       @default = create_instance('default', config) if config.is_a? Hash
     end

@@ -1,10 +1,11 @@
-require 'yaml'
 require 'dployr/configuration'
 require 'dployr/config/file_utils'
 
 module Dployr
 
-  def configure
+  module_function
+
+  def configure(attributes = {})
     dployr = Init::instance
     yield dployr if block_given?
   end
@@ -15,22 +16,28 @@ module Dployr
   end
 
   def load(file_path)
-    YAML.load file_path
+    if Dployr::Config::FileUtils.yaml_file? file_path
+      Dployr::Config::FileUtils.read_yaml file_path
+    else
+      load file_path
+    end
   end
-
-  module_function :configure, :config, :load
 
   class Init
 
+    include Dployr::Config::FileUtils
+
     attr_reader :file_path, :config
 
-    def initialize
-      @@instance = self
-      @config = Dployr::Configuration.new
-      load_file
-    end
-
     @@instance = nil
+
+    def initialize(attributes = {})
+      @@instance = self
+      @attributes = attributes
+      @config = Dployr::Configuration.new
+      @file_path = discover
+      load_file @file_path
+    end
 
     def self.instance
       @@instance
@@ -38,19 +45,18 @@ module Dployr
 
     private
 
-    def load_file
-      @file_path = Dployr::Config::FileUtils.discover
-      if @file_path.is_a? String
-        if @file_path.include? '.yml' or @file_path.include? '.yaml'
-          load_yaml @file_path
+    def load_file(file_path)
+      if file_path.is_a? String
+        if yaml_file? file_path
+          load_yaml file_path
         else
-          load @file_path
+          load file_path
         end
       end
     end
 
     def load_yaml(file_path)
-      config = Dployr::Config::FileUtils.read_yaml file_path
+      config = read_yaml file_path
       if config.is_a? Hash
         config.each do |name, config|
           if key == 'default'
@@ -61,5 +67,6 @@ module Dployr
         end
       end
     end
+
   end
 end

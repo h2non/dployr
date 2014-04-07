@@ -55,7 +55,7 @@ module Dployr
 
     def parse_flags(str)
       hash = {}
-      str.strip.gsub(/\s+/, ' ').split(' ').each_slice(2) do |val|
+      str.gsub(/\s+/, ' ').strip.split(' ').each_slice(2) do |val|
         key = val.first
         if val.first.is_a? String
           key = key.gsub(/^\-+/, '').strip

@@ -37,6 +37,35 @@ spec.add_dependency 'dployr', '>= 0.1.0'
 gem 'dployr', '>= 0.1.0'
 ```
 
+## Usage
+
+### Command-line interface
+
+```
+Usage: dployr <command> [options]
+
+Commands
+
+  up        start instances
+  halt      stop instances
+  status    retrieve the instances status
+  test      run remote test in instances
+  deploy    start, provision and test running instances
+  provision instance provisioning
+  config    generate configuration in YAML format
+  init      create a sample Dployrfile
+
+Options
+
+  -e, --environment ENV            environment to pass to the instances
+  -n, --name NAME                  template name identifier to load
+  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
+  -p, --provider                   provider to use (allow multiple values comma-separated)
+  -r, --region                     region to use (allow multiple values comma-separated)
+  -h, --help                       help
+
+```
+
 ## Features
 
 `Under design!`
@@ -52,6 +81,91 @@ Supported config values
 - extends
 
 ```yaml
+---
+default:
+  attributes:
+    name: "%{name}"
+    prefix: dev
+    private_key_path: ~/pems/innotechdev.pem
+    username: innotechdev
+  authentication:
+    private_key_path: ~/.ssh/id_rsa
+    public_key_path: ~/.ssh/id_rsa.pub
+    username: ubuntu
+  providers:
+    aws:
+      attributes:
+        instance_type: m1.small
+      regions:
+        eu-west-1a:
+          attributes:
+            ami: ami-f5ca3682
+            keypair: vagrant-aws-ireland
+            security_groups:
+              - sg-576c7635
+              - sg-1e648a7b
+            subnet_id: subnet-be457fca
+        us-west-2b:
+          attributes:
+            ami: ami-c66608f6
+            keypair: vagrant-aws-oregon
+            security_groups:
+              - sg-88283cea
+              - sg-f233ca97
+            subnet_id: subnet-ef757e8d
+    gce:
+      attributes:
+        client_email: 388158271394-hiqo47ehuagjshtrtsgicsnn0uvmdk06@developer.gserviceaccount.com
+        instance_type: m1.small
+        key_location: ~/pems/70ddae97bf1c09d2d799b2acde33a03ebd52d774-privatekey.p12
+        project_id: innotechapp
+      regions:
+        europe-west1-a:
+          attributes:
+            ami: centos-base-v5
+            instance_type: n1-standard-1
+            network: liberty-gce
+  scripts:
+    -
+      path: ./vagrant-deploy-common/scripts/routes_allregions.sh
+    -
+      args: "%{name}"
+      path: ./vagrant-deploy-common/scripts/updatedns.sh
+
+
+custom:
+  name: 1
+  web-server:
+    attributes:
+      prefix: zeus-dev
+    authentication:
+      private_key_path: ~/.ssh/id_rsa
+      public_key_path: ~/.ssh/id_rsa.pub
+      username: ubuntu
+    providers:
+      aws:
+        regions:
+        attributes:
+          instance_type: m1.medium
+      gce:
+        attributes:
+          instance_type: m1.large
+    scripts:
+      -
+        args:
+          - "%{name}"
+          - "%{type}"
+          - "%{domain}"
+        path: ./scripts/configure.sh
+      -
+        args:
+          - "%{hydra}"
+        path: ./scripts/configureListener.sh
+      -
+        args:
+          - "%{$provider}-%{region}"
+          - "%{type}"
+        path: ./vagrant-deploy-common/scripts/hydraProbe.sh
 
 ```
 

@@ -2,17 +2,58 @@
 Dployr::configure do |dployr|
   dployr.config.set_default({
     attributes: {
-      name: "zeus",
-      instance_type: "m1.medium"
+      name: "example",
+      instance_type: "m1.small",
+      version: "${DPLOYR}"
+    },
+    scripts: [
+      { path: "configure.sh" }
+    ],
+    providers: {
+      aws: {
+        attributes: {
+          network_id: "be457fca",
+          instance_type: "m1.small",
+          "type-%{name}" => "small"
+        },
+        scripts: [
+          { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
+        ],
+        regions: {
+          "eu-west-1a" => {
+            attributes: {
+              keypair: "vagrant-aws-ireland"
+            }
+          }
+        }
+      }
     }
   })
 
   dployr.config.add_instance('zeus', {
     attributes: {
-      name: 'zeus'
+      name: "zeus"
+    },
+    authentication: {
+      user: "admin",
+      key_path: "path/to/key.pem"
     },
     scripts: [
-      { path: 'path/to/script.sh' }
-    ]
+      { path: "setup.sh", args: ["--id ${index}"], remote: true }
+    ],
+    providers: {
+      aws: {
+        attributes: {
+          instance_type: "m1.small"
+        },
+        regions: {
+          "europe-west1-a" => {
+            attributes: {
+              keypair: "vagrant-aws-ireland"
+            }
+          }
+        }
+      }
+    }
   })
 end
