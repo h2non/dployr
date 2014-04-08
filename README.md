@@ -116,13 +116,13 @@ end
 
 ## Features
 
-`To do! but all are cool :)`
+`To do! but all will be cool :)`
 
 ## Configuration file
 
 Configuration file must be called `Dployrfile`.
 
-It can be a standard Ruby file or a YAML file (you need to the `.yaml` extension in the file name)
+It can be a standard Ruby file or a YAML file (you need to add the `.yaml` extension in the file name)
 
 #### Data schema
 
