@@ -142,7 +142,7 @@ Notation: `%{attribute-name}`
 
 ##### Iteration context variables
 
-You can reference to the current `provider` or `region` of the iteration load context
+You can reference to the current `provider` or `region` of the current iteration context
 
 Notation: `${region}`
 
