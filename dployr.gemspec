@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "dployr"
 
   s.bindir        = "bin"
-  s.require_paths = "lib"
+  s.require_paths = ["lib"]
   s.executables   = ["dployr"]
 
   s.rdoc_options     = ["--charset=UTF-8"]
