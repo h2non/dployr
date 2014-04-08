@@ -27,8 +27,8 @@ Dployr only works in Ruby >= 1.9.x
 
 ## Installation
 
-```
-$ gem install dployr --source https://SeCrEt-ToKeN@gem.fury.io/innotech/
+```bash
+$ gem install dployr --source https://6wNxkeCE8z3GnoU1TH7f@repo.fury.io/innotech/
 ```
 
 Or add it as dependency in your `Gemfile` or `.gemspec` file
@@ -36,6 +36,7 @@ Or add it as dependency in your `Gemfile` or `.gemspec` file
 # gemspec
 spec.add_dependency 'dployr', '>= 0.0.1'
 # Gemfile
+source 'https://6wNxkeCE8z3GnoU1TH7f@gem.fury.io/innotech/'
 gem 'dployr', '>= 0.0.1'
 ```
 
