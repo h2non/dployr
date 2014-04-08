@@ -6,11 +6,11 @@
 
 > Multicloud management and deployment with asteroids made simple
 
-> **Spoiler! Funny work in progress**
+> **Spoiler! Alpha project. Funny work in progress**
 
 <table>
 <tr>
-<td><b>Version</b></td><td>beta</td>
+<td><b>Version</b></td><td>alpha</td>
 </tr>
 <tr>
 <td><b>Stage</b></td><td>WIP</td>
@@ -19,11 +19,13 @@
 
 ## About
 
-A Ruby utility that simplifies cloud management across different providers
+**Dployr** is a Ruby utility that simplifies cloud management
+and deployment across different providers
 
-`to do`
+You can configure your infraestructure and deployment from a simple configuration file which support built-in
+rich features like templating and inheritance
 
-Dployr only works in Ruby >= 1.9.x
+Dployr only works in Ruby >= `1.9.x`
 
 ## Installation
 
