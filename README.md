@@ -116,14 +116,41 @@ Configuration file must be called `Dployrfile`.
 
 It can be a standard Ruby file or a YAML file (you need to the `.yaml` extension in the file name)
 
+#### Data schema
 
 Each configuration level supports the followings members:
+
 - **attributes** `Object`
 - **scripts** `Array`
 - **providers** `Object`
 - **authentication** `Object`
-- **extends** `String|Array`
+- **extends** `String|Array` Allows to inherits the current config object from others
 
+#### Templating
+
+Dployr allows templating features inside configuration values, in order
+to provide an easy and clean way to dynamically replace values and self-referenced variables
+inside the same configuration
+
+Supported template values notations
+
+##### Attributes
+
+Attribute values are available to be referenciable from any part of the config document
+
+Template notation: `%{attribute-name}`
+
+##### Iteration context variables
+
+You can reference to the current `provider` or `region` of the iteration load context
+
+Template notation: `${region}`
+
+##### Environment variables
+
+Template notation: `${HOME}`
+
+#### Example
 
 Featured example configuration file (YAML)
 ```yaml
