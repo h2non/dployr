@@ -1,4 +1,9 @@
-# dployr [![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/dployr.png)][gemnasium] [![Gem](https://badge.fury.io/js/dployr.png)][gem]
+# dployr  [![Gem](https://badge.fury.io/js/dployr.png)][gem]
+
+<!--
+[![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/innotech/dployr.png)][gemnasium]
+-->
 
 [travis]: http://travis-ci.org/innotech/dployr
 [gemnasium]: https://gemnasium.com/innotech/dployr
