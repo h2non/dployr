@@ -120,9 +120,8 @@ end
 
 ## Configuration file
 
-Configuration file must be called `Dployrfile`.
-
-It can be a standard Ruby file or a YAML file (you need to add the `.yaml` extension in the file name)
+Configuration file must be called `Dployrfile`. It can be also a standard Ruby file
+or a YAML file (adding the `.yml` or `.yaml` extension)
 
 #### Data schema
 
