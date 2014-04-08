@@ -116,7 +116,7 @@ end
 
 ## Features
 
-`Under design!`
+`To do! but all are cool :)`
 
 ## Configuration file
 
