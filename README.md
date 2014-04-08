@@ -23,6 +23,8 @@ A Ruby utility that simplifies cloud management across different providers
 
 `to do`
 
+Dployr only works in Ruby >= 1.9.x
+
 ## Installation
 
 ```
