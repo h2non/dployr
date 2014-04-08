@@ -1,5 +1,6 @@
 require 'optparse'
 require 'dployr'
+require 'dployr/version'
 require 'dployr/cli/commands'
 
 command = ARGV[0]
@@ -40,6 +41,10 @@ opt_parser = OptionParser.new do |opt|
 
   opt.on("-r", "--region", "region to use (allow multiple values comma-separated)") do |v|
     options[:provider] = v
+  end
+
+  opt.on("-v",  "-V", "--version", "version") do
+    puts Dployr::VERSION
   end
 
   opt.on("-h", "--help", "help") do
