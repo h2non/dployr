@@ -28,15 +28,15 @@ Dployr only works in Ruby >= 1.9.x
 ## Installation
 
 ```
-$ gem install dployr
+$ gem install dployr --source https://SeCrEt-ToKeN@gem.fury.io/innotech/
 ```
 
 Or add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '>= 0.1.0'
+spec.add_dependency 'dployr', '>= 0.0.1'
 # Gemfile
-gem 'dployr', '>= 0.1.0'
+gem 'dployr', '>= 0.0.1'
 ```
 
 ## Usage
