@@ -138,17 +138,17 @@ Supported template values notations
 
 Attribute values are available to be referenciable from any part of the config document
 
-Template notation: `%{attribute-name}`
+Notation: `%{attribute-name}`
 
 ##### Iteration context variables
 
 You can reference to the current `provider` or `region` of the iteration load context
 
-Template notation: `${region}`
+Notation: `${region}`
 
 ##### Environment variables
 
-Template notation: `${HOME}`
+Notation: `${HOME}`
 
 #### Example
 
