@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name        = "dployr"
   s.version     = Dployr::VERSION
   s.summary     = "Multicloud management and deployment with asteroids made simple"
-  s.description = "Command-line utility that simplifies multicloud management and deployment with build-in rich features"
+  s.description = "Multicloud management and deployment with asteroids made simple"
   s.authors     = ["Tomas Aparicio"]
   s.homepage    = "https://github.com/innotech/dployr"
   s.license     = "MIT"
@@ -23,6 +23,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rake", "~> 10"
   s.add_development_dependency "rspec", "~> 2"
+
+  s.required_ruby_version = ">= 1.9.3"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
