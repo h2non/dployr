@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.summary     = "Multicloud management and deployment with asteroids made simple"
   s.description = "Multicloud management and deployment with asteroids made simple. It provider a rich featured programmatic API and CLI"
   s.authors     = ["Tomas Aparicio"]
+  s.email       = ["nerds@innotechapp.com"]
   s.homepage    = "https://github.com/innotech/dployr"
   s.license     = "MIT"
   s.rubyforge_project = "dployr"
