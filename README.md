@@ -1,4 +1,4 @@
-# dployr  [![Gem](https://badge.fury.io/js/dployr.png)][gem]
+# dployr  [![Gem](https://badge.fury.io/rb/dployr.png)][gem]
 
 <!--
 [![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis]
