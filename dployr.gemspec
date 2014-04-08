@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name        = "dployr"
   s.version     = Dployr::VERSION
   s.summary     = "Multicloud management and deployment with asteroids made simple"
-  s.description = "Multicloud management and deployment with asteroids made simple"
+  s.description = "Multicloud management and deployment with asteroids made simple. It provider a rich featured programmatic API and CLI"
   s.authors     = ["Tomas Aparicio"]
   s.homepage    = "https://github.com/innotech/dployr"
   s.license     = "MIT"
