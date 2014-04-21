@@ -9,7 +9,7 @@
 [gemnasium]: https://gemnasium.com/innotech/dployr
 [gem]: http://rubygems.org/gems/dployr
 
-> Multicloud management and deployment with asteroids made simple
+> Multicloud management and deployment made simple
 
 > **Spoiler! Alpha project. Funny work in progress**
 
@@ -35,7 +35,7 @@ Dployr only works in Ruby >= `1.9.x`
 ## Installation
 
 ```bash
-$ gem install dployr --source https://6wNxkeCE8z3GnoU1TH7f@repo.fury.io/innotech/
+$ gem install dployr
 ```
 
 Or add it as dependency in your `Gemfile` or `.gemspec` file
@@ -43,7 +43,6 @@ Or add it as dependency in your `Gemfile` or `.gemspec` file
 # gemspec
 spec.add_dependency 'dployr', '>= 0.0.1'
 # Gemfile
-source 'https://6wNxkeCE8z3GnoU1TH7f@gem.fury.io/innotech/'
 gem 'dployr', '>= 0.0.1'
 ```
 

@@ -7,4 +7,5 @@ RSpec::Core::RakeTask.new do |t|
   t.rspec_opts = '--color --order defined --format documentation' # --fail-fast
 end
 
+task :test => :spec
 task :default => :spec
