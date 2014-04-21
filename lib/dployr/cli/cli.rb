@@ -67,6 +67,8 @@ when "test"
   puts "Command currently not available"
 when "deploy"
   puts "Command currently not available"
+when "execute"
+  puts "Command currently not available"
 when "config"
   Dployr::CLI::Config.new options
 when "init"
