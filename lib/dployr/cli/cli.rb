@@ -18,15 +18,12 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  "    test      run remote test in instances"
   opt.separator  "    deploy    start, provision and test running instances"
   opt.separator  "    provision instance provisioning"
-  opt.separator  "    config    generate configuration in YAML format"
+  opt.separator  "    config    generate configuration in YAML from Dployrfile"
+  opt.separator  "    execute   run custom stages"
   opt.separator  "    init      create a sample Dployrfile"
   opt.separator  ""
   opt.separator  "  Options"
   opt.separator  ""
-
-  opt.on("-e", "--environment ENV", "environment to pass to the instances") do |v|
-    options[:environment] = v
-  end
 
   opt.on("-n", "--name NAME", "template name identifier to load") do |v|
     options[:name] = v
