@@ -24,7 +24,6 @@ describe "Fog" do
       end
 
       it "should create the server" do
-        #fog.servers.get(@server.id)should_not be_empty
         fog.servers.all.should have(1).items
       end
 

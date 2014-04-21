@@ -32,9 +32,9 @@ default:
             subnet_id: subnet-ef757e8d
     gce:
       attributes:
-        client_email: 388158271394-hiqo47ehuagjshtrtsgicsnn0uvmdk06@developer.gserviceaccount.com
+        client_email: sample@developer.com
         instance_type: m1.small
-        key_location: ~/pems/70ddae97bf1c09d2d799b2acde33a03ebd52d774-privatekey.p12
+        key_location: ~/pems/privatekey.p12
         project_id: innotechapp
       regions:
         europe-west1-a:
@@ -44,10 +44,10 @@ default:
             network: liberty-gce
   scripts:
     -
-      path: ./vagrant-deploy-common/scripts/routes_allregions.sh
+      path: ./scripts/routes_allregions.sh
     -
       args: "%{name}"
-      path: ./vagrant-deploy-common/scripts/updatedns.sh
+      path: ./scripts/updatedns.sh
 
 
 custom:
@@ -82,7 +82,7 @@ custom:
         args:
           - "%{$provider}-%{region}"
           - "%{type}"
-        path: ./vagrant-deploy-common/scripts/hydraProbe.sh
+        path: ./scripts/hydraProbe.sh
 
 #instances:
 #  zeus:
