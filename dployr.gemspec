@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "fog", "~> 1.21"
   s.add_dependency "deep_merge", "~> 1.0"
+  s.add_dependency "net-ssh", "~> 2.8.0"
 
   s.add_development_dependency "rake", "~> 10"
   s.add_development_dependency "rspec", "~> 2"

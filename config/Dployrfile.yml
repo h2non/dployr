@@ -1,0 +1,26 @@
+german-dployr:
+  attributes:
+    name: "hydra-demo-time3"
+    args: "%{name}"
+    prefix: dev
+    private_key_path: ~/pems/innotechdev.pem
+    username: innotechdev
+  scripts:
+    provision:
+      -
+        path: ls /
+      -
+        args: "%{name}"
+        path: true 
+  providers:
+    aws:
+      attributes:
+        instance_type: t1.micro
+      regions:
+        eu-west-1a:
+          attributes:
+            ami: ami-370daf2a # centos-base-v7
+            keypair: vagrant-aws-saopaulo
+            security_groups:
+              - sg-3cf3e45e # lib_aws_saopaulo
+            subnet_id: subnet-1eebe07c

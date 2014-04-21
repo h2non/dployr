@@ -82,7 +82,7 @@ module Dployr
       end
 
       def set_scripts(scripts)
-        @scripts = scripts if scripts.is_a? Array
+        @scripts = scripts if scripts.is_a? Hash
       end
 
       def set_attributes(attrs)

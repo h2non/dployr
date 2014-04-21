@@ -65,7 +65,7 @@ when "halt"
 when "status"
   puts "Command currently not available"
 when "provision"
-  puts "Command currently not available"
+  Dployr::CLI::Provision.new options
 when "test"
   puts "Command currently not available"
 when "deploy"
