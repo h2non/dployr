@@ -13,6 +13,7 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  ""
   opt.separator  "    up        start instances"
   opt.separator  "    halt      stop instances"
+  opt.separator  "    destroy   destroy instances"
   opt.separator  "    status    retrieve the instances status"
   opt.separator  "    test      run remote test in instances"
   opt.separator  "    deploy    start, provision and test running instances"

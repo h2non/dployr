@@ -3,7 +3,6 @@ module Dployr
     module Constants
 
       FILENAME = "Dployrfile"
-
       EXTENSIONS = ['rb', 'yml', 'yaml']
 
     end

@@ -10,16 +10,16 @@ describe "Fog" do
 
     let(:fog) do
       Fog::Compute.new({
-        provider                 : 'AWS',
-        aws_access_key_id        : 'key',
-        aws_secret_access_key    : 'secret'
+        provider: 'AWS',
+        aws_access_key_id: 'key',
+        aws_secret_access_key: 'secret'
       })
     end
 
     describe "create server" do
 
       before do
-        @server = fog.servers.create :flavor_id => 1, :image_id => 'ami-5ee70037', :name => 'fake_server'
+        @server = fog.servers.create flavor_id => 1, :image_id => 'ami-5ee70037', :name => 'fake_server'
         @server.wait_for { ready? }
       end
 

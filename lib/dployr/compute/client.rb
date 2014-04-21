@@ -7,7 +7,7 @@ module Dployr
       attr_reader :client
 
       DEFAULT = {
-        :flavor_id => 1
+        provider: 'AWS'
       }
 
       def initialize(options)

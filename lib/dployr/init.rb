@@ -48,7 +48,7 @@ module Dployr
     def load_file(file_path)
       if file_path.is_a? String
         if yaml_file? file_path
-          load_yaml file_path
+          load_yaml file_path
         else
           load file_path
         end
@@ -59,10 +59,10 @@ module Dployr
       config = read_yaml file_path
       if config.is_a? Hash
         config.each do |name, config|
-          if key == 'default'
-            @config.set_default value
+          if name == 'default'
+            @config.set_default config
           else
-            @config.add_instance name, value
+            @config.add_instance name, config
           end
         end
       end
