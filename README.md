@@ -1,13 +1,4 @@
-# dployr  [![Gem](https://badge.fury.io/rb/dployr.png)][gem]
-
-<!--
-[![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/innotech/dployr.png)][gemnasium]
--->
-
-[travis]: http://travis-ci.org/innotech/dployr
-[gemnasium]: https://gemnasium.com/innotech/dployr
-[gem]: http://rubygems.org/gems/dployr
+# dployr [![Build Status](https://secure.travis-ci.org/innotech/dployr.svg?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/dployr.svg)][gemnasium] [![Gem](https://badge.fury.io/rb/dployr.svg)][gem]
 
 > Multicloud management and deployment made simple
 
@@ -163,10 +154,9 @@ Featured example configuration file (YAML)
 ---
 default:
   attributes:
-    name: "%{name}"
+    name: "default"
     prefix: dev
-    private_key_path: ~/pems/innotechdev.pem
-    username: innotechdev
+    private_key_path: ~/pems/private.pem
   authentication:
     private_key_path: ~/.ssh/id_rsa
     public_key_path: ~/.ssh/id_rsa.pub
@@ -194,9 +184,9 @@ default:
             subnet_id: subnet-ef757e8d
     gce:
       attributes:
-        client_email: 388158271394-hiqo47ehuagjshtrtsgicsnn0uvmdk06@developer.gserviceaccount.com
+        client_email: sample@mail.com
         instance_type: m1.small
-        key_location: ~/pems/70ddae97bf1c09d2d799b2acde33a03ebd52d774-privatekey.p12
+        key_location: ~/pems/privatekey.p12
         project_id: innotechapp
       regions:
         europe-west1-a:
@@ -206,10 +196,10 @@ default:
             network: liberty-gce
   scripts:
     -
-      path: ./vagrant-deploy-common/scripts/routes_allregions.sh
+      path: ./scripts/routes_allregions.sh
     -
       args: "%{name}"
-      path: ./vagrant-deploy-common/scripts/updatedns.sh
+      path: ./scripts/updatedns.sh
 
 
 custom:
@@ -244,7 +234,7 @@ custom:
         args:
           - "%{$provider}-%{region}"
           - "%{type}"
-        path: ./vagrant-deploy-common/scripts/hydraProbe.sh
+        path: ./scripts/hydraProbe.sh
 
 ```
 
@@ -252,6 +242,11 @@ custom:
 
 Feel free to report any issue you experiment via Github issues.
 PR are also too much appreciated
+
+Only PR which follows the [Ruby coding style][ruby-guide] guide will be accepted.
+Aditionally, you must cover with test any new feature or refactor you do
+
+We try to follow the [best RSpec][rspec-best] conventions in our tests
 
 ### Development
 
@@ -263,14 +258,14 @@ Clone/fork this repository
 $ git clone git@github.com:innotech/dployr.git && cd dployr
 ```
 
-Install required dependencies
+Install dependencies
 ```
 $ bundle install
 ```
 
-Before you push any changes, run the RSpec suite
+Before you push any changes, run test specs
 ```
-$ rake spec
+$ rake test
 ```
 
 To build a new version of the gem:
@@ -283,6 +278,17 @@ To publish the new version to Rubygems:
 $ rake release
 ```
 
+## Contributors
+
+- [Tomas Aparicio](https://github.com/h2non)
+- [Germán Ramos](https://github.com/germanramos)
+
 ## License
 
-Released under the MIT license
+[MIT](http://opensource.org/licenses/MIT) © Innotech and contributors
+
+[travis]: http://travis-ci.org/innotech/dployr
+[gemnasium]: https://gemnasium.com/innotech/dployr
+[gem]: http://rubygems.org/gems/dployr
+[ruby-guide]: https://github.com/bbatsov/ruby-style-guide
+[rspec-test]: http://betterspecs.org/
