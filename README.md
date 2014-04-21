@@ -37,78 +37,11 @@ spec.add_dependency 'dployr', '>= 0.0.1'
 gem 'dployr', '>= 0.0.1'
 ```
 
-## Usage
-
-### Command-line interface
-
-```
-Usage: dployr <command> [options]
-
-Commands
-
-  up        start instances
-  halt      stop instances
-  status    retrieve the instances status
-  test      run remote test in instances
-  deploy    start, provision and test running instances
-  provision instance provisioning
-  config    generate configuration in YAML format
-  init      create a sample Dployrfile
-
-Options
-
-  -e, --environment ENV            environment to pass to the instances
-  -n, --name NAME                  template name identifier to load
-  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
-  -p, --provider                   provider to use (allow multiple values comma-separated)
-  -r, --region                     region to use (allow multiple values comma-separated)
-  -h, --help                       help
-
-```
-
-### Programmatic API
-
-```ruby
-Dployr::configure do |dployr|
-
-  dployr.config.add_instance({
-    attributes: {
-      name: "example",
-      instance_type: "m1.small",
-      version: "${VERSION}"
-    },
-    scripts: [
-      { path: "configure.sh" }
-    ],
-    providers: {
-      aws: {
-        attributes: {
-          network_id: "be457fca",
-          instance_type: "m1.small",
-          "type-%{name}" => "small"
-        },
-        regions: {
-          "eu-west-1a" => {
-            attributes: {
-              keypair: "vagrant-aws-ireland"
-            },
-            scripts: [
-              { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
-            ]
-          }
-        }
-      }
-    }
-  })
-
-end
-```
-
 ## Features
 
 `To do! but all will be cool :)`
 
-## Configuration file
+## Configuration
 
 Configuration file must be called `Dployrfile`. It can be also a standard Ruby file
 or a YAML file (adding the `.yml` or `.yaml` extension)
@@ -236,6 +169,71 @@ custom:
           - "%{type}"
         path: ./scripts/hydraProbe.sh
 
+```
+
+## Command-line interface
+
+```
+Usage: dployr <command> [options]
+
+Commands
+
+  up        start instances
+  halt      stop instances
+  status    retrieve the instances status
+  test      run remote test in instances
+  deploy    start, provision and test running instances
+  provision instance provisioning
+  config    generate configuration in YAML format
+  init      create a sample Dployrfile
+
+Options
+
+  -e, --environment ENV            environment to pass to the instances
+  -n, --name NAME                  template name identifier to load
+  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
+  -p, --provider                   provider to use (allow multiple values comma-separated)
+  -r, --region                     region to use (allow multiple values comma-separated)
+  -h, --help                       help
+
+```
+
+## Programmatic API
+
+```ruby
+Dployr::configure do |dployr|
+
+  dployr.config.add_instance({
+    attributes: {
+      name: "example",
+      instance_type: "m1.small",
+      version: "${VERSION}"
+    },
+    scripts: [
+      { path: "configure.sh" }
+    ],
+    providers: {
+      aws: {
+        attributes: {
+          network_id: "be457fca",
+          instance_type: "m1.small",
+          "type-%{name}" => "small"
+        },
+        regions: {
+          "eu-west-1a" => {
+            attributes: {
+              keypair: "vagrant-aws-ireland"
+            },
+            scripts: [
+              { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
+            ]
+          }
+        }
+      }
+    }
+  })
+
+end
 ```
 
 ## Contributing
