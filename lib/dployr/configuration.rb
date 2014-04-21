@@ -44,6 +44,7 @@ module Dployr
       @instances.each do |i|
         config << get_config(i.name, attributes)
       end
+      puts config
       config
     end
 
@@ -80,10 +81,13 @@ module Dployr
     end
 
     def replace_variables(config, attributes = {})
-      attributes = get_all_attributes(config).merge attributes
-      traverse_map config do |str, key|
-        replace_env_vars template(str, attributes)
-      end if config.is_a? Hash
+      if config.is_a? Hash
+        attrs = get_all_attributes config
+        attrs.merge! attributes if attributes.is_a? Hash
+        traverse_map config do |str, key|
+          replace_env_vars template(str, attrs)
+        end
+      end
       config
     end
 

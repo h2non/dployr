@@ -36,9 +36,15 @@ module Dployr
         raise "Configuration is missing" unless @dployr.config.exists?
         begin
           if @name
-            puts @dployr.config.get_config(@name, @attributes).to_yaml
+            config = @dployr.config.get_config @name, @attributes
           else
-            puts @dployr.config.get_config_all(@attributes).to_yaml
+            puts @attributes
+            config = @dployr.config.get_config_all @attributes
+          end
+          unless config.nil?
+            puts config.to_yaml
+          else
+            @log.info "Missing configuration data"
           end
         rescue Exception => e
           raise "Cannot generate the config: #{e}"
