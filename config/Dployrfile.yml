@@ -6,12 +6,17 @@ german-dployr:
     private_key_path: ~/pems/innotechdev.pem
     username: innotechdev
   scripts:
+    pre-provision:
+      -
+        source: ./hello
+        target: /tmp
     provision:
       -
-        path: ls /
+        args: ""
+        path: "/tmp/hello/hello.sh"
       -
-        args: "%{name}"
-        path: true 
+        args: ""
+        path: "ls -l /tmp" 
   providers:
     aws:
       attributes:

@@ -3,6 +3,7 @@ require 'dployr'
 require 'dployr/utils'
 require 'json'
 require 'net/ssh'
+require 'colorize'
 
 module Dployr
   module Provision
@@ -10,26 +11,22 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(instance)
+      def initialize(host, username, private_key_path, script)
       
         begin
           @log = Logger.new STDOUT
-          host = instance[:attributes]["name"]
-          username = instance[:attributes]["username"]
-          private_key_path = instance[:attributes]["private_key_path"]
-          
-          puts "Making ssh to #{instance[:attributes]["username"]}"
+          puts "Connecting to #{host} (SSH)...".yellow
           Net::SSH.start(host, username, :keys => [private_key_path]) do |ssh|
-            puts instance.inspect
-            instance[:scripts]["provision"].each do |script|
-              command = script["path"]
-              arguments = script["args"]
-              puts "Running remote script '#{command} #{arguments}'"
-              result = ssh_exec!(ssh, command)
-              puts result.inspect
-              if result[:exit_code] > 0
-                raise "Exit code #{result[:exit_code]} when running script '#{command} #{arguments}'"
-              end
+            @host = host
+            command = script["path"]
+            arguments = script["args"]
+            puts "Running remote script '#{command} #{arguments}'".yellow
+            result = ssh_exec!(ssh, command)
+            #puts result.inspect
+            if result[:exit_code] > 0
+              raise "Exit code #{result[:exit_code]} when running script '#{command} #{arguments}'".yellow
+            else
+              puts "Remote script '#{command} #{arguments}' finished succesfully".yellow
             end
           end
           
@@ -39,6 +36,7 @@ module Dployr
         end
       end
 
+      # http://craiccomputing.blogspot.com.es/2010/08/printing-colored-text-in-unix-terminals.html
       def ssh_exec!(ssh, command)
         stdout_data = ""
         stderr_data = ""
@@ -51,12 +49,12 @@ module Dployr
             end
             channel.on_data do |ch,data|
               stdout_data+=data
-              puts data
+              print "[#{@host}] #{data}".green
             end
       
             channel.on_extended_data do |ch,type,data|
               stderr_data+=data
-              puts data
+              print "[#{@host}] #{data}".red
             end
       
             channel.on_request("exit-status") do |ch,data|
@@ -69,6 +67,7 @@ module Dployr
           end
         end
         ssh.loop
+        #puts "\033[0m"
         {
           stdout_data: stdout_data,
           stderr_data: stderr_data, 
