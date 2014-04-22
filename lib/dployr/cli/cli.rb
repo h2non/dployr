@@ -29,6 +29,10 @@ opt_parser = OptionParser.new do |opt|
     options[:name] = v
   end
 
+  opt.on("-f", "--file FILE", "custom config file path to load") do |v|
+    options[:name] = v
+  end
+
   opt.on("-a", "--attributes ATTRS", "aditional attributes to pass to the configuration in matrix query format") do |v|
     options[:attributes] = v
   end
@@ -73,4 +77,8 @@ when "config"
   Dployr::CLI::Config.new options
 when "init"
   Dployr::Config::Create.write_file
+when '-h', '--help', 'help'
+  # help already showed by option
+else
+  puts opt_parser
 end

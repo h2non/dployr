@@ -16,9 +16,9 @@ module Dployr
 
         begin
           # Read and parse config
-          create
+          config = create.config.get_config @name
           # Pass instance to provision
-          instance = Dployr::Provision::Provision.new @dployr.config.get_config @name
+          instance = Dployr::Provision::Provision.new config
         rescue Exception => e
           @log.error e
           Process.exit! false
@@ -27,7 +27,7 @@ module Dployr
 
       def create
         begin
-          @dployr = Dployr::Init.new @attributes
+          @dployr = Dployr::Init.new(@attributes)
         rescue Exception => e
           raise "Cannot load the config: #{e}"
         end

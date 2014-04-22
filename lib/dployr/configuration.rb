@@ -20,7 +20,7 @@ module Dployr
     end
 
     def set_default(config)
-      @default = create_instance('default', config) if config.is_a? Hash
+      @default = create_instance 'default', config if config.is_a? Hash
     end
 
     def add_instance(name, config)

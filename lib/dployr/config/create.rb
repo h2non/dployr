@@ -1,8 +1,10 @@
+require 'dployr/config/constants'
+
 module Dployr
   module Config
     module Create
 
-      FILENAME = 'Dployrfile'
+      include Dployr::Config::Constants
 
       RB_CONTENT = <<-EOS
       Dployr::configure do |dployr|

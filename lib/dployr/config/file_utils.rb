@@ -20,15 +20,16 @@ module Dployr
       def discover(dir = Dir.pwd)
         [nil].concat(EXTENSIONS).each do |ext|
           (0..5).each do |n|
-            file_name = FILENAME
-            file_name += ".#{ext}" if ext
-            file_path = File.join dir, ('../' * n), file_name
-            if File.exists? file_path
-              return File.expand_path file_path, dir
+            FILENAMES.each do |file|
+              file += ".#{ext}" if ext
+              file_path = File.join dir, ('../' * n), file
+              if File.file? file_path
+                return File.expand_path file_path, dir
+              end
             end
           end
         end
-        nil
+        return nil
       end
 
     end

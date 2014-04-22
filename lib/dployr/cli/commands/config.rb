@@ -14,6 +14,7 @@ module Dployr
         @log = Logger.new STDOUT
         @attributes = parse_attributes @options[:attributes]
 
+        puts @options
         begin
           create
           render_file
