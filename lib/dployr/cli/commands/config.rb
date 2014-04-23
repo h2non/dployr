@@ -1,12 +1,12 @@
 require 'logger'
 require 'dployr'
-require 'dployr/utils'
+require 'dployr/cli/utils'
 
 module Dployr
   module CLI
     class Config
 
-      include Dployr::Utils
+      include Dployr::CLI::Utils
 
       def initialize(options)
         @options = options
@@ -14,7 +14,6 @@ module Dployr
         @log = Logger.new STDOUT
         @attributes = parse_attributes @options[:attributes]
 
-        puts @options
         begin
           create
           render_file
@@ -27,6 +26,7 @@ module Dployr
       def create
         begin
           @dployr = Dployr::Init.new @attributes
+          @dployr.load_config @options[:file]
         rescue Exception => e
           raise "Cannot load the config: #{e}"
         end
@@ -39,7 +39,6 @@ module Dployr
           if @name
             config = @dployr.config.get_config @name, @attributes
           else
-            puts @attributes
             config = @dployr.config.get_config_all @attributes
           end
           unless config.nil?
@@ -49,16 +48,6 @@ module Dployr
           end
         rescue Exception => e
           raise "Cannot generate the config: #{e}"
-        end
-      end
-
-      def parse_attributes(attributes)
-        if attributes.is_a? String
-          if @options[:attributes][0] == '-'
-            parse_flags attributes
-          else
-            parse_matrix attributes
-          end
         end
       end
 

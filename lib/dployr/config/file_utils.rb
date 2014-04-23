@@ -23,6 +23,7 @@ module Dployr
             FILENAMES.each do |file|
               file += ".#{ext}" if ext
               file_path = File.join dir, ('../' * n), file
+              puts file_path
               if File.file? file_path
                 return File.expand_path file_path, dir
               end

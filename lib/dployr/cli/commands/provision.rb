@@ -1,12 +1,12 @@
 require 'logger'
 require 'dployr'
-require 'dployr/utils'
+require 'dployr/cli/utils'
 
 module Dployr
   module CLI
     class Provision
 
-      include Dployr::Utils
+      include Dployr::CLI::Utils
 
       def initialize(options)
         @options = options
@@ -15,9 +15,11 @@ module Dployr
         @attributes = parse_attributes @options[:attributes]
 
         begin
-          # Read and parse config
-          config = create.config.get_config @name
-          # Pass instance to provision
+          if @name
+            config = create.config.get_config @name
+          else
+            config = create.config.get_config_all
+          end
           instance = Dployr::Provision::Provision.new config
         rescue Exception => e
           @log.error e
@@ -27,19 +29,11 @@ module Dployr
 
       def create
         begin
-          @dployr = Dployr::Init.new(@attributes)
+          @dployr = Dployr::Init.new @attributes
+          @dployr.load_config @options[:file]
+          @dployr
         rescue Exception => e
           raise "Cannot load the config: #{e}"
-        end
-      end
-
-      def parse_attributes(attributes)
-        if attributes.is_a? String
-          if @options[:attributes][0] == '-'
-            parse_flags attributes
-          else
-            parse_matrix attributes
-          end
         end
       end
 

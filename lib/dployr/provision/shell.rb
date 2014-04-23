@@ -1,9 +1,7 @@
 require 'logger'
-require 'dployr'
-require 'dployr/utils'
-require 'json'
 require 'net/ssh'
 require 'colorize'
+require 'dployr/utils'
 
 module Dployr
   module Provision
@@ -12,27 +10,35 @@ module Dployr
       include Dployr::Utils
 
       def initialize(host, username, private_key_path, script)
-      
+        @log = Logger.new STDOUT
+        @host = host
+        @username = username
+        @private_key_path = private_key_path
+        @script = script
+
         begin
-          @log = Logger.new STDOUT
-          puts "Connecting to #{host} (SSH)...".yellow
-          Net::SSH.start(host, username, :keys => [private_key_path]) do |ssh|
-            @host = host
-            command = script["path"]
-            arguments = script["args"]
-            puts "Running remote script '#{command} #{arguments}'".yellow
-            result = ssh_exec!(ssh, command)
-            #puts result.inspect
-            if result[:exit_code] > 0
-              raise "Exit code #{result[:exit_code]} when running script '#{command} #{arguments}'".yellow
-            else
-              puts "Remote script '#{command} #{arguments}' finished succesfully".yellow
-            end
-          end
-          
+          start
         rescue Exception => e
           @log.error e
           Process.exit! false
+        end
+      end
+
+      private
+
+      def start
+        puts "Connecting to #{host} (SSH)...".yellow
+        Net::SSH.start(@host, @username, :keys => [@private_key_path]) do |ssh|
+          command = @script["path"]
+          arguments = @script["args"]
+
+          puts "Running remote script '#{command} #{arguments}'".yellow
+          result = ssh_exec!(ssh, command)
+          if result[:exit_code] > 0
+            raise "Exit code #{result[:exit_code]} when running script '#{command} #{arguments}'".yellow
+          else
+            puts "Remote script '#{command} #{arguments}' finished succesfully".yellow
+          end
         end
       end
 
@@ -51,26 +57,25 @@ module Dployr
               stdout_data+=data
               print "[#{@host}] #{data}".green
             end
-      
+
             channel.on_extended_data do |ch,type,data|
               stderr_data+=data
               print "[#{@host}] #{data}".red
             end
-      
+
             channel.on_request("exit-status") do |ch,data|
               exit_code = data.read_long
             end
-      
+
             channel.on_request("exit-signal") do |ch, data|
               exit_signal = data.read_long
             end
           end
         end
         ssh.loop
-        #puts "\033[0m"
         {
           stdout_data: stdout_data,
-          stderr_data: stderr_data, 
+          stderr_data: stderr_data,
           exit_code: exit_code,
           exit_signal: exit_signal
         }

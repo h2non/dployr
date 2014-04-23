@@ -29,8 +29,8 @@ opt_parser = OptionParser.new do |opt|
     options[:name] = v
   end
 
-  opt.on("-f", "--file FILE", "custom config file path to load") do |v|
-    options[:name] = v
+  opt.on("-f", "--file PATH", "custom config file path to load") do |v|
+    options[:file] = v
   end
 
   opt.on("-a", "--attributes ATTRS", "aditional attributes to pass to the configuration in matrix query format") do |v|

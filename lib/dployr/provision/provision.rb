@@ -1,5 +1,4 @@
 require 'logger'
-require 'dployr'
 require 'dployr/utils'
 
 module Dployr
@@ -10,8 +9,8 @@ module Dployr
 
       def initialize(instance)
         begin
-          @log = Logger.new STDOUT 
-          
+          @log = Logger.new STDOUT
+
           if instance[:scripts]["pre-provision"]
             Dployr::Provision::Hook.new instance, "pre-provision"
           end
