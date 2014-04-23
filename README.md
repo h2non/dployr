@@ -289,4 +289,4 @@ $ rake release
 [gemnasium]: https://gemnasium.com/innotech/dployr
 [gem]: http://rubygems.org/gems/dployr
 [ruby-guide]: https://github.com/bbatsov/ruby-style-guide
-[rspec-test]: http://betterspecs.org/
+[rspec-best]: http://betterspecs.org/
