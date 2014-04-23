@@ -39,7 +39,7 @@ gem 'dployr', '>= 0.0.1'
 
 ## Documentation
 
-Dployr documentation and API available from [RubyDoc][rubydoc]
+Dployr documentation and API is available from [RubyDoc][rubydoc]
 
 ## Features
 
