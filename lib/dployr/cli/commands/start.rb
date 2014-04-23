@@ -16,12 +16,10 @@ module Dployr
         @region = options[:region]
         @log = Logger.new STDOUT
         #@attributes = parse_attributes @options[:attributes]
-
+        
         begin
           if @name
             config = create.config.get_region(@name, @provider, @region)
-            puts config.to_json
-            exit 0
           else
             raise "No template name specified"
           end

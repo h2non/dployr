@@ -18,8 +18,7 @@ module Dployr
           @region = options[:region]
           #@attributes = config[:providers][@provider]["regions"][@region]["attributes"]
           @attributes = config[:attributes]
-          puts @attributes.inspect
-          exit 0
+
           if @provider == "aws"  
             puts "Connecting to AWS...".yellow
             aws = Dployr::Compute::AWS.new(@region)
@@ -30,7 +29,9 @@ module Dployr
             if @ip
               puts "#{@name} found with IP #{@ip}".yellow
             else
+              puts "Creating new instance for #{@name} in #{@region}...".yellow
               @ip = aws.start(@attributes, @region)
+              puts "Created new instance for #{@name} in #{@region} with IP #{@ip}".yellow
             end
           else
             raise "Unsopported provider #{options[:provider]}"

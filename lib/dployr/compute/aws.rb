@@ -1,5 +1,5 @@
 require 'fog'
-require 'json'
+require 'net/ssh'
 
 module Dployr
   module Compute
@@ -26,16 +26,16 @@ module Dployr
         end
 
         def start(attributes, region)
-          puts attributes.to_json
+          #puts attributes.to_json
           options = {
             availability_zone: region,
             flavor_id: attributes["instance_type"],
             image_id: attributes["ami"],
             key_name: attributes["keypair"],
-            #private_ip_address        : private_ip_address,
             subnet_id: attributes["subnet_id"],
-            security_groups: attributes["security_groups"],
+            security_group_ids: attributes["security_groups"],
             tags: { Name: attributes["name"] }
+            #private_ip_address        : private_ip_address,
             #user_data                 : user_data,
             #elastic_ip                : elastic_ip,
             #allocate_elastic_ip       : allocate_elastic_ip,
@@ -44,8 +44,25 @@ module Dployr
             #monitoring                : monitoring,
             #ebs_optimized             : ebs_optimized
           }
-          puts options.inspect
+          puts options.to_yaml
           server = @compute.servers.create(options)
+                   
+          puts "Wait for instance to get online".yellow
+          server.wait_for { print "."; ready? }
+          
+          puts "\nWait for ssh to get ready...".yellow
+          while true
+            begin
+              Net::SSH.start(server.private_ip_address, attributes["username"], :keys => attributes["private_key_path"]) do |ssh|
+                return server.private_ip_address
+              end
+            rescue Exception => e
+              print "."
+              sleep 2
+            end
+          end
+          
+          return null
         end
 
     end
