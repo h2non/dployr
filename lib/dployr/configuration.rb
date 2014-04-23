@@ -136,6 +136,9 @@ module Dployr
       keys.each do |type|
         current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
+        if current and source
+          raise Error.new "Cannot merge different types: #{parent}" if current.class != source.class
+        end
         if type.to_sym == :scripts and current.is_a? Array
           current = [] unless current.is_a? Array
           current.concat source if source.is_a? Array

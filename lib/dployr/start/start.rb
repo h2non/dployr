@@ -12,20 +12,20 @@ module Dployr
       def initialize(config, options)
         begin
           @log = Logger.new STDOUT
-          
+
           @name = config[:attributes]["name"]
           @provider = options[:provider]
           @region = options[:region]
           #@attributes = config[:providers][@provider]["regions"][@region]["attributes"]
           @attributes = config[:attributes]
 
-          if @provider == "aws"  
+          if @provider == "aws"
             puts "Connecting to AWS...".yellow
             aws = Dployr::Compute::AWS.new(@region)
-            
+
             puts "Looking for #{@name} in #{@region}...".yellow
             @ip = aws.get_ip(@name)
-            
+
             if @ip
               puts "#{@name} found with IP #{@ip}".yellow
             else
@@ -36,7 +36,7 @@ module Dployr
           else
             raise "Unsopported provider #{options[:provider]}"
           end
-         
+
           if config[:scripts]["pre-start"]
             Dployr::Provision::Hook.new @ip, config, "pre-provision"
           end

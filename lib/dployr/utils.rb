@@ -19,7 +19,7 @@ module Dployr
     end
 
     def get_real_key(hash, key)
-      if hash.is_a? Hash
+      if key and hash.is_a? Hash
         if hash.key? key
           key
         elsif hash.key? key.to_sym
