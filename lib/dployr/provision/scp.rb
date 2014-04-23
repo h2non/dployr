@@ -1,9 +1,7 @@
 require 'logger'
-require 'dployr/utils'
-require 'json'
-require 'net/ssh'
 require 'net/scp'
 require 'colorize'
+require 'dployr/utils'
 
 module Dployr
   module Provision
