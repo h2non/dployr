@@ -359,7 +359,7 @@ describe Dployr::Configuration do
               zeus[:providers][:aws][:regions]["eu-west-1a"].should be_a Hash
             end
 
-            describe "eu-west-1a" do
+            describe "europe-west1-a" do
               let(:region) {
                 zeus[:providers][:aws][:regions]["eu-west-1a"]
               }

@@ -44,7 +44,6 @@ module Dployr
       @instances.each do |i|
         config << get_config(i.name, attributes)
       end
-      puts config
       config
     end
 
@@ -137,15 +136,16 @@ module Dployr
       keys.each do |type|
         current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
-        if type == :scripts
+        if type.to_sym == :scripts and current.is_a? Array
           current = [] unless current.is_a? Array
           current.concat source if source.is_a? Array
           current = current.compact.uniq
         else
           current = {} unless current.is_a? Hash
           current = deep_merge current, source
+
         end
-        child[type] = current if current.length
+        child[type] = current if current
       end
       child
     end
