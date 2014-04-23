@@ -4,7 +4,7 @@ require 'dployr/cli/utils'
 
 module Dployr
   module CLI
-    class Provision
+    class Start
 
       include Dployr::CLI::Utils
 
@@ -20,7 +20,7 @@ module Dployr
           else
             config = create.config.get_config_all
           end
-          instance = Dployr::Provision::Provision.new(config, options)
+          instance = Dployr::Start::Start.new(config, options)
         rescue Exception => e
           @log.error e
           Process.exit! false

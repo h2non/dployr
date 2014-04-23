@@ -9,8 +9,9 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(host, username, private_key_path, script)
+      def initialize(ip, host, username, private_key_path, script)
         @log = Logger.new STDOUT
+        @ip = ip
         @host = host
         @username = username
         @private_key_path = private_key_path
@@ -27,8 +28,8 @@ module Dployr
       private
 
       def start
-        puts "Connecting to #{host} (SSH)...".yellow
-        Net::SSH.start(@host, @username, :keys => [@private_key_path]) do |ssh|
+        puts "Connecting to #{@host} (SSH)...".yellow
+        Net::SSH.start(@ip, @username, :keys => [@private_key_path]) do |ssh|
           command = @script["path"]
           arguments = @script["args"]
 

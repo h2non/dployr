@@ -8,10 +8,12 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(instance, stage)
+      def initialize(ip, instance, stage)
         @log = Logger.new STDOUT
+        @ip = ip
         @instance = instance
         @stage = stage
+        run
       end
 
       private
@@ -22,12 +24,12 @@ module Dployr
         username = attrs["username"]
         private_key_path = attrs["private_key_path"]
 
-        puts "STAGE '#{stage}':".yellow
-        @instance[:scripts][stage].each do |script|
+        puts "STAGE '#{@stage}':".yellow
+        @instance[:scripts][@stage].each do |script|
           if script["target"]
-            Dployr::Provision::Scp.new host, username, private_key_path, script
+            Dployr::Provision::Scp.new @ip, host, username, private_key_path, script
           else
-            Dployr::Provision::Shell.new host, username, private_key_path, script
+            Dployr::Provision::Shell.new @ip, host, username, private_key_path, script
           end
         end
       end

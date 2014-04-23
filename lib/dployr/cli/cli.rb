@@ -37,12 +37,12 @@ opt_parser = OptionParser.new do |opt|
     options[:attributes] = v
   end
 
-  opt.on("-p", "--provider", "provider to use (allow multiple values comma-separated)") do |v|
+  opt.on("-p", "--provider VALUES", "provider to use (allow multiple values comma-separated)") do |v|
     options[:provider] = v
   end
 
-  opt.on("-r", "--region", "region to use (allow multiple values comma-separated)") do |v|
-    options[:provider] = v
+  opt.on("-r", "--region REGION", "region to use (allow multiple values comma-separated)") do |v|
+    options[:region] = v
   end
 
   opt.on("-v",  "-V", "--version", "version") do
@@ -51,6 +51,7 @@ opt_parser = OptionParser.new do |opt|
 
   opt.on("-h", "--help", "help") do
     puts opt_parser
+    exit 0
   end
 
   opt.separator  ""
@@ -60,7 +61,7 @@ opt_parser.parse!
 
 case command
 when "start"
-  puts "Command currently not available"
+  Dployr::CLI::Start.new options
 when "halt"
   puts "Command currently not available"
 when "status"

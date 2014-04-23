@@ -47,7 +47,6 @@ module Dployr
       if file_path
         @file_path = file_path
       else
-        puts "Discover"
         @file_path = discover
       end
       set_config @file_path

@@ -1,7 +1,6 @@
 german-dployr:
   attributes:
-    name: "hydra-demo-time3"
-    args: "%{name}"
+    name: "german-dployr"
     prefix: dev
     private_key_path: ~/pems/innotechdev.pem
     username: innotechdev
