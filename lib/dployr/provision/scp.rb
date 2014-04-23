@@ -23,7 +23,7 @@ module Dployr
 
         rescue Exception => e
           @log.error e
-          Process.exit! false
+          raise Error.new "Cannot copy to remote: #{e}"
         end
       end
     end
