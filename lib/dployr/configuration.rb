@@ -143,9 +143,9 @@ module Dployr
         else
           current = {} unless current.is_a? Hash
           current = deep_merge current, source
-
         end
-        child[type] = current if current
+        child.delete type.to_s unless child[type.to_s].nil?
+        child[type.to_sym] = current if current
       end
       child
     end
