@@ -34,7 +34,8 @@ module Dployr
             key_name: attributes["keypair"],
             #private_ip_address        : private_ip_address,
             subnet_id: attributes["subnet_id"],
-            tags: { name: attributes["name"] }
+            security_groups: attributes["security_groups"],
+            tags: { Name: attributes["name"] }
             #user_data                 : user_data,
             #elastic_ip                : elastic_ip,
             #allocate_elastic_ip       : allocate_elastic_ip,

@@ -21,7 +21,7 @@ german-dployr:
       attributes:
         instance_type: t1.micro
       regions:
-        eu-west-1a:
+        sa-east-1a:
           attributes:
             ami: ami-370daf2a # centos-base-v7
             keypair: vagrant-aws-saopaulo

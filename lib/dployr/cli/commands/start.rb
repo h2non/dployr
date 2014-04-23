@@ -1,6 +1,7 @@
 require 'logger'
 require 'dployr'
 require 'dployr/cli/utils'
+require 'json'
 
 module Dployr
   module CLI
@@ -11,14 +12,18 @@ module Dployr
       def initialize(options)
         @options = options
         @name = options[:name]
+        @provider = options[:provider]
+        @region = options[:region]
         @log = Logger.new STDOUT
-        @attributes = parse_attributes @options[:attributes]
+        #@attributes = parse_attributes @options[:attributes]
 
         begin
           if @name
-            config = create.config.get_config @name
+            config = create.config.get_region(@name, @provider, @region)
+            puts config.to_json
+            exit 0
           else
-            config = create.config.get_config_all
+            raise "No template name specified"
           end
           instance = Dployr::Start::Start.new(config, options)
         rescue Exception => e

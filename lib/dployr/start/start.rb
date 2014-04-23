@@ -9,15 +9,17 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(instance, options)
+      def initialize(config, options)
         begin
           @log = Logger.new STDOUT
           
-          @name = instance[:attributes]["name"]
+          @name = config[:attributes]["name"]
           @provider = options[:provider]
           @region = options[:region]
-          @attributes = instance[:providers][@provider]["regions"][@region]["attributes"]
-          
+          #@attributes = config[:providers][@provider]["regions"][@region]["attributes"]
+          @attributes = config[:attributes]
+          puts @attributes.inspect
+          exit 0
           if @provider == "aws"  
             puts "Connecting to AWS...".yellow
             aws = Dployr::Compute::AWS.new(@region)
@@ -34,14 +36,14 @@ module Dployr
             raise "Unsopported provider #{options[:provider]}"
           end
          
-          if instance[:scripts]["pre-start"]
-            Dployr::Provision::Hook.new @ip, instance, "pre-provision"
+          if config[:scripts]["pre-start"]
+            Dployr::Provision::Hook.new @ip, config, "pre-provision"
           end
-          if instance[:scripts]["start"]
-            Dployr::Provision::Hook.new @ip, instance, "provision"
+          if config[:scripts]["start"]
+            Dployr::Provision::Hook.new @ip, config, "provision"
           end
-          if instance[:scripts]["post-start"]
-            Dployr::Provision::Hook.new @ip, instance, "post-provision"
+          if config[:scripts]["post-start"]
+            Dployr::Provision::Hook.new @ip, config, "post-provision"
           end
         rescue Exception => e
           @log.error e
