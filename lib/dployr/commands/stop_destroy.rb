@@ -5,39 +5,42 @@ require 'colorize'
 
 module Dployr
   module Commands
-    class Start
+    class Stop_Destroy
 
       include Dployr::Utils
 
-      def initialize(config, options)
+      def initialize(config, options, action)
         begin
-          @log = Logger.new STDOUT      
+          @log = Logger.new STDOUT     
           @name = config[:attributes]["name"]
           @provider = options[:provider].upcase
           @region = options[:region]
           @attributes = config[:attributes]
-
+          @action = action
+          
           puts "Connecting to #{@provider}...".yellow
           @client = Dployr::Compute.const_get(@provider.to_sym).new(@region)
-                 
+          
           puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip(@name)  
-         
-          Dployr::Scripts::Default_Hooks.new @ip, config, "start", self
-         
+          @ip = @client.get_ip(@name)
+          if @ip
+            puts "#{@name} found with IP #{@ip}".yellow
+          else
+            puts "#{@name} not found".yellow
+          end
+              
+          Dployr::Scripts::Default_Hooks.new @ip, config, @action, self
+          
         rescue Exception => e
           @log.error e
           Process.exit! false
         end
       end
       
-      def action
-        if @ip
-          puts "#{@name} found with IP #{@ip}".yellow
-        else
-          @ip = @client.start(@attributes, @region)
-          puts "Startded instance for #{@name} in #{@region} with IP #{@ip} succesfully".yellow
-        end
+      def action        
+        puts "#{@action.capitalize}ing #{@name} in #{@region}...".yellow
+        @client.send(@action.to_sym, @name) 
+        puts "#{@name} destroyed sucesfully".yellow
         return @ip
       end
       

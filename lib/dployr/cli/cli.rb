@@ -63,7 +63,9 @@ case command
 when "start"
   Dployr::CLI::Start.new options
 when "halt"
-  puts "Command currently not available"
+  Dployr::CLI::Halt.new options
+when "destroy"
+  Dployr::CLI::Destroy.new options
 when "status"
   puts "Command currently not available"
 when "provision"

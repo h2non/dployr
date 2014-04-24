@@ -8,7 +8,7 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(ip, config, stage)
+      def initialize(ip, config, stage, command)
         @log = Logger.new STDOUT
         @config = config
         @ip = ip
@@ -17,6 +17,7 @@ module Dployr
         if @config[:scripts]["pre-#{@stage}"]
           Dployr::Scripts::Hook.new @ip, config, "pre-#{@stage}"
         end
+        @ip = command.action()
         if @config[:scripts][@stage]
           Dployr::Scripts::Hook.new @ip, config, "#{@stage}"
         end
