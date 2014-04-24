@@ -4,7 +4,7 @@ require 'colorize'
 require 'dployr/utils'
 
 module Dployr
-  module Provision
+  module Scripts
     class Scp
 
       include Dployr::Utils

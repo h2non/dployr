@@ -15,7 +15,6 @@ module Dployr
         @provider = options[:provider]
         @region = options[:region]
         @log = Logger.new STDOUT
-        #@attributes = parse_attributes @options[:attributes]
         
         begin
           if @name
@@ -23,7 +22,7 @@ module Dployr
           else
             raise "No template name specified"
           end
-          instance = Dployr::Start::Start.new(config, options)
+          instance = Dployr::Commands::Start.new(config, options)
         rescue Exception => e
           @log.error e
           Process.exit! false

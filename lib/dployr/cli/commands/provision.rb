@@ -20,7 +20,7 @@ module Dployr
           else
             config = create.config.get_config_all
           end
-          instance = Dployr::Provision::Provision.new(config, options)
+          instance = Dployr::Commands::Provision.new(config, options)
         rescue Exception => e
           @log.error e
           Process.exit! false

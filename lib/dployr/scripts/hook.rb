@@ -3,7 +3,7 @@ require 'dployr/utils'
 require 'colorize'
 
 module Dployr
-  module Provision
+  module Scripts
     class Hook
 
       include Dployr::Utils
@@ -27,9 +27,9 @@ module Dployr
         puts "STAGE '#{@stage}':".yellow
         @instance[:scripts][@stage].each do |script|
           if script["target"]
-            Dployr::Provision::Scp.new @ip, host, username, private_key_path, script
+            Dployr::Scripts::Scp.new @ip, host, username, private_key_path, script
           else
-            Dployr::Provision::Shell.new @ip, host, username, private_key_path, script
+            Dployr::Scripts::Shell.new @ip, host, username, private_key_path, script
           end
         end
       end
