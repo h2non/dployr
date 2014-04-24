@@ -5,11 +5,11 @@ require 'colorize'
 
 module Dployr
   module Commands
-    class Provision
+    class Execute
 
       include Dployr::Utils
 
-      def initialize(config, options)
+      def initialize(config, options, stages)
         begin
           @log = Logger.new STDOUT     
           @name = config[:attributes]["name"]
@@ -28,7 +28,9 @@ module Dployr
             raise "#{@name} not found"
           end
           
-          Dployr::Scripts::Default_Hooks.new @ip, config, "provision", self
+          stages.each do |stage|
+            Dployr::Scripts::Hook.new @ip, config, stage
+          end
           
         rescue Exception => e
           @log.error e
@@ -36,9 +38,6 @@ module Dployr
         end
       end
 
-      def action
-        return @ip
-      end
     end
   end
 end

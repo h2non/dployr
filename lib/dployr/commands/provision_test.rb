@@ -5,7 +5,7 @@ require 'colorize'
 
 module Dployr
   module Commands
-    class Stop_Destroy
+    class Provision_Test
 
       include Dployr::Utils
 
@@ -17,7 +17,7 @@ module Dployr
           @region = options[:region]
           @attributes = config[:attributes]
           @action = action
-          
+
           puts "Connecting to #{@provider}...".yellow
           @client = Dployr::Compute.const_get(@provider.to_sym).new(@region)
           
@@ -26,9 +26,9 @@ module Dployr
           if @ip
             puts "#{@name} found with IP #{@ip}".yellow
           else
-            puts "#{@name} not found".yellow
+            raise "#{@name} not found"
           end
-              
+          
           Dployr::Scripts::Default_Hooks.new @ip, config, @action, self
           
         rescue Exception => e
@@ -36,14 +36,10 @@ module Dployr
           Process.exit! false
         end
       end
-      
-      def action        
-        puts "#{@action.capitalize}ing #{@name} in #{@region}...".yellow
-        @client.send(@action.to_sym, @name) 
-        puts "#{@name} #{@action}ed sucesfully".yellow
+
+      def action
         return @ip
       end
-      
     end
   end
 end

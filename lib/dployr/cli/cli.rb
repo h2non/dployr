@@ -1,7 +1,6 @@
 require 'optparse'
 require 'dployr'
 require 'dployr/version'
-require 'dployr/cli/commands'
 
 command = ARGV[0]
 options = {}
@@ -59,25 +58,31 @@ end
 
 opt_parser.parse!
 
+dployr = Dployr::Init.new @attributes
+dployr.load_config options[:file]     
+config = dployr.config.get_region(options[:name], options[:provider], options[:region])
+
 case command
 when "start"
-  Dployr::CLI::Start.new options
+  Dployr::Commands::Start.new(config, options)
 when "halt"
-  Dployr::CLI::Halt.new options
+  Dployr::Commands::Stop_Destroy.new(config, options, "halt")
 when "destroy"
-  Dployr::CLI::Destroy.new options
+  Dployr::Commands::Stop_Destroy.new(config, options, "destroy")
 when "status"
   puts "Command currently not available"
 when "provision"
-  Dployr::CLI::Provision.new options
+  Dployr::Commands::Provision_Test.new(config, options, "provision")
 when "test"
-  puts "Command currently not available"
+  Dployr::Commands::Provision_Test.new(config, options, "test")
 when "deploy"
-  puts "Command currently not available"
+  Dployr::Commands::Start.new(config, options)
+  Dployr::Commands::Provision_Test.new(config, options, "provision")
+  Dployr::Commands::Provision_Test.new(config, options, "test")
 when "execute"
-  puts "Command currently not available"
+  Dployr::Commands::Execute.new(config, options, ARGV[1..-1])
 when "config"
-  Dployr::CLI::Config.new options
+  Dployr::Commands::Config.new(config, options)
 when "init"
   Dployr::Config::Create.write_file
 when '-h', '--help', 'help'

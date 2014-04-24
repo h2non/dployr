@@ -1,5 +1,0 @@
-require 'dployr/cli/commands/config'
-require 'dployr/cli/commands/provision'
-require 'dployr/cli/commands/start'
-require 'dployr/cli/commands/destroy'
-require 'dployr/cli/commands/halt'
