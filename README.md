@@ -37,6 +37,10 @@ spec.add_dependency 'dployr', '>= 0.0.1'
 gem 'dployr', '>= 0.0.1'
 ```
 
+## Documentation
+
+Dployr documentation and API is available from [RubyDoc][rubydoc]
+
 ## Features
 
 `To do! but all will be cool :)`
@@ -290,3 +294,4 @@ $ rake release
 [gem]: http://rubygems.org/gems/dployr
 [ruby-guide]: https://github.com/bbatsov/ruby-style-guide
 [rspec-best]: http://betterspecs.org/
+[rubydoc]: http://www.rubydoc.info/gems/dployr/
