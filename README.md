@@ -54,10 +54,10 @@ or a YAML file (adding the `.yml` or `.yaml` extension)
 
 Each configuration level supports the followings members:
 
-- **attributes** `Object`
-- **scripts** `Array`
+- **attributes** `Object` Custom attrbutes to apply to the current template
+- **scripts** `Array|Object`
 - **providers** `Object`
-- **authentication** `Object`
+- **authentication** `Object` (optional)
 - **extends** `String|Array` Allows to inherits the current config object from others
 
 #### Templating
@@ -132,11 +132,13 @@ default:
             instance_type: n1-standard-1
             network: liberty-gce
   scripts:
-    -
-      path: ./scripts/routes_allregions.sh
-    -
-      args: "%{name}"
-      path: ./scripts/updatedns.sh
+    pre-start:
+      -
+        path: ./scripts/routes_allregions.sh
+    start:
+      -
+        args: "%{name}"
+        path: ./scripts/updatedns.sh
 
 
 custom:
@@ -157,12 +159,13 @@ custom:
         attributes:
           instance_type: m1.large
     scripts:
-      -
-        args:
-          - "%{name}"
-          - "%{type}"
-          - "%{domain}"
-        path: ./scripts/configure.sh
+      post-start:
+        -
+          args:
+            - "%{name}"
+            - "%{type}"
+            - "%{domain}"
+          path: ./scripts/.sh
       -
         args:
           - "%{hydra}"
@@ -182,22 +185,25 @@ Usage: dployr <command> [options]
 
 Commands
 
-  up        start instances
+  start     start instances
   halt      stop instances
+  destroy   destroy instances
   status    retrieve the instances status
   test      run remote test in instances
   deploy    start, provision and test running instances
   provision instance provisioning
-  config    generate configuration in YAML format
+  config    generate configuration in YAML from Dployrfile
+  execute   run custom stages
   init      create a sample Dployrfile
 
 Options
 
-  -e, --environment ENV            environment to pass to the instances
   -n, --name NAME                  template name identifier to load
+  -f, --file PATH                  custom config file path to load
   -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
-  -p, --provider                   provider to use (allow multiple values comma-separated)
-  -r, --region                     region to use (allow multiple values comma-separated)
+  -p, --provider VALUES            provider to use (allow multiple values comma-separated)
+  -r, --region REGION              region to use (allow multiple values comma-separated)
+  -v, -V, --version                version
   -h, --help                       help
 
 ```
