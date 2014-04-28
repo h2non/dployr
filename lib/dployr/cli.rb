@@ -19,6 +19,7 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  "    provision instance provisioning"
   opt.separator  "    config    generate configuration in YAML from Dployrfile"
   opt.separator  "    execute   run custom stages"
+  opt.separator  "    ssh       ssh into machine"
   opt.separator  "    init      create a sample Dployrfile"
   opt.separator  ""
   opt.separator  "  Options"
@@ -77,6 +78,8 @@ when "deploy"
   Dployr::Commands::ProvisionTest.new options, "test"
 when "execute"
   Dployr::Commands::Execute.new options, ARGV[1..-1]
+when "ssh"
+  Dployr::Commands::Ssh.new options
 when "config"
   Dployr::Commands::Config.new options
 when "init"

@@ -1,10 +1,10 @@
+require 'logger'
 require 'dployr/commands/base'
 require 'dployr/compute/aws'
-require 'dployr/compute/gce'
 
 module Dployr
   module Commands
-    class Start < Base
+    class Ssh < Base
 
       def initialize(options)
         super options
@@ -15,29 +15,24 @@ module Dployr
           @name = config[:attributes]["name"]
           @provider = options[:provider].upcase
           @region = options[:region]
-          @attributes = config[:attributes]
 
           puts "Connecting to #{@provider}...".yellow
           @client = Dployr::Compute.const_get(@provider.to_sym).new @region
 
           puts "Looking for #{@name} in #{@region}...".yellow
           @ip = @client.get_ip @name
+          if @ip
+            puts "#{@name} found with IP #{@ip}".yellow
+          else
+            raise "#{@name} not found"
+          end
 
-          Dployr::Scripts::Default_Hooks.new @ip, config, "start", self
+          Dployr::Scripts::Ssh.new @ip, config
+
         rescue Exception => e
-          @log.error e
+          self.log.error e
           exit 1
         end
-      end
-
-      def action
-        if @ip
-          puts "#{@name} found with IP #{@ip}".yellow
-        else
-          @ip = @client.start @attributes, @region
-          puts "Startded instance for #{@name} in #{@region} with IP #{@ip} succesfully".yellow
-        end
-        @ip
       end
 
     end

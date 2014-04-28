@@ -44,12 +44,14 @@ module Dployr
             end
             channel.on_data do |ch,data|
               stdout_data+=data
-              print "[#{@host}] #{data}".green
+              #print "[#{@host}] #{data}".green
+              print "#{data}".green
             end
 
             channel.on_extended_data do |ch,type,data|
               stderr_data+=data
-              print "[#{@host}] #{data}".red
+              #print "[#{@host}] #{data}".red
+              print "#{data}".red
             end
 
             channel.on_request("exit-status") do |ch,data|

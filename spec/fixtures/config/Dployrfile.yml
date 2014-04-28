@@ -6,16 +6,18 @@ german-dployr:
     username: innotechdev
   scripts:
     pre-provision:
-      -
-        source: ./hello
-        target: /tmp
+      # -
+        # source: ./hello
+        # target: /tmp
     provision:
-      -
-        args: ""
-        remote_path: "/tmp/hello/hello.sh"
-      -
-        args: ""
-        local_path: "ls -l /tmp/"
+      # -
+        # args: ""
+        # remote_path: "/tmp/hello/hello.sh"
+      # -
+        # args: ""
+        # local_path: "ls -l /tmp/"
+      - args: ""
+        remote_path: "sudo /etc/init.d/postfix restart"
   providers:
     aws:
       attributes:
