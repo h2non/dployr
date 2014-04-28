@@ -39,7 +39,7 @@ module Dployr
           if instance
             instance.destroy
             instance.disks.each do |disk|
-              instance.disks.destroy
+              disk.destroy
             end
           end
           raise "Instance #{name} not found"
