@@ -15,7 +15,7 @@ german-dployr:
         remote_path: "/tmp/hello/hello.sh"
       -
         args: ""
-        local_path: "ls -l /tmp/"    
+        local_path: "ls -l /tmp/ %{index}"    
   providers:
     aws:
       attributes:

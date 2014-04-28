@@ -58,9 +58,9 @@ end
 
 opt_parser.parse!
 
-dployr = Dployr::Init.new @attributes
-dployr.load_config options[:file]     
-config = dployr.config.get_region(options[:name], options[:provider], options[:region])
+#dployr = Dployr::Init.new @attributes
+#dployr.load_config options[:file]
+#config = dployr.config.get_region(options[:name], options[:provider], options[:region])
 
 case command
 when "start"
@@ -82,7 +82,7 @@ when "deploy"
 when "execute"
   Dployr::Commands::Execute.new(config, options, ARGV[1..-1])
 when "config"
-  Dployr::Commands::Config.new(config, options)
+  Dployr::Commands::Config.new options
 when "init"
   Dployr::Config::Create.write_file
 when '-h', '--help', 'help'
