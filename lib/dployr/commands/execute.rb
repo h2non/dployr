@@ -1,7 +1,6 @@
 require 'logger'
 require 'dployr/utils'
 require 'dployr/compute/aws'
-require 'colorize'
 
 module Dployr
   module Commands
@@ -9,7 +8,7 @@ module Dployr
 
       include Dployr::Utils
 
-      def initialize(config, options, stages)
+      def initialize(options, stages)
         begin
           @log = Logger.new STDOUT
           @name = config[:attributes]["name"]
@@ -33,7 +32,7 @@ module Dployr
           end
         rescue Exception => e
           @log.error e
-          Process.exit! false
+          exit 1
         end
       end
 

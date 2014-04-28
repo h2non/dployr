@@ -64,7 +64,7 @@ opt_parser.parse!
 
 case command
 when "start"
-  Dployr::Commands::Start.new(config, options)
+  Dployr::Commands::Start.new options
 when "halt"
   Dployr::Commands::Stop_Destroy.new(config, options, "halt")
 when "destroy"
@@ -76,7 +76,7 @@ when "provision"
 when "test"
   Dployr::Commands::Provision_Test.new(config, options, "test")
 when "deploy"
-  Dployr::Commands::Start.new(config, options)
+  Dployr::Commands::Start.new options
   Dployr::Commands::Provision_Test.new(config, options, "provision")
   Dployr::Commands::Provision_Test.new(config, options, "test")
 when "execute"
@@ -85,8 +85,6 @@ when "config"
   Dployr::Commands::Config.new options
 when "init"
   Dployr::Config::Create.write_file
-when '-h', '--help', 'help'
-  # help already showed by option
 else
   puts opt_parser
 end

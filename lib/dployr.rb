@@ -1,3 +1,4 @@
+require 'colorize'
 require 'dployr/version'
 require 'dployr/init'
 require 'dployr/configuration'

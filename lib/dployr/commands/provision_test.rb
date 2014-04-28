@@ -11,7 +11,7 @@ module Dployr
 
       def initialize(config, options, action)
         begin
-          @log = Logger.new STDOUT     
+          @log = Logger.new STDOUT
           @name = config[:attributes]["name"]
           @provider = options[:provider].upcase
           @region = options[:region]
@@ -20,7 +20,7 @@ module Dployr
 
           puts "Connecting to #{@provider}...".yellow
           @client = Dployr::Compute.const_get(@provider.to_sym).new(@region)
-          
+
           puts "Looking for #{@name} in #{@region}...".yellow
           @ip = @client.get_ip(@name)
           if @ip
@@ -28,12 +28,11 @@ module Dployr
           else
             raise "#{@name} not found"
           end
-          
+
           Dployr::Scripts::Default_Hooks.new @ip, config, @action, self
-          
         rescue Exception => e
           @log.error e
-          Process.exit! false
+          exit 1
         end
       end
 

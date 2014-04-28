@@ -1,46 +1,50 @@
 require 'logger'
-require 'dployr/utils'
+require 'dployr/commands/base'
 require 'dployr/compute/aws'
-require 'colorize'
 
 module Dployr
   module Commands
-    class Start
+    class Start < Base
 
-      include Dployr::Utils
-
-      def initialize(config, options)
+      def initialize(options)
+        super options
         begin
-          @log = Logger.new STDOUT      
+          self.create
+          config = get_region_config options
+
           @name = config[:attributes]["name"]
           @provider = options[:provider].upcase
           @region = options[:region]
-          @attributes = config[:attributes]
 
           puts "Connecting to #{@provider}...".yellow
-          @client = Dployr::Compute.const_get(@provider.to_sym).new(@region)
-                 
+          @client = Dployr::Compute.const_get(@provider.to_sym).new @region
+
           puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip(@name)  
-         
+          @ip = @client.get_ip @name
+
           Dployr::Scripts::Default_Hooks.new @ip, config, "start", self
-         
         rescue Exception => e
           @log.error e
-          Process.exit! false
+          exit 1
         end
       end
-      
+
       def action
         if @ip
           puts "#{@name} found with IP #{@ip}".yellow
         else
-          @ip = @client.start(@attributes, @region)
+          @ip = @client.start @attributes, @region
           puts "Startded instance for #{@name} in #{@region} with IP #{@ip} succesfully".yellow
         end
-        return @ip
+        @ip
       end
-      
+
+      private
+
+      def get_region_config(options)
+        self.dployr.config.get_region options[:name], options[:provider], options[:region]
+      end
+
     end
   end
 end

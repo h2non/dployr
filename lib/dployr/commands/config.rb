@@ -1,35 +1,18 @@
 require 'logger'
-require 'dployr'
-require 'dployr/commands/utils'
+require 'dployr/commands/base'
 
 module Dployr
   module Commands
-    class Config
-
-      include Dployr::Commands::Utils
+    class Config < Base
 
       def initialize(options)
-        @options = options
-        @name = options[:name]
-        @log = Logger.new STDOUT
-        @attributes = parse_attributes @options[:attributes]
-
-
+        super options
         begin
-          create
+          self.create
           render_file
         rescue Exception => e
           @log.error e
-          Process.exit! false
-        end
-      end
-
-      def create
-        begin
-          @dployr = Dployr::Init.new @attributes
-          @dployr.load_config @options[:file]
-        rescue Exception => e
-          raise "Cannot load the config: #{e}"
+          exit 1
         end
       end
 
@@ -38,9 +21,9 @@ module Dployr
         raise "Configuration is missing" unless @dployr.config.exists?
         begin
           if @name
-            config = @dployr.config.get_config @name, @attributes
+            config = @dployr.config.get_config @name, @attrs
           else
-            config = @dployr.config.get_config_all @attributes
+            config = @dployr.config.get_config_all @attrs
           end
           unless config.nil?
             puts config.to_yaml

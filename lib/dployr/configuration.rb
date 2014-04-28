@@ -7,11 +7,12 @@ module Dployr
 
     attr_reader :default, :instances
 
-    def initialize
+    def initialize(attributes = {})
       @default = nil
       @config = nil
       @instances = []
       @merged = false
+      @attributes = attributes
       yield self if block_given?
     end
 
@@ -35,6 +36,7 @@ module Dployr
 
     def get_config(name, attributes = {})
       instance = get_instance name
+      attributes = @attributes.merge attributes
       raise ArgumentError.new "Instance '#{name.to_s}' do not exists" if instance.nil?
       replace_variables merge_config(instance), replace_variables(attributes)
     end

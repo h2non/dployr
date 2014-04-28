@@ -34,8 +34,7 @@ module Dployr
 
     def initialize(attributes = {})
       @@instance = self
-      @attributes = attributes
-      @config = Dployr::Configuration.new
+      @config = Dployr::Configuration.new attributes
       @file_path = nil
     end
 

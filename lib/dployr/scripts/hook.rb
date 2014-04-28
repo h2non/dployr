@@ -24,7 +24,7 @@ module Dployr
         username = attrs["username"]
         private_key_path = attrs["private_key_path"]
 
-        puts "STAGE '#{@stage}':".yellow
+        puts "Running stage '#{@stage}':".yellow
         @instance[:scripts][@stage].each do |script|
           if script["target"]
             Dployr::Scripts::Scp.new @ip, host, username, private_key_path, script
