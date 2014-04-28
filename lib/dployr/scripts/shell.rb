@@ -22,7 +22,7 @@ module Dployr
           arguments = @script["args"]
 
           puts "Running remote script '#{command} #{arguments}'".yellow
-          result = ssh_exec!(ssh, command)
+          result = ssh_exec!(ssh, command + ' ' + arguments)
           if result[:exit_code] > 0
             raise "Exit code #{result[:exit_code]} when running script '#{command} #{arguments}'".yellow
           else
