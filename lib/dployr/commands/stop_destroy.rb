@@ -9,7 +9,7 @@ module Dployr
       def initialize(options, action)
         super options
         begin
-          self.create
+          create
           config = get_region_config options
 
           @name = config[:attributes]["name"]
@@ -40,7 +40,7 @@ module Dployr
         puts "#{@action.capitalize}ing #{@name} in #{@region}...".yellow
         @client.send(@action.to_sym, @name)
         puts "#{@name} #{@action}ed sucesfully".yellow
-        return @ip
+        @ip
       end
 
     end

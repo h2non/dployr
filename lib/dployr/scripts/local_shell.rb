@@ -1,24 +1,12 @@
-require 'logger'
 require 'net/ssh'
-require 'colorize'
-require 'dployr/utils'
 
 module Dployr
   module Scripts
     class Local_Shell
 
-      include Dployr::Utils
-
       def initialize(script)
-        @log = Logger.new STDOUT
         @script = script
-
-        begin
-          start
-        rescue Exception => e
-          @log.error e
-          Process.exit! false
-        end
+        start
       end
 
       private

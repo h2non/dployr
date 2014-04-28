@@ -9,7 +9,7 @@ module Dployr
       def initialize(options, stages)
         super options
         begin
-          self.create
+          create
           config = get_region_config options
 
           @name = config[:attributes]["name"]
@@ -17,7 +17,7 @@ module Dployr
           @region = options[:region]
 
           puts "Connecting to #{@provider}...".yellow
-          @client = Dployr::Compute.const_get(provider.to.sym).new @region
+          @client = Dployr::Compute.const_get(@provider.to_sym).new @region
 
           puts "Looking for #{@name} in #{@region}...".yellow
           @ip = @client.get_ip @name

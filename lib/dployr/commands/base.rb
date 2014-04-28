@@ -33,6 +33,10 @@ module Dployr
         end
       end
 
+      def get_region_config(options)
+        @dployr.config.get_region options[:name], options[:provider], options[:region]
+      end
+
     end
   end
 end

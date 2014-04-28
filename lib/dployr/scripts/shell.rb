@@ -1,28 +1,16 @@
-require 'logger'
 require 'net/ssh'
-require 'colorize'
-require 'dployr/utils'
 
 module Dployr
   module Scripts
     class Shell
 
-      include Dployr::Utils
-
       def initialize(ip, host, username, private_key_path, script)
-        @log = Logger.new STDOUT
         @ip = ip
         @host = host
         @username = username
         @private_key_path = private_key_path
         @script = script
-
-        begin
-          start
-        rescue Exception => e
-          @log.error e
-          Process.exit! false
-        end
+        start
       end
 
       private

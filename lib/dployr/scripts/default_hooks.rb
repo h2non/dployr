@@ -1,19 +1,12 @@
-require 'logger'
-require 'dployr/utils'
-require 'colorize'
-
 module Dployr
   module Scripts
     class Default_Hooks
 
-      include Dployr::Utils
-
       def initialize(ip, config, stage, command)
-        @log = Logger.new STDOUT
         @config = config
         @ip = ip
         @stage = stage
-      
+
         if @config[:scripts]["pre-#{@stage}"]
           Dployr::Scripts::Hook.new @ip, config, "pre-#{@stage}"
         end
@@ -25,7 +18,7 @@ module Dployr
           Dployr::Scripts::Hook.new @ip, config, "#{@stage}"
         end
       end
-      
+
     end
   end
 end

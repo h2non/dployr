@@ -9,7 +9,7 @@ module Dployr
       def initialize(options)
         super options
         begin
-          self.create
+          create
           config = get_region_config options
 
           @name = config[:attributes]["name"]
@@ -37,12 +37,6 @@ module Dployr
           puts "Startded instance for #{@name} in #{@region} with IP #{@ip} succesfully".yellow
         end
         @ip
-      end
-
-      private
-
-      def get_region_config(options)
-        @dployr.config.get_region options[:name], options[:provider], options[:region]
       end
 
     end

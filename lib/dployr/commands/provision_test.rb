@@ -9,7 +9,7 @@ module Dployr
       def initialize(options, action)
         super options
         begin
-          self.create
+          create
           config = get_region_config options
 
           @name = config[:attributes]["name"]
@@ -35,7 +35,7 @@ module Dployr
       end
 
       def action
-        return @ip
+        @ip
       end
     end
   end

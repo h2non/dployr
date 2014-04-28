@@ -1,15 +1,8 @@
-require 'logger'
-require 'dployr/utils'
-require 'colorize'
-
 module Dployr
   module Scripts
     class Hook
 
-      include Dployr::Utils
-
       def initialize(ip, instance, stage)
-        @log = Logger.new STDOUT
         @ip = ip
         @instance = instance
         @stage = stage
