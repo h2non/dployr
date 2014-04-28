@@ -1,4 +1,3 @@
-require 'logger'
 require 'dployr/commands/base'
 require 'dployr/compute/aws'
 
