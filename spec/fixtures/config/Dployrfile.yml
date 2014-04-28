@@ -15,7 +15,8 @@ german-dployr:
         path: "/tmp/hello/hello.sh"
       -
         args: ""
-        path: "ls -l /tmp" 
+        path: "ls -l /tmp"
+        type: local
   providers:
     aws:
       attributes:
