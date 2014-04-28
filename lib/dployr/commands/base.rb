@@ -1,3 +1,4 @@
+require 'logger'
 require 'dployr/init'
 require 'dployr/commands/utils'
 
