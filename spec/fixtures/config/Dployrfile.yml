@@ -28,3 +28,11 @@ german-dployr:
             security_groups:
               - sg-3cf3e45e # lib_aws_saopaulo
             subnet_id: subnet-1eebe07c
+    gce:
+      attributes:
+        instance_type: f1-micro
+      regions:
+        europe-west1-a:
+          attributes:
+            image_name: centos-base-v7 # centos-base-v7
+            network: liberty-gce

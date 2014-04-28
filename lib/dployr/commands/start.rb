@@ -1,6 +1,9 @@
 require 'logger'
 require 'dployr/commands/base'
 require 'dployr/compute/aws'
+require 'dployr/compute/gce'
+require 'colorize'
+
 
 module Dployr
   module Commands
