@@ -12,7 +12,7 @@ module Dployr
       @config = nil
       @instances = []
       @merged = false
-      @attributes = (attributes or {})
+      @attributes = attributes or {}
       yield self if block_given?
     end
 
