@@ -12,7 +12,7 @@ module Dployr
       @config = nil
       @instances = []
       @merged = false
-      @attributes = attributes or {}
+      @attributes = attributes.is_a?(Hash) ? attributes : {}
       yield self if block_given?
     end
 
