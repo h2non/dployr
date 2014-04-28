@@ -18,8 +18,8 @@ module Dployr
         # private
         def get_instance(name, states)
           servers = @compute.servers.all
-          servers.each do |instance|            
-            if instance.tags["Name"] == name and states.include? instance.state 
+          servers.each do |instance|
+            if instance.tags["Name"] == name and states.include? instance.state
               return instance
             end
           end
@@ -32,7 +32,7 @@ module Dployr
             return instance.private_ip_address
           end
         end
-        
+
         def destroy(name)
           instance = get_instance(name, ["running", "stopped", "stopping"])
           if instance
@@ -40,7 +40,7 @@ module Dployr
           end
           raise "Instance #{name} not found"
         end
-        
+
         def halt(name)
           instance = get_instance(name, ["running"])
           if instance
@@ -75,10 +75,10 @@ module Dployr
             }
             puts options.to_yaml
             server = @compute.servers.create(options)
-          end         
+          end
           print "Wait for instance to get online".yellow
           server.wait_for { print ".".yellow; ready? }
-          
+
           print "\nWait for ssh to get ready...".yellow
           while true
             begin
@@ -92,7 +92,7 @@ module Dployr
             end
           end
           print "\n"
-          return null
+          return nil
       end
 
     end
