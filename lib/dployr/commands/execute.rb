@@ -1,23 +1,23 @@
 require 'logger'
-require 'dployr/utils'
+require 'dployr/commands/base'
 require 'dployr/compute/aws'
 
 module Dployr
   module Commands
-    class Execute
-
-      include Dployr::Utils
+    class Execute < Base
 
       def initialize(options, stages)
+        super options
         begin
-          @log = Logger.new STDOUT
+          self.create
+          config = get_region_config options
+
           @name = config[:attributes]["name"]
           @provider = options[:provider].upcase
           @region = options[:region]
-          @attributes = config[:attributes]
 
           puts "Connecting to #{@provider}...".yellow
-          @client = create_compute_client
+          @client = Dployr::Compute.const_get(provider.to.sym).new @region
 
           puts "Looking for #{@name} in #{@region}...".yellow
           @ip = @client.get_ip @name
@@ -31,18 +31,8 @@ module Dployr
             Dployr::Scripts::Hook.new @ip, config, stage
           end
         rescue Exception => e
-          @log.error e
+          self.log.error e
           exit 1
-        end
-      end
-
-      private
-
-      def create_compute_client
-        begin
-          Dployr::Compute.const_get(@provider.to_sym).new @regions
-        rescue Exception => e
-          raise "Provider '#{@provider}' is not supported: #{e}"
         end
       end
 

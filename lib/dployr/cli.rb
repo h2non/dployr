@@ -58,29 +58,25 @@ end
 
 opt_parser.parse!
 
-#dployr = Dployr::Init.new @attributes
-#dployr.load_config options[:file]
-#config = dployr.config.get_region(options[:name], options[:provider], options[:region])
-
 case command
 when "start"
   Dployr::Commands::Start.new options
 when "halt"
-  Dployr::Commands::Stop_Destroy.new(config, options, "halt")
+  Dployr::Commands::StopDestroy.new options, "halt"
 when "destroy"
-  Dployr::Commands::Stop_Destroy.new(config, options, "destroy")
+  Dployr::Commands::StopDestroy.new options, "destroy"
 when "status"
   puts "Command currently not available"
 when "provision"
-  Dployr::Commands::Provision_Test.new(config, options, "provision")
+  Dployr::Commands::ProvisionTest.new options, "provision"
 when "test"
-  Dployr::Commands::Provision_Test.new(config, options, "test")
+  Dployr::Commands::ProvisionTest.new options, "test"
 when "deploy"
   Dployr::Commands::Start.new options
-  Dployr::Commands::Provision_Test.new(config, options, "provision")
-  Dployr::Commands::Provision_Test.new(config, options, "test")
+  Dployr::Commands::ProvisionTest.new options, "provision"
+  Dployr::Commands::ProvisionTest.new options, "test"
 when "execute"
-  Dployr::Commands::Execute.new(config, options, ARGV[1..-1])
+  Dployr::Commands::Execute.new options, ARGV[1..-1]
 when "config"
   Dployr::Commands::Config.new options
 when "init"

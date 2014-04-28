@@ -42,7 +42,7 @@ module Dployr
       private
 
       def get_region_config(options)
-        self.dployr.config.get_region options[:name], options[:provider], options[:region]
+        @dployr.config.get_region options[:name], options[:provider], options[:region]
       end
 
     end

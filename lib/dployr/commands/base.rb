@@ -25,6 +25,14 @@ module Dployr
         end
       end
 
+      def create_compute_client
+        begin
+          Dployr::Compute.const_get(@provider.to_sym).new @regions
+        rescue Exception => e
+          raise "Provider '#{@provider}' is not supported: #{e}"
+        end
+      end
+
     end
   end
 end
