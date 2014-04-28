@@ -37,10 +37,17 @@ module Dployr
         def destroy(name)
           instance = get_instance(name, ["RUNNING", "STOPPED"])
           if instance
-            instance.destroy
-            instance.disks.each do |disk|
-              disk.destroy
-            end
+            puts "Destroying instance #{name}...".yellow
+            instance.destroy(async = false)
+            puts "Destroying disk #{name}...".yellow
+            disk = @compute.disks.get(name)
+            disk.destroy
+            # Bug in fog. It return "persistent-disk-0" instead of boot disk name (usually the same name of the machine)
+            # instance.disks.each do |disk|
+            #   gdisk = @compute.disks.get(disk["deviceName"])
+            #   gdisk.destroy
+            # end
+            return   
           end
           raise "Instance #{name} not found"
         end

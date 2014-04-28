@@ -6,9 +6,8 @@ german-dployr:
     username: innotechdev
   scripts:
     pre-provision:
-      # -
-        # source: ./hello
-        # target: /tmp
+      - source: ./hello
+        target: /tmp
     provision:
       # -
         # args: ""
@@ -16,8 +15,10 @@ german-dployr:
       # -
         # args: ""
         # local_path: "ls -l /tmp/"
+      # - args: ""
+        # remote_path: "sudo service jetty restart"
       - args: ""
-        remote_path: "sudo /etc/init.d/postfix restart"
+        remote_path: "/tmp/hello/jetty.sh"
   providers:
     aws:
       attributes:
