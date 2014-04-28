@@ -28,8 +28,10 @@ module Dployr
         @instance[:scripts][@stage].each do |script|
           if script["target"]
             Dployr::Scripts::Scp.new @ip, host, username, private_key_path, script
-          else
+          elsif script["remote_path"]
             Dployr::Scripts::Shell.new @ip, host, username, private_key_path, script
+          elsif script["local_path"]
+            Dployr::Scripts::Local_Shell.new script
           end
         end
       end

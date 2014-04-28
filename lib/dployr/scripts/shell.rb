@@ -30,7 +30,7 @@ module Dployr
       def start
         puts "Connecting to #{@host} (SSH)...".yellow
         Net::SSH.start(@ip, @username, :keys => [@private_key_path]) do |ssh|
-          command = @script["path"]
+          command = @script["remote_path"]
           arguments = @script["args"]
 
           puts "Running remote script '#{command} #{arguments}'".yellow

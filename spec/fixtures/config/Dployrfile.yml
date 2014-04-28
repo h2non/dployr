@@ -12,11 +12,10 @@ german-dployr:
     provision:
       -
         args: ""
-        path: "/tmp/hello/hello.sh"
+        remote_path: "/tmp/hello/hello.sh"
       -
         args: ""
-        path: "ls -l /tmp"
-        type: local
+        local_path: "ls -l /tmp/"    
   providers:
     aws:
       attributes:
