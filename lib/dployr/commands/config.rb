@@ -19,7 +19,9 @@ module Dployr
         raise "Dployrfile was not found" if @dployr.file_path.nil?
         raise "Configuration is missing" unless @dployr.config.exists?
         begin
-          if @name
+          if @name and options[:provider] and options[:region]
+            config = get_region_config options
+          elsif @name
             config = @dployr.config.get_config @name, @attrs
           else
             config = @dployr.config.get_config_all @attrs
