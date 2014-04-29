@@ -22,12 +22,16 @@ describe Dployr::Commands::Config do
       @result.should include "name: dployr"
     end
 
+    it "should have a valid attribute index" do
+      @result.should match /index: [']?100[']?/
+    end
+
     it "should have a valid attribute prefix" do
       @result.should include "prefix: dev"
     end
 
     it "should have a valid attribute private_key_path" do
-      @result.should include "private_key_path: ~/pems/innotechdev.pem"
+      @result.should match /private_key_path: [\"]?~\/pems\/innotechdev.pem[\"]?/
     end
 
     it "should have a valid attribute username" do
