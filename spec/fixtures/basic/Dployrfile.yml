@@ -28,9 +28,9 @@ dployr:
             security_groups:
               - sg-3cf3e45e # lib_aws_saopaulo
             subnet_id: subnet-1eebe07c
-        scripts:
-          stop:
-            - remote_path: "/tmp/stop.sh %{index}"
+          scripts:
+            stop:
+              - remote_path: "/tmp/stop.sh %{index}"
     gce:
       attributes:
         instance_type: f1-micro

@@ -9,6 +9,7 @@ describe Dployr::Commands::Config do
   before :all do
     @result = `bin/dployr #{arguments}`
     @exit_code = $?.exitstatus
+    puts @result
   end
 
   it "should have a valid exit code" do
@@ -17,7 +18,6 @@ describe Dployr::Commands::Config do
   end
 
   describe "attributes" do
-
     it "should have a valid attribute name" do
       @result.should include "name: dployr"
     end
@@ -57,20 +57,21 @@ describe Dployr::Commands::Config do
     it "should have a valid attribute subnet_id" do
       @result.should include "subnet_id: subnet-1eebe07c"
     end
-
-    it "should has first attribute in script for scp in pre-provision stage" do
-      @result.should include ":scripts:\n"\
-                             "  pre-provision:\n"\
-                             "  - source: ./hello\n"\
-                             "    target: /tmp"
-    end
-
-    it "should has second attribute in script for remote execute in provision stage" do
-      @result.should include "  provision:\n"\
-                             "  - remote_path: /tmp/hello/jetty.sh\n"\
-                             "    args: ''"
-    end
-
   end
+
+  describe "scripts" do
+    it "should have a valid script in pre-provision stage" do
+      @result.should match /:scripts:\n  pre-provision:\n  - source: [\"]?.\/hello[\"]?\n    target: [\"]?\/tmp[\"]?/
+    end
+
+    it "should have a valid script in provision stage" do
+      @result.should match /provision:\n  - remote_path: [\"]?\/tmp\/hello\/jetty.sh[\"]?\n    args: ''/
+    end
+
+    it "should have a valid script in stop stage with template value" do
+      @result.should match /stop:\n  - remote_path: [\"]?\/tmp\/stop.sh 100[\"]?\n/
+    end
+  end
+
 
 end
