@@ -2,7 +2,7 @@
 
 > Multicloud management and deployment made simple
 
-> **Spoiler! Alpha project. Funny work in progress**
+> **Spoiler! Alpha project. Use it by your own risk**
 
 <table>
 <tr>
@@ -18,8 +18,8 @@
 **Dployr** is a Ruby utility that simplifies cloud management
 and deployment across different providers
 
-You can configure your infraestructure and deployment from a simple configuration file which support built-in
-rich features like templating and inheritance
+You can configure your infraestructure and deployment from a
+simple configuration file which support built-in rich features
 
 Dployr only works in Ruby >= `1.9.x`
 
@@ -29,12 +29,13 @@ Dployr only works in Ruby >= `1.9.x`
 $ gem install dployr
 ```
 
-Or add it as dependency in your `Gemfile` or `.gemspec` file
+If you need to use it from another Ruby package,
+add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '>= 0.0.1'
+spec.add_dependency 'dployr', '>= 0.0.3'
 # Gemfile
-gem 'dployr', '>= 0.0.1'
+gem 'dployr', '>= 0.0.3'
 ```
 
 ## Documentation
@@ -43,7 +44,18 @@ Dployr documentation and API is available from [RubyDoc][rubydoc]
 
 ## Features
 
-`To do! but all will be cool :)`
+- Fully configurable from Ruby or YAML file with rich features like templating
+- Supports deployment to multiple providers
+- Built-in support for defailted instances configuration
+- Local and remote scripts execution per stage phase (start, test, provision, update, stop...)
+- Featured command-line and programmatic API
+
+## Supported providers
+
+Note that as Dployr is still in alpha stage, there are only a few providers supported
+
+- Amazon Web Services (`aws`)
+- Google Compute Engine (`gce`)
 
 ## Configuration
 
@@ -140,7 +152,6 @@ default:
         args: "%{name}"
         path: ./scripts/updatedns.sh
 
-
 custom:
   name: 1
   web-server:
@@ -159,23 +170,26 @@ custom:
         attributes:
           instance_type: m1.large
     scripts:
-      post-start:
+      pre-start:
         -
           args:
             - "%{name}"
             - "%{type}"
             - "%{domain}"
-          path: ./scripts/.sh
-      -
-        args:
-          - "%{hydra}"
-        path: ./scripts/configureListener.sh
-      -
-        args:
-          - "%{$provider}-%{region}"
-          - "%{type}"
-        path: ./scripts/hydraProbe.sh
-
+          path: ./scripts/pre-start.sh
+      start:
+        -
+          args:
+            - "%{hydra}"
+          path: ./scripts/configure.sh
+      provision:
+        -
+          args:
+            - "%{$provider}-%{region}"
+            - "%{type}"
+          path: ./scripts/provision.sh
+      test:
+        - path: ./scripts/serverspec.sh
 ```
 
 ## Command-line interface
@@ -194,6 +208,7 @@ Commands
   provision instance provisioning
   config    generate configuration in YAML from Dployrfile
   execute   run custom stages
+  ssh       ssh into machine
   init      create a sample Dployrfile
 
 Options
@@ -205,7 +220,23 @@ Options
   -r, --region REGION              region to use (allow multiple values comma-separated)
   -v, -V, --version                version
   -h, --help                       help
+```
 
+### Examples
+
+Start a new instance. If it don't exists, it will be created
+```bash
+$ dployr start -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+Provision an existent working instance
+```bash
+$ dployr provision -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+Test a working instance
+```bash
+$ dployr test -n name -p aws -r eu-west-1 -a 'env=dev'
 ```
 
 ## Programmatic API
