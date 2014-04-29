@@ -1,4 +1,4 @@
-german-dployr:
+german-template:
   attributes:
     name: "german-dployr"
     prefix: dev
@@ -9,16 +9,8 @@ german-dployr:
       - source: ./hello
         target: /tmp
     provision:
-      # -
-        # args: ""
-        # remote_path: "/tmp/hello/hello.sh"
-      # -
-        # args: ""
-        # local_path: "ls -l /tmp/"
-      # - args: ""
-        # remote_path: "sudo service jetty restart"
-      - args: ""
-        remote_path: "/tmp/hello/jetty.sh"
+      - remote_path: /tmp/hello/jetty.sh
+        args: ""
   providers:
     aws:
       attributes:

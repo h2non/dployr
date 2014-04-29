@@ -27,6 +27,7 @@ module Dployr
             config = @dployr.config.get_config_all @attrs
           end
           unless config.nil?
+            puts @options.to_yaml
             puts config.to_yaml
           else
             @log.info "Missing configuration data"
