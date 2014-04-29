@@ -88,9 +88,15 @@ Notation: `%{attribute-name}`
 
 ##### Iteration context variables
 
-You can reference to the current `provider` or `region` of the current iteration context
+You can use references from config strings to specific iteration context values
 
-Notation: `${region}`
+Notation: `${value}`
+
+Supported values:
+
+- **provider** - Current context provider name identifier
+- **region** - Current context region name identifier
+- **name** - Current context template name identifier
 
 ##### Environment variables
 

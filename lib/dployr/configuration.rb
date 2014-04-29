@@ -37,8 +37,8 @@ module Dployr
     def get_config(name, attributes = {})
       instance = get_instance name
       attributes = @attributes.merge (attributes or {})
-      raise ArgumentError.new "Instance '#{name.to_s}' do not exists" if instance.nil?
-      replace_variables merge_config(instance, attributes), replace_variables(attributes)
+      raise Error.new "Instance '#{name.to_s}' do not exists" if instance.nil?
+      render_config name, instance, attributes
     end
 
     def get_config_all(attributes = {})
@@ -73,6 +73,18 @@ module Dployr
     end
 
     private
+
+    def render_config(name, instance, attributes)
+      attributes = replace_variables attributes
+      config = merge_config instance, attributes
+      config = replace_name name, config
+      config = replace_variables config, attributes
+      config
+    end
+
+    def replace_name(name, config)
+      replace_keywords 'name', name, config
+    end
 
     def create_instance(name = 'unnamed', config)
       Dployr::Config::Instance.new do |i|
