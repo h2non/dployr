@@ -471,7 +471,7 @@ describe Dployr::Configuration do
           end
 
           it "should have a valid name" do
-            @config[:attributes][:name].should eql "zeus"
+            @config[:attributes][:name].should eql "hera"
           end
         end
 

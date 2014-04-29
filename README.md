@@ -215,7 +215,7 @@ Options
 
   -n, --name NAME                  template name identifier to load
   -f, --file PATH                  custom config file path to load
-  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
+  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query
   -p, --provider VALUES            provider to use (allow multiple values comma-separated)
   -r, --region REGION              region to use (allow multiple values comma-separated)
   -v, -V, --version                version

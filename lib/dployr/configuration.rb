@@ -38,7 +38,7 @@ module Dployr
       instance = get_instance name
       attributes = @attributes.merge (attributes or {})
       raise ArgumentError.new "Instance '#{name.to_s}' do not exists" if instance.nil?
-      replace_variables merge_config(instance), replace_variables(attributes)
+      replace_variables merge_config(instance, attributes), replace_variables(attributes)
     end
 
     def get_config_all(attributes = {})
@@ -104,8 +104,11 @@ module Dployr
       attrs
     end
 
-    def merge_config(instance)
-      merge_providers merge_parents merge_defaults instance.get_values
+    def merge_config(instance, attributes = {})
+      config = merge_defaults instance.get_values
+      config[:attributes] =
+        (get_by_key(config, :attributes) or {}).merge attributes if attributes
+      merge_providers merge_parents config
     end
 
     def merge_defaults(config)

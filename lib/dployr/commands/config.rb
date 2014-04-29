@@ -33,6 +33,7 @@ module Dployr
             @log.info "Missing configuration data"
           end
         rescue Exception => e
+          puts e.backtrace
           raise "Cannot generate the config: #{e}"
         end
       end

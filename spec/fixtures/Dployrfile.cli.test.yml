@@ -1,4 +1,8 @@
-german-template:
+default:
+  attributes:
+    index: 1
+
+german-dployr:
   attributes:
     name: "german-dployr"
     prefix: dev
@@ -9,8 +13,16 @@ german-template:
       - source: ./hello
         target: /tmp
     provision:
-      - remote_path: /tmp/hello/jetty.sh
-        args: ""
+      # -
+        # args: ""
+        # remote_path: "/tmp/hello/hello.sh"
+      # -
+        # args: ""
+        # local_path: "ls -l /tmp/"
+      # - args: ""
+        # remote_path: "sudo service jetty restart"
+      - args: ""
+        remote_path: "/tmp/hello/jetty.sh %{index}"
   providers:
     aws:
       attributes:
@@ -23,6 +35,9 @@ german-template:
             security_groups:
               - sg-3cf3e45e # lib_aws_saopaulo
             subnet_id: subnet-1eebe07c
+          scripts:
+            stop:
+              - remote_path: "/tmp/stop.sh %{index}"
     gce:
       attributes:
         instance_type: f1-micro
