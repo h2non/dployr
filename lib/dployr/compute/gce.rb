@@ -1,10 +1,12 @@
 require 'fog'
-require 'net/ssh'
+require 'dployr/compute/common'
 
 module Dployr
   module Compute
     class GCE
 
+        include Dployr::Compute::Common
+        
         def initialize(region)
           @options = {
             provider: 'Google',
@@ -85,11 +87,13 @@ module Dployr
         end
 
         def start(attributes, region)
+          external_ip(attributes, region)
           server = get_instance(attributes["name"], ["stopped", "stopping"])
           if server
             puts "Starting stopped instance for #{attributes["name"]} in #{region}...".yellow
             server.start
           else
+            puts "Creating boot disk...".yellow
             disks = create_disk(attributes["name"], 10, region, attributes["image_name"])
             if defined? attributes["autodelete_disk"]
               autodelete_disk  = attributes["autodelete_disk"]
@@ -105,6 +109,7 @@ module Dployr
               machine_type: attributes["instance_type"],
               network: attributes["network"],
               disks: [disks.get_as_boot_disk(true, autodelete_disk)],
+              external_ip: attributes["public_ip"]
             }
             
             puts options.to_yaml
@@ -112,21 +117,27 @@ module Dployr
           end
           print "Wait for instance to get online".yellow
           server.wait_for { print ".".yellow; ready? }
-
-          print "\nWait for ssh to get ready...".yellow
-          while true
-            begin
-              Net::SSH.start(server.private_ip_address, attributes["username"], :keys => attributes["private_key_path"]) do |ssh|
-                print "\n"
-                return server.private_ip_address
+          print "\n"
+          wait_ssh(attributes, server)
+      end
+      
+      private
+      
+      def external_ip(attributes, region)
+        if attributes["public_ip"] == "new"
+            puts "Looking for previous public_ip...".yellow
+            ip = @compute.insert_address(attributes["name"], region[0..-3])
+            while true
+              ip = @compute.get_address(attributes["name"], region[0..-3])
+              if ip[:body]["address"]
+                attributes["public_ip"].replace ip[:body]["address"]
+                puts "Using public_ip #{attributes["public_ip"]}".yellow
+                break
               end
-            rescue Exception => e
-              print ".".yellow
-              sleep 2
+              puts "Waiting for ip to be ready...".yellow
+              sleep 1
             end
           end
-          print "\n"
-          return nil
       end
 
     end

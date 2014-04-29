@@ -1,10 +1,12 @@
 require 'fog'
-require 'net/ssh'
+require 'dployr/compute/common'
 
 module Dployr
   module Compute
     class AWS
-
+      
+      include Dployr::Compute::Common
+      
       def initialize(region)
         @options = {
           region: region[0..-2],
@@ -13,16 +15,6 @@ module Dployr
           aws_secret_access_key: ENV["AWS_SECRET_KEY"]
         }
         @compute = Fog::Compute.new @options
-      end
-
-      def get_instance(name, states)
-        servers = @compute.servers.all
-        servers.each do |instance|
-          if instance.tags["Name"] == name and states.include? instance.state
-            return instance
-          end
-        end
-        nil
       end
 
       def get_ip(name)
@@ -63,35 +55,44 @@ module Dployr
             subnet_id: attributes["subnet_id"],
             security_group_ids: attributes["security_groups"],
             tags: { Name: attributes["name"] }
-            #private_ip_address        : private_ip_address,
-            #user_data                 : user_data,
-            #elastic_ip                : elastic_ip,
-            #allocate_elastic_ip       : allocate_elastic_ip,
-            #block_device_mapping      : block_device_mapping,
-            #instance_initiated_shutdown_behavior : terminate_on_shutdown == true ? "terminate" : nil,
-            #monitoring                : monitoring,
-            #ebs_optimized             : ebs_optimized
           }
           puts options.to_yaml
           server = @compute.servers.create(options)
         end
         print "Wait for instance to get online".yellow
         server.wait_for { print ".".yellow; ready? }
-
-        print "\nWait for ssh to get ready...".yellow
-        while true
-          begin
-            Net::SSH.start(server.private_ip_address, attributes["username"], :keys => attributes["private_key_path"]) do |ssh|
-              print "\n"
-              return server.private_ip_address
-            end
-          rescue Exception => e
-            print ".".yellow
-            sleep 2
+        print "\n"
+        elastic_ip(attributes, server)
+        wait_ssh(attributes, server)
+      end
+      
+      private
+      
+      def get_instance(name, states)
+        servers = @compute.servers.all
+        servers.each do |instance|
+          if instance.tags["Name"] == name and states.include? instance.state
+            return instance
           end
         end
-        print "\n"
         nil
+      end
+      
+      def elastic_ip(attributes, server)
+        if attributes["public_ip"]
+          if attributes["public_ip"] == "new"
+            puts "Creating new elastic ip...".yellow
+            response = @compute.allocate_address(server.vpc_id)
+            allocation_id = response[:body]["allocationId"]
+            attributes["public_ip"] = response[:body]["publicIp"]
+          else
+            puts "Looking for elastic ip #{attributes["public_ip"]}...".yellow
+            eip = @compute.addresses.get(attributes["public_ip"])
+            allocation_id = eip.allocation_id
+          end
+          puts "Associating elastic ip #{attributes["public_ip"]}...".yellow
+          @compute.associate_address(server.id,nil,nil,allocation_id)
+        end
       end
 
     end
