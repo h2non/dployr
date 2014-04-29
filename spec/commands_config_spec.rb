@@ -68,10 +68,13 @@ describe Dployr::Commands::Config do
       @result.should match /provision:\n  - remote_path: [\"]?\/tmp\/hello\/jetty.sh[\"]?\n    args: ''/
     end
 
+    it "should have a valid script in provision stage with template value" do
+      @result.should match /- remote_path: [\"]?\/tmp\/test.sh 100[\"]?\n/
+    end
+
     it "should have a valid script in stop stage with template value" do
       @result.should match /stop:\n  - remote_path: [\"]?\/tmp\/stop.sh 100[\"]?\n/
     end
   end
-
 
 end
