@@ -9,7 +9,6 @@ describe Dployr::Commands::Config do
   before :all do
     @result = `bin/dployr #{arguments}`
     @exit_code = $?.exitstatus
-    puts @result
   end
 
   it "should have a valid exit code" do
