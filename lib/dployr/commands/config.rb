@@ -29,11 +29,11 @@ module Dployr
           unless config.nil?
             puts config.to_yaml
           else
-            puts "Missing configuration data"
-            exit 1
+            raise "Missing configuration data"
           end
         rescue Exception => e
-          raise "Cannot generate the config: #{e}"
+          puts "Cannot generate the config: #{e}"
+          exit 1
         end
       end
 
