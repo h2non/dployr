@@ -47,6 +47,7 @@ opt_parser = OptionParser.new do |opt|
 
   opt.on("-v",  "-V", "--version", "version") do
     puts Dployr::VERSION
+    exit 0
   end
 
   opt.on("-h", "--help", "help") do
