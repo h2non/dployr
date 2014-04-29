@@ -27,13 +27,12 @@ module Dployr
             config = @dployr.config.get_config_all @attrs
           end
           unless config.nil?
-            puts @options.to_yaml
             puts config.to_yaml
           else
-            @log.info "Missing configuration data"
+            puts "Missing configuration data"
+            exit 1
           end
         rescue Exception => e
-          puts e.backtrace
           raise "Cannot generate the config: #{e}"
         end
       end
