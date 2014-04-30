@@ -35,6 +35,10 @@ module Dployr
             return instance.private_ip_address
           end
         end
+        
+        def get_info(name)
+          get_instance(name,["RUNNING", "STOPPED"])
+        end
 
         def destroy(name)
           instance = get_instance(name, ["RUNNING", "STOPPED"])
@@ -88,7 +92,7 @@ module Dployr
 
         def start(attributes, region)
           external_ip(attributes, region)
-          server = get_instance(attributes["name"], ["stopped", "stopping"])
+          server = get_instance(attributes["name"], ["STOPPED"])
           if server
             puts "Starting stopped instance for #{attributes["name"]} in #{region}...".yellow
             server.start

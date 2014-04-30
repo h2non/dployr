@@ -18,8 +18,12 @@ module Dployr
       end
 
       def get_ip(name)
-        instance = get_instance(name, ["running"])
+        instance = get_instance(name, ["running"]) # TODO: add starting states
         instance.private_ip_address if instance
+      end
+      
+      def get_info(name)
+        get_instance(name, ["running", "stopped", "stopping"])
       end
 
       def destroy(name)
