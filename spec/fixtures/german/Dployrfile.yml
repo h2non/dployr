@@ -9,8 +9,10 @@ german-template:
       - source: ./hello
         target: /tmp
     provision:
-      - remote_path: /tmp/hello/jetty.sh
-        args: ""
+      - remote_path: /tmp/hello/hello.sh
+    post-halt:
+      - local_path: sleep
+        args: "50"
   providers:
     aws:
       attributes:

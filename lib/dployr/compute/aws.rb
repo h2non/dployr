@@ -17,9 +17,15 @@ module Dployr
         @compute = Fog::Compute.new @options
       end
 
-      def get_ip(name)
+      def get_ip(name, public)
         instance = get_instance(name, ["running"]) # TODO: add starting states
-        instance.private_ip_address if instance
+        if instance
+          if public
+            return instance.public_ip_address
+          else
+            return instance.private_ip_address
+          end
+        end
       end
       
       def get_info(name)

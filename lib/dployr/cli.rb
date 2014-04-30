@@ -45,6 +45,10 @@ opt_parser = OptionParser.new do |opt|
   opt.on("-r", "--region REGION", "region to use (allow multiple values comma-separated)") do |v|
     options[:region] = v
   end
+  
+  opt.on("-i", "--public-ip", "use public ip instead of private ip to when access instances") do |v|
+    options[:public_ip] = v
+  end
 
   opt.on("-v",  "-V", "--version", "version") do
     puts Dployr::VERSION

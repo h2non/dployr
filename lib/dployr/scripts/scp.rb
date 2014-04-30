@@ -10,7 +10,7 @@ module Dployr
           Net::SCP.start(ip, username, :keys => [private_key_path]) do |scp|
             source = script["source"]
             target = script["target"]
-            puts "Coping #{source} -> #{target}".yellow
+            puts "Copying #{source} -> #{target}".yellow
             scp.upload(source, target, :recursive => true, :preserve => true)
           end
         rescue Exception => e

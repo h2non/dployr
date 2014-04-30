@@ -21,7 +21,7 @@ module Dployr
           @client = Dployr::Compute.const_get(@provider.to_sym).new @region
 
           puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip @name
+          @ip = @client.get_ip(@name, options[:public_ip])
 
           Dployr::Scripts::Default_Hooks.new @ip, config, "start", self
         rescue Exception => e

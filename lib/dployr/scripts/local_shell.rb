@@ -16,9 +16,13 @@ module Dployr
         arguments = @script["args"]
 
         puts "Running local script '#{command} #{arguments}'".yellow
-        result = system(command + ' ' + arguments)
+        total_command = command
+          if arguments
+            total_command =  command + ' ' + arguments
+          end
+        result = system(total_command)
         if result == false
-          raise "Exit code non zero when running local script '#{command} #{arguments}'".yellow
+          raise "Exit code non zero when running local script '#{total_command}'".yellow
         else
           puts "Local script '#{command} #{arguments}' finished succesfully".yellow
         end

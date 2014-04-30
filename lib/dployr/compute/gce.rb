@@ -29,10 +29,14 @@ module Dployr
           return nil
         end
 
-        def get_ip(name)
+        def get_ip(name, public)
           instance = get_instance(name, ["PROVISIONING", "STAGING", "RUNNING"])
           if instance
-            return instance.private_ip_address
+            if public
+              return instance.public_ip_address
+            else
+              return instance.private_ip_address
+            end
           end
         end
         

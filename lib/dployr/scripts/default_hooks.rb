@@ -15,7 +15,7 @@ module Dployr
           Dployr::Scripts::Hook.new @ip, config, "#{@stage}"
         end
         if @config[:scripts]["post-#{@stage}"]
-          Dployr::Scripts::Hook.new @ip, config, "#{@stage}"
+          Dployr::Scripts::Hook.new @ip, config, "post-#{@stage}"
         end
       end
 
