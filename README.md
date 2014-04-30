@@ -105,7 +105,7 @@ Notation: `${HOME}`
 #### Example
 
 Featured example configuration file (YAML)
-```yaml
+```yml
 ---
 default:
   attributes:
