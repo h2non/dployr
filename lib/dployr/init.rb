@@ -27,30 +27,38 @@ module Dployr
 
     include Dployr::Config::FileUtils
 
-    attr_reader :file_path, :config
+    attr_reader :config
+    attr_accessor :file_path
 
     @@instance = nil
 
     def initialize(attributes = {})
       @@instance = self
-      @attributes = attributes
-      @config = Dployr::Configuration.new
-      @file_path = discover
-      load_file @file_path
+      @config = Dployr::Configuration.new attributes
+      @file_path = nil
     end
 
     def self.instance
       @@instance
     end
 
+    def load_config(file_path = nil)
+      if file_path
+        @file_path = file_path
+      else
+        @file_path = discover
+      end
+      set_config @file_path
+    end
+
     private
 
-    def load_file(file_path)
-      if file_path.is_a? String
-        if yaml_file? file_path
-          load_yaml file_path
+    def set_config(file_path)
+      if @file_path.is_a? String
+        if yaml_file? @file_path
+          load_yaml @file_path
         else
-          load file_path
+          load @file_path
         end
       end
     end

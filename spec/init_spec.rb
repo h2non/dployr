@@ -7,7 +7,6 @@ describe Dployr::Init do
 
     before :all do
       Dir.chdir fixtures
-      @dployr = Dployr::Init.new
     end
 
     after :all do
@@ -15,8 +14,30 @@ describe Dployr::Init do
     end
 
     describe "file discovery" do
-      it "should discover the file" do
+
+      before :all do
+        @dployr = Dployr::Init.new
+        @dployr.load_config
+      end
+
+      it "should discover Dployrfile" do
         @dployr.file_path.should eql "#{fixtures}/Dployrfile"
+      end
+
+      it "should create a new config instance" do
+        @dployr.config.should be_instance_of Dployr::Configuration
+      end
+    end
+
+    describe "custom path" do
+
+      before :all do
+        @dployr = Dployr::Init.new
+        @dployr.load_config File.join File.dirname(__FILE__), 'fixtures', 'Dployrfile.yml'
+      end
+
+      it "should load with custom path" do
+        @dployr.file_path.should eql "#{fixtures}/Dployrfile.yml"
       end
 
       it "should create a new config instance" do

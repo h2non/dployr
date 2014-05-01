@@ -110,7 +110,7 @@ describe Dployr::Configuration do
           key_path: "path/to/key.pem"
         },
         scripts: [
-          { path: "setup.sh", args: ["--id ${index}"], remote: true }
+          { path: "setup.sh", args: ["--id ${index}", "--name ${name}"], remote: true }
         ],
         providers: {
           aws: {
@@ -327,6 +327,14 @@ describe Dployr::Configuration do
               zeus[:providers][:aws][:scripts][1][:path].should eql "setup.sh"
             end
 
+            it "should have a valid number of arguments" do
+              zeus[:providers][:aws][:scripts][1][:args].should have(2).items
+            end
+
+            it "should have a remote property" do
+              zeus[:providers][:aws][:scripts][1][:remote].should eql true
+            end
+
             it "should have a valid path" do
               zeus[:providers][:aws][:scripts][2][:path].should eql "router.sh"
             end
@@ -334,6 +342,10 @@ describe Dployr::Configuration do
             describe "templating" do
               it "should replace the argument with the instance name" do
                 zeus[:providers][:aws][:scripts][2][:args][0].should eql "zeus"
+              end
+
+              it "should replace the name context value" do
+                zeus[:providers][:aws][:scripts][1][:args][1].should eql "--name zeus"
               end
             end
           end
@@ -359,7 +371,7 @@ describe Dployr::Configuration do
               zeus[:providers][:aws][:regions]["eu-west-1a"].should be_a Hash
             end
 
-            describe "eu-west-1a" do
+            describe "europe-west1-a" do
               let(:region) {
                 zeus[:providers][:aws][:regions]["eu-west-1a"]
               }
@@ -471,7 +483,7 @@ describe Dployr::Configuration do
           end
 
           it "should have a valid name" do
-            @config[:attributes][:name].should eql "zeus"
+            @config[:attributes][:name].should eql "hera"
           end
         end
 

@@ -1,3 +1,5 @@
+require 'deep_merge'
+
 module Dployr
   module Utils
 
@@ -17,7 +19,7 @@ module Dployr
     end
 
     def get_real_key(hash, key)
-      if hash.is_a? Hash
+      if key and hash.is_a? Hash
         if hash.key? key
           key
         elsif hash.key? key.to_sym
@@ -42,27 +44,6 @@ module Dployr
 
     def deep_copy(o)
       Marshal.load Marshal.dump o
-    end
-
-    def parse_matrix(str)
-      hash = {}
-      str.split(';').each do |val|
-        val = val.split '='
-        hash[val.first.strip] = val.last.strip
-      end if str.is_a? String
-      hash
-    end
-
-    def parse_flags(str)
-      hash = {}
-      str.gsub(/\s+/, ' ').strip.split(' ').each_slice(2) do |val|
-        key = val.first
-        if val.first.is_a? String
-          key = key.gsub(/^\-+/, '').strip
-          hash[key] = (val.last or '').strip
-        end
-      end if str.is_a? String
-      hash
     end
 
     def replace_vars(str)

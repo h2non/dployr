@@ -1,17 +1,8 @@
-# dployr  [![Gem](https://badge.fury.io/rb/dployr.png)][gem]
+# dployr [![Build Status](https://secure.travis-ci.org/innotech/dployr.svg?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/dployr.svg)][gemnasium] [![Gem](https://badge.fury.io/rb/dployr.svg)][gem]
 
-<!--
-[![Build Status](https://secure.travis-ci.org/innotech/dployr.png?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/innotech/dployr.png)][gemnasium]
--->
+> Multicloud management and deployment made simple
 
-[travis]: http://travis-ci.org/innotech/dployr
-[gemnasium]: https://gemnasium.com/innotech/dployr
-[gem]: http://rubygems.org/gems/dployr
-
-> Multicloud management and deployment with asteroids made simple
-
-> **Spoiler! Alpha project. Funny work in progress**
+> **Spoiler! Alpha project. Use it by your own risk**
 
 <table>
 <tr>
@@ -27,56 +18,234 @@
 **Dployr** is a Ruby utility that simplifies cloud management
 and deployment across different providers
 
-You can configure your infraestructure and deployment from a simple configuration file which support built-in
-rich features like templating and inheritance
+You can configure your infraestructure and deployment from a
+simple configuration file which support built-in rich features
 
 Dployr only works in Ruby >= `1.9.x`
 
 ## Installation
 
 ```bash
-$ gem install dployr --source https://6wNxkeCE8z3GnoU1TH7f@repo.fury.io/innotech/
+$ gem install dployr
 ```
 
-Or add it as dependency in your `Gemfile` or `.gemspec` file
+If you need to use it from another Ruby package,
+add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '>= 0.0.1'
+spec.add_dependency 'dployr', '>= 0.0.3'
 # Gemfile
-source 'https://6wNxkeCE8z3GnoU1TH7f@gem.fury.io/innotech/'
-gem 'dployr', '>= 0.0.1'
+gem 'dployr', '>= 0.0.3'
 ```
 
-## Usage
+## Documentation
 
-### Command-line interface
+Dployr documentation and API is available from [RubyDoc][rubydoc]
+
+## Features
+
+- Fully configurable from Ruby or YAML file with rich features like templating
+- Supports deployment to multiple providers
+- Built-in support for defailted instances configuration
+- Local and remote scripts execution per stage phase (start, test, provision, update, stop...)
+- Featured command-line and programmatic API
+
+## Supported providers
+
+Note that as Dployr is still in alpha stage, there are only a few providers supported
+
+- Amazon Web Services (`aws`)
+- Google Compute Engine (`gce`)
+
+## Configuration
+
+Configuration file must be called `Dployrfile`. It can be also a standard Ruby file
+or a YAML file (adding the `.yml` or `.yaml` extension)
+
+#### Data schema
+
+Each configuration level supports the followings members:
+
+- **attributes** `Object` Custom attrbutes to apply to the current template
+- **scripts** `Array|Object`
+- **providers** `Object`
+- **authentication** `Object` (optional)
+- **extends** `String|Array` Allows to inherits the current config object from others
+
+#### Templating
+
+Dployr allows templating features inside configuration values, in order
+to provide an easy and clean way to dynamically replace values and self-referenced variables
+inside the same configuration
+
+Supported template values notations
+
+##### Attributes
+
+Attribute values are available to be referenciable from any part of the config document
+
+Notation: `%{attribute-name}`
+
+##### Iteration context variables
+
+You can use references from config strings to specific iteration context values
+
+Notation: `${value}`
+
+Supported values:
+
+- **provider** - Current context provider name identifier
+- **region** - Current context region name identifier
+- **name** - Current context template name identifier
+
+##### Environment variables
+
+Notation: `${HOME}`
+
+#### Example
+
+Featured example configuration file (YAML)
+```yml
+---
+default:
+  attributes:
+    name: "default"
+    prefix: dev
+    private_key_path: ~/pems/private.pem
+  authentication:
+    private_key_path: ~/.ssh/id_rsa
+    public_key_path: ~/.ssh/id_rsa.pub
+    username: ubuntu
+  providers:
+    aws:
+      attributes:
+        instance_type: m1.small
+      regions:
+        eu-west-1a:
+          attributes:
+            ami: ami-f5ca3682
+            keypair: vagrant-aws-ireland
+            security_groups:
+              - sg-576c7635
+              - sg-1e648a7b
+            subnet_id: subnet-be457fca
+        us-west-2b:
+          attributes:
+            ami: ami-c66608f6
+            keypair: vagrant-aws-oregon
+            security_groups:
+              - sg-88283cea
+              - sg-f233ca97
+            subnet_id: subnet-ef757e8d
+    gce:
+      attributes:
+        client_email: sample@mail.com
+        instance_type: m1.small
+        key_location: ~/pems/privatekey.p12
+        project_id: innotechapp
+      regions:
+        europe-west1-a:
+          attributes:
+            ami: centos-base-v5
+            instance_type: n1-standard-1
+            network: liberty-gce
+  scripts:
+    pre-start:
+      -
+        path: ./scripts/routes_allregions.sh
+    start:
+      -
+        args: "%{name}"
+        path: ./scripts/updatedns.sh
+
+custom:
+  name: 1
+  web-server:
+    attributes:
+      prefix: zeus-dev
+    authentication:
+      private_key_path: ~/.ssh/id_rsa
+      public_key_path: ~/.ssh/id_rsa.pub
+      username: ubuntu
+    providers:
+      aws:
+        regions:
+        attributes:
+          instance_type: m1.medium
+      gce:
+        attributes:
+          instance_type: m1.large
+    scripts:
+      pre-start:
+        -
+          args:
+            - "%{name}"
+            - "%{type}"
+            - "%{domain}"
+          path: ./scripts/pre-start.sh
+      start:
+        -
+          args:
+            - "%{hydra}"
+          path: ./scripts/configure.sh
+      provision:
+        -
+          args:
+            - "%{$provider}-%{region}"
+            - "%{type}"
+          path: ./scripts/provision.sh
+      test:
+        - path: ./scripts/serverspec.sh
+```
+
+## Command-line interface
 
 ```
 Usage: dployr <command> [options]
 
 Commands
 
-  up        start instances
+  start     start instances
   halt      stop instances
+  destroy   destroy instances
   status    retrieve the instances status
   test      run remote test in instances
   deploy    start, provision and test running instances
   provision instance provisioning
-  config    generate configuration in YAML format
+  config    generate configuration in YAML from Dployrfile
+  execute   run custom stages
+  ssh       ssh into machine
   init      create a sample Dployrfile
 
 Options
 
-  -e, --environment ENV            environment to pass to the instances
   -n, --name NAME                  template name identifier to load
-  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
-  -p, --provider                   provider to use (allow multiple values comma-separated)
-  -r, --region                     region to use (allow multiple values comma-separated)
+  -f, --file PATH                  custom config file path to load
+  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query
+  -p, --provider VALUES            provider to use (allow multiple values comma-separated)
+  -r, --region REGION              region to use (allow multiple values comma-separated)
+  -v, -V, --version                version
   -h, --help                       help
-
 ```
 
-### Programmatic API
+### Examples
+
+Start a new instance. If it don't exists, it will be created
+```bash
+$ dployr start -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+Provision an existent working instance
+```bash
+$ dployr provision -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+Test a working instance
+```bash
+$ dployr test -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+## Programmatic API
 
 ```ruby
 Dployr::configure do |dployr|
@@ -114,145 +283,15 @@ Dployr::configure do |dployr|
 end
 ```
 
-## Features
-
-`To do! but all will be cool :)`
-
-## Configuration file
-
-Configuration file must be called `Dployrfile`. It can be also a standard Ruby file
-or a YAML file (adding the `.yml` or `.yaml` extension)
-
-#### Data schema
-
-Each configuration level supports the followings members:
-
-- **attributes** `Object`
-- **scripts** `Array`
-- **providers** `Object`
-- **authentication** `Object`
-- **extends** `String|Array` Allows to inherits the current config object from others
-
-#### Templating
-
-Dployr allows templating features inside configuration values, in order
-to provide an easy and clean way to dynamically replace values and self-referenced variables
-inside the same configuration
-
-Supported template values notations
-
-##### Attributes
-
-Attribute values are available to be referenciable from any part of the config document
-
-Notation: `%{attribute-name}`
-
-##### Iteration context variables
-
-You can reference to the current `provider` or `region` of the current iteration context
-
-Notation: `${region}`
-
-##### Environment variables
-
-Notation: `${HOME}`
-
-#### Example
-
-Featured example configuration file (YAML)
-```yaml
----
-default:
-  attributes:
-    name: "%{name}"
-    prefix: dev
-    private_key_path: ~/pems/innotechdev.pem
-    username: innotechdev
-  authentication:
-    private_key_path: ~/.ssh/id_rsa
-    public_key_path: ~/.ssh/id_rsa.pub
-    username: ubuntu
-  providers:
-    aws:
-      attributes:
-        instance_type: m1.small
-      regions:
-        eu-west-1a:
-          attributes:
-            ami: ami-f5ca3682
-            keypair: vagrant-aws-ireland
-            security_groups:
-              - sg-576c7635
-              - sg-1e648a7b
-            subnet_id: subnet-be457fca
-        us-west-2b:
-          attributes:
-            ami: ami-c66608f6
-            keypair: vagrant-aws-oregon
-            security_groups:
-              - sg-88283cea
-              - sg-f233ca97
-            subnet_id: subnet-ef757e8d
-    gce:
-      attributes:
-        client_email: 388158271394-hiqo47ehuagjshtrtsgicsnn0uvmdk06@developer.gserviceaccount.com
-        instance_type: m1.small
-        key_location: ~/pems/70ddae97bf1c09d2d799b2acde33a03ebd52d774-privatekey.p12
-        project_id: innotechapp
-      regions:
-        europe-west1-a:
-          attributes:
-            ami: centos-base-v5
-            instance_type: n1-standard-1
-            network: liberty-gce
-  scripts:
-    -
-      path: ./vagrant-deploy-common/scripts/routes_allregions.sh
-    -
-      args: "%{name}"
-      path: ./vagrant-deploy-common/scripts/updatedns.sh
-
-
-custom:
-  name: 1
-  web-server:
-    attributes:
-      prefix: zeus-dev
-    authentication:
-      private_key_path: ~/.ssh/id_rsa
-      public_key_path: ~/.ssh/id_rsa.pub
-      username: ubuntu
-    providers:
-      aws:
-        regions:
-        attributes:
-          instance_type: m1.medium
-      gce:
-        attributes:
-          instance_type: m1.large
-    scripts:
-      -
-        args:
-          - "%{name}"
-          - "%{type}"
-          - "%{domain}"
-        path: ./scripts/configure.sh
-      -
-        args:
-          - "%{hydra}"
-        path: ./scripts/configureListener.sh
-      -
-        args:
-          - "%{$provider}-%{region}"
-          - "%{type}"
-        path: ./vagrant-deploy-common/scripts/hydraProbe.sh
-
-```
-
 ## Contributing
 
 Feel free to report any issue you experiment via Github issues.
 PR are also too much appreciated
+
+Only PR which follows the [Ruby coding style][ruby-guide] guide will be accepted.
+Aditionally, you must cover with test any new feature or refactor you do
+
+We try to follow the [best RSpec][rspec-best] conventions in our tests
 
 ### Development
 
@@ -264,14 +303,14 @@ Clone/fork this repository
 $ git clone git@github.com:innotech/dployr.git && cd dployr
 ```
 
-Install required dependencies
+Install dependencies
 ```
 $ bundle install
 ```
 
-Before you push any changes, run the RSpec suite
+Before you push any changes, run test specs
 ```
-$ rake spec
+$ rake test
 ```
 
 To build a new version of the gem:
@@ -284,6 +323,18 @@ To publish the new version to Rubygems:
 $ rake release
 ```
 
+## Contributors
+
+- [Tomas Aparicio](https://github.com/h2non)
+- [Germán Ramos](https://github.com/germanramos)
+
 ## License
 
-Released under the MIT license
+[MIT](http://opensource.org/licenses/MIT) © Innotech and contributors
+
+[travis]: http://travis-ci.org/innotech/dployr
+[gemnasium]: https://gemnasium.com/innotech/dployr
+[gem]: http://rubygems.org/gems/dployr
+[ruby-guide]: https://github.com/bbatsov/ruby-style-guide
+[rspec-best]: http://betterspecs.org/
+[rubydoc]: http://www.rubydoc.info/gems/dployr/

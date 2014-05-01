@@ -7,11 +7,12 @@ module Dployr
 
     attr_reader :default, :instances
 
-    def initialize
+    def initialize(attributes = {})
       @default = nil
       @config = nil
       @instances = []
       @merged = false
+      @attributes = attributes.is_a?(Hash) ? attributes : {}
       yield self if block_given?
     end
 
@@ -20,7 +21,7 @@ module Dployr
     end
 
     def set_default(config)
-      @default = create_instance('default', config) if config.is_a? Hash
+      @default = create_instance 'default', config if config.is_a? Hash
     end
 
     def add_instance(name, config)
@@ -35,8 +36,9 @@ module Dployr
 
     def get_config(name, attributes = {})
       instance = get_instance name
-      raise ArgumentError.new "Instance '#{name.to_s}' do not exists" if instance.nil?
-      replace_variables merge_config(instance), replace_variables(attributes)
+      attributes = @attributes.merge (attributes or {})
+      raise Error.new "Instance '#{name.to_s}' do not exists" if instance.nil?
+      render_config name, instance, attributes
     end
 
     def get_config_all(attributes = {})
@@ -44,7 +46,6 @@ module Dployr
       @instances.each do |i|
         config << get_config(i.name, attributes)
       end
-      puts config
       config
     end
 
@@ -72,6 +73,18 @@ module Dployr
     end
 
     private
+
+    def render_config(name, instance, attributes)
+      attributes = replace_variables attributes
+      config = merge_config instance, attributes
+      config = replace_name name, config
+      config = replace_variables config, attributes
+      config
+    end
+
+    def replace_name(name, config)
+      replace_keywords 'name', name, config
+    end
 
     def create_instance(name = 'unnamed', config)
       Dployr::Config::Instance.new do |i|
@@ -103,8 +116,11 @@ module Dployr
       attrs
     end
 
-    def merge_config(instance)
-      merge_providers merge_parents merge_defaults instance.get_values
+    def merge_config(instance, attributes = {})
+      config = merge_defaults instance.get_values
+      config[:attributes] =
+        (get_by_key(config, :attributes) or {}).merge attributes if attributes
+      merge_providers merge_parents config
     end
 
     def merge_defaults(config)
@@ -137,7 +153,10 @@ module Dployr
       keys.each do |type|
         current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
-        if type == :scripts
+        if current and source
+          raise Error.new "Cannot merge different types: #{parent}" if current.class != source.class
+        end
+        if type.to_sym == :scripts and current.is_a? Array
           current = [] unless current.is_a? Array
           current.concat source if source.is_a? Array
           current = current.compact.uniq
@@ -145,7 +164,8 @@ module Dployr
           current = {} unless current.is_a? Hash
           current = deep_merge current, source
         end
-        child[type] = current if current.length
+        child.delete type.to_s unless child[type.to_s].nil?
+        child[type.to_sym] = current if current
       end
       child
     end
