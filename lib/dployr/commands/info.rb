@@ -19,7 +19,7 @@ module Dployr
 
           @info = @client.get_info @name
           if @info
-            puts @info.to_yaml
+            puts @info.attributes.to_yaml
           else
             raise "#{@name} not found"
           end
