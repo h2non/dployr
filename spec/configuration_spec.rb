@@ -202,20 +202,6 @@ describe Dployr::Configuration do
         end
       end
 
-      describe "autentication" do
-        it "should exists" do
-          zeus[:authentication].should be_a Hash
-        end
-
-        it "should have a valid number of values" do
-          zeus[:authentication].should have(2).items
-        end
-
-        it "should have a valid authentication values" do
-          zeus[:authentication][:user].should eql 'admin'
-        end
-      end
-
       describe "providers" do
         it "should exists" do
           zeus[:providers].should be_a Hash
@@ -265,9 +251,6 @@ describe Dployr::Configuration do
                 region[:scripts].should have(2).items
               end
 
-              it "should have inherited autentication" do
-                region[:authentication].should have(2).items
-              end
             end
           end
 
@@ -275,7 +258,7 @@ describe Dployr::Configuration do
 
         describe "aws" do
           it "should have the expected values" do
-            zeus[:providers][:aws].should have(4).items
+            zeus[:providers][:aws].should have(3).items
           end
 
           describe "attributes" do
@@ -434,23 +417,6 @@ describe Dployr::Configuration do
                 end
               end
 
-              describe "authentication" do
-                it "should exists" do
-                  region[:authentication].should be_a Hash
-                end
-
-                it "should have a valid number" do
-                  region[:authentication].should have(2).items
-                end
-
-                it "should have a valid user" do
-                  region[:authentication][:user].should eql "admin"
-                end
-
-                it "should have a valid key_path" do
-                  region[:authentication][:key_path].should eql "path/to/key.pem"
-                end
-              end
             end
           end
         end
@@ -470,7 +436,7 @@ describe Dployr::Configuration do
         end
 
         it "should have one provider" do
-          @config.should have(4).items
+          @config.should have(3).items
         end
 
         it "should have two regions" do
@@ -512,7 +478,7 @@ describe Dployr::Configuration do
         end
 
         it "should have a valid number of keys" do
-          @config.should have(3).items
+          @config.should have(2).items
         end
 
         it "should have a attributes" do
