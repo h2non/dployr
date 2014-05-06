@@ -7,7 +7,6 @@ module Dployr
       def initialize(options)
         super options
         begin
-          create
           render_file
         rescue Exception => e
           @log.error e
