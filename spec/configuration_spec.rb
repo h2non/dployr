@@ -108,7 +108,11 @@ describe Dployr::Configuration do
           name: "zeus"
         },
         scripts: [
-          { path: "setup.sh", args: ["--id ${index}", "--name ${name}", "%{name}-%{instance_type}-%{version}"], remote: true }
+          {
+            path: "setup.sh",
+            args: ["--id ${index}", "--name ${name}", "%{name}-%{instance_type}-%{version}", "%{mixed}"],
+            remote: true
+          }
         ],
         providers: {
           aws: {
@@ -312,7 +316,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of arguments" do
-              zeus[:providers][:aws][:scripts][1][:args].should have(3).items
+              zeus[:providers][:aws][:scripts][1][:args].should have(4).items
             end
 
             it "should have a remote property" do
@@ -330,6 +334,14 @@ describe Dployr::Configuration do
 
               it "should replace the name context value" do
                 zeus[:providers][:aws][:scripts][1][:args][1].should eql "--name zeus"
+              end
+
+              it "should replace the multiple attributes" do
+                zeus[:providers][:aws][:scripts][1][:args][2].should eql "zeus-m1.small-0.1.0"
+              end
+
+              it "should replace the self-referenced attribute with other attributes" do
+                zeus[:providers][:aws][:scripts][1][:args][3].should eql "be457fca-m1.small"
               end
             end
           end

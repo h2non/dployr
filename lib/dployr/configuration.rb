@@ -82,10 +82,6 @@ module Dployr
       config
     end
 
-    def replace_name(name, config)
-      replace_keywords 'name', name, config
-    end
-
     def create_instance(name = 'unnamed', config)
       Dployr::Config::Instance.new do |i|
         i.name = name
@@ -93,15 +89,24 @@ module Dployr
       end if config.is_a? Hash
     end
 
+    def replace_name(name, config)
+      replace_keywords 'name', name, config
+    end
+
     def replace_variables(config, attributes = {})
       if config.is_a? Hash
         attrs = get_all_attributes config
         attrs.merge! attributes if attributes.is_a? Hash
-        traverse_map config do |str, key|
-          replace_env_vars template(str, attrs)
-        end
+        config = replace config, attrs
       end
       config
+    end
+
+    def replace(hash, origin)
+      traverse_map hash do |str|
+        replace_env_vars template(str, origin)
+      end
+      hash
     end
 
     def get_all_attributes(config)
@@ -113,6 +118,7 @@ module Dployr
           attrs.merge! get_all_attributes value
         end
       end if config.is_a? Hash
+      attrs = replace attrs, attrs
       attrs
     end
 
