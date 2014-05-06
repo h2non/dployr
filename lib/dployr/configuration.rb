@@ -79,7 +79,6 @@ module Dployr
     private
 
     def render_config(name, instance, attributes)
-      attributes = replace_variables attributes
       config = merge_config instance, attributes
       config = replace_name name, config
       config = replace_variables config, attributes
