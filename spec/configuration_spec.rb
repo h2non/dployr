@@ -14,41 +14,39 @@ describe Dployr::Configuration do
     end
 
     describe "default values" do
-      let(:defaults) do
-        {
-          attributes: {
-            name: "example",
-            instance_type: "m1.small",
-            version: "${DPLOYR}"
-          },
-          scripts: [
-            { path: "configure.sh" }
-          ],
-          providers: {
-            aws: {
-              attributes: {
-                network_id: "be457fca",
-                instance_type: "m1.small",
-                "type-%{name}" => "small",
-                mixed: "%{network_id}-%{instance_type}"
-              },
-              scripts: [
-                {
-                  path: "router.sh",
-                  args: [ "%{name}", "${region}", "${provider}" ]
-                }
-              ],
-              regions: {
-                "eu-west-1a" => {
-                  attributes: {
-                    keypair: "vagrant-aws-ireland"
-                  }
+      defaults = {
+        attributes: {
+          name: "example",
+          instance_type: "m1.small",
+          version: "${DPLOYR}"
+        },
+        scripts: [
+          { path: "configure.sh" }
+        ],
+        providers: {
+          aws: {
+            attributes: {
+              network_id: "be457fca",
+              instance_type: "m1.small",
+              "type-%{name}" => "small",
+              mixed: "%{network_id}-%{instance_type}"
+            },
+            scripts: [
+              {
+                path: "router.sh",
+                args: [ "%{name}", "${region}", "${provider}" ]
+              }
+            ],
+            regions: {
+              "eu-west-1a" => {
+                attributes: {
+                  keypair: "vagrant-aws-ireland"
                 }
               }
             }
           }
         }
-      end
+      }
 
       describe "add default values" do
         before do
@@ -108,10 +106,6 @@ describe Dployr::Configuration do
         extends: "hera",
         attributes: {
           name: "zeus"
-        },
-        authentication: {
-          user: "admin",
-          key_path: "path/to/key.pem"
         },
         scripts: [
           { path: "setup.sh", args: ["--id ${index}", "--name ${name}", "%{name}-%{instance_type}-%{version}"], remote: true }
@@ -254,7 +248,6 @@ describe Dployr::Configuration do
               it "should have inherited scripts" do
                 region[:scripts].should have(2).items
               end
-
             end
           end
 
@@ -424,7 +417,6 @@ describe Dployr::Configuration do
                   end
                 end
               end
-
             end
           end
         end
@@ -443,7 +435,7 @@ describe Dployr::Configuration do
           @config.should be_a Hash
         end
 
-        it "should have one provider" do
+        it "should have a valid number of keys" do
           @config.should have(3).items
         end
 

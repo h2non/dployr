@@ -37,7 +37,7 @@ module Dployr
     def get_config(name, attributes = {})
       instance = get_instance name
       attributes = @attributes.merge (attributes or {})
-      raise Error.new "Instance '#{name.to_s}' do not exists" if instance.nil?
+      fail "Instance '#{name.to_s}' do not exists" if instance.nil?
       render_config name, instance, attributes
     end
 
@@ -154,7 +154,7 @@ module Dployr
         current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
         if current and source
-          raise "Cannot merge different types: #{parent}" if current.class != source.class
+          fail "Cannot merge different types: #{parent}" if current.class != source.class
         end
         if type.to_sym == :scripts and current.is_a? Array
           current = [] unless current.is_a? Array
