@@ -6,7 +6,7 @@ command = ARGV[0]
 options = {}
 
 opt_parser = OptionParser.new do |opt|
-  opt.banner   = "  Usage: dployr <command> [options]"
+  opt.banner   = "\n  Usage: dployr <command> [options]"
   opt.separator  ""
   opt.separator  "  Commands"
   opt.separator  ""
