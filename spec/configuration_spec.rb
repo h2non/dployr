@@ -29,10 +29,14 @@ describe Dployr::Configuration do
               attributes: {
                 network_id: "be457fca",
                 instance_type: "m1.small",
-                "type-%{name}" => "small"
+                "type-%{name}" => "small",
+                mixed: "%{network_id}-%{instance_type}"
               },
               scripts: [
-                { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
+                {
+                  path: "router.sh",
+                  args: [ "%{name}", "${region}", "${provider}" ]
+                }
               ],
               regions: {
                 "eu-west-1a" => {
@@ -110,7 +114,7 @@ describe Dployr::Configuration do
           key_path: "path/to/key.pem"
         },
         scripts: [
-          { path: "setup.sh", args: ["--id ${index}", "--name ${name}"], remote: true }
+          { path: "setup.sh", args: ["--id ${index}", "--name ${name}", "%{name}-%{instance_type}-%{version}"], remote: true }
         ],
         providers: {
           aws: {
@@ -267,7 +271,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of attributes" do
-              zeus[:providers][:aws][:attributes].should have(5).items
+              zeus[:providers][:aws][:attributes].should have(6).items
             end
 
             it "should have a valid instance_type" do
@@ -290,6 +294,10 @@ describe Dployr::Configuration do
               it "should have a type key with valid replacement" do
                 zeus[:providers][:aws][:attributes]["type-zeus"].should eql "small"
               end
+
+              it "should have a mixed attribute with self-referenced values" do
+                zeus[:providers][:aws][:attributes][:mixed].should eql "be457fca-m1.small"
+              end
             end
           end
 
@@ -311,7 +319,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of arguments" do
-              zeus[:providers][:aws][:scripts][1][:args].should have(2).items
+              zeus[:providers][:aws][:scripts][1][:args].should have(3).items
             end
 
             it "should have a remote property" do
