@@ -10,13 +10,19 @@ german-template:
         target: /tmp
     provision:
       - remote_path: /tmp/hello/hello.sh
-    post-halt:
-      - local_path: sleep
-        args: "50"
   providers:
+    baremetal:
+      regions:
+        wizzo:
+          attributes:
+            private_ip: 10.111.6.56
     aws:
       attributes:
         instance_type: t1.micro
+      scripts:
+        post-halt:
+        - local_path: sleep
+          args: "50"
       regions:
         sa-east-1a:
           attributes:

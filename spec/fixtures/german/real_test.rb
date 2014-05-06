@@ -1,5 +1,6 @@
 #OPTIONS=" -f Dployrfile.yml -n german-template -p aws -r sa-east-1a"
-OPTIONS=" -f Dployrfile.yml -n german-template -p gce -r europe-west1-a"
+#OPTIONS=" -f Dployrfile.yml -n german-template -p gce -r europe-west1-a"
+OPTIONS=" -f Dployrfile.yml -n german-template -p baremetal -r wizzo"
 
 
 BIN="../../../bin/dployr"

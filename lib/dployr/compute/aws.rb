@@ -7,20 +7,22 @@ module Dployr
       
       include Dployr::Compute::Common
       
-      def initialize(region)
-        @options = {
-          region: region[0..-2],
+      def initialize(options, attrs)
+        @aws_options = {
+          region: options[:region][0..-2],
           provider: 'AWS',
           aws_access_key_id: ENV["AWS_ACCESS_KEY"],
-          aws_secret_access_key: ENV["AWS_SECRET_KEY"]
+          aws_secret_access_key: ENV["AWS_SECRET_KEY"],
         }
-        @compute = Fog::Compute.new @options
+        @compute = Fog::Compute.new @aws_options
+        @attrs = attrs
+        @options = options
       end
 
-      def get_ip(name, public)
-        instance = get_instance(name, ["running"]) # TODO: add starting states
+      def get_ip()
+        instance = get_instance(["running"]) # TODO: add starting states
         if instance
-          if public
+          if @options[:public_ip]
             return instance.public_ip_address
           else
             return instance.private_ip_address
@@ -28,43 +30,43 @@ module Dployr
         end
       end
       
-      def get_info(name)
-        get_instance(name, ["running", "stopped", "stopping"])
+      def get_info()
+        get_instance(["running", "stopped", "stopping"])
       end
 
-      def destroy(name)
-        instance = get_instance(name, ["running", "stopped", "stopping"])
+      def destroy()
+        instance = get_instance(["running", "stopped", "stopping"])
         if instance
           instance.destroy
         else
-          raise "Instance #{name} not found"
+          raise "Instance #{@attrs["name"]} not found"
         end
       end
 
-      def halt(name)
-        instance = get_instance(name, ["running"])
+      def halt()
+        instance = get_instance(["running"])
         if instance
           instance.stop
         else
-          raise "Instance #{name} not found"
+          raise "Instance #{@attrs["name"]} not found"
         end
       end
 
-      def start(attributes, region)
-        server = get_instance(attributes["name"], ["stopped", "stopping"])
+      def start()
+        server = get_instance(["stopped", "stopping"])
         if server
-          puts "Starting stopped instance for #{attributes["name"]} in #{region}...".yellow
+          puts "Starting stopped instance for #{@attrs["name"]} in #{@options[:region]}...".yellow
           server.start
         else
-          puts "Creating new instance for #{attributes["name"]} in #{region}...".yellow
+          puts "Creating new instance for #{@attrs["name"]} in #{@options[:region]}...".yellow
           options = {
-            availability_zone: region,
-            flavor_id: attributes["instance_type"],
-            image_id: attributes["ami"],
-            key_name: attributes["keypair"],
-            subnet_id: attributes["subnet_id"],
-            security_group_ids: attributes["security_groups"],
-            tags: { Name: attributes["name"] }
+            availability_zone: @options[:region],
+            flavor_id: @attrs["instance_type"],
+            image_id: @attrs["ami"],
+            key_name: @attrs["keypair"],
+            subnet_id: @attrs["subnet_id"],
+            security_group_ids: @attrs["security_groups"],
+            tags: { Name: @attrs["name"] }
           }
           puts options.to_yaml
           server = @compute.servers.create(options)
@@ -72,35 +74,35 @@ module Dployr
         print "Wait for instance to get online".yellow
         server.wait_for { print ".".yellow; ready? }
         print "\n"
-        elastic_ip(attributes, server)
-        wait_ssh(attributes, server)
+        elastic_ip(server)
+        wait_ssh(@attrs, server, @options[:public_ip])
       end
       
       private
       
-      def get_instance(name, states)
+      def get_instance(states)
         servers = @compute.servers.all
         servers.each do |instance|
-          if instance.tags["Name"] == name and states.include? instance.state
+          if instance.tags["Name"] == @attrs["name"] and states.include? instance.state
             return instance
           end
         end
         nil
       end
       
-      def elastic_ip(attributes, server)
-        if attributes["public_ip"]
-          if attributes["public_ip"] == "new"
+      def elastic_ip(server)
+        if @attrs["public_ip"]
+          if @attrs["public_ip"] == "new"
             puts "Creating new elastic ip...".yellow
             response = @compute.allocate_address(server.vpc_id)
             allocation_id = response[:body]["allocationId"]
-            attributes["public_ip"] = response[:body]["publicIp"]
+            @attrs["public_ip"] = response[:body]["publicIp"]
           else
-            puts "Looking for elastic ip #{attributes["public_ip"]}...".yellow
-            eip = @compute.addresses.get(attributes["public_ip"])
+            puts "Looking for elastic ip #{@attrs["public_ip"]}...".yellow
+            eip = @compute.addresses.get(@attrs["public_ip"])
             allocation_id = eip.allocation_id
           end
-          puts "Associating elastic ip #{attributes["public_ip"]}...".yellow
+          puts "Associating elastic ip #{@attrs["public_ip"]}...".yellow
           @compute.associate_address(server.id,nil,nil,allocation_id)
         end
       end

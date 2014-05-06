@@ -1,6 +1,9 @@
 require 'logger'
 require 'dployr/init'
 require 'dployr/commands/utils'
+require 'dployr/compute/aws'
+require 'dployr/compute/gce'
+require 'dployr/compute/baremetal'
 
 module Dployr
   module Commands
@@ -15,6 +18,13 @@ module Dployr
         @name = options[:name]
         @log = Logger.new STDOUT
         @attrs = parse_attributes @options[:attributes]
+        if !options[:public_ip]
+          options[:public_ip] = false
+        end
+        @provider = options[:provider].upcase
+        create
+        @config = get_region_config options
+        @p_attrs = @config[:attributes]
       end
 
       def create
