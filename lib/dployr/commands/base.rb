@@ -11,27 +11,22 @@ module Dployr
 
       include Dployr::Commands::Utils
 
-      attr_reader :options, :name, :log, :attrs, :dployr
-
       def initialize(options)
         @options = options
         @name = options[:name]
         @log = Logger.new STDOUT
         @attrs = parse_attributes @options[:attributes]
-        if !options[:public_ip]
-          options[:public_ip] = false
-        end
+        @options[:public_ip] = false if !options[:public_ip]
         @provider = options[:provider].upcase
         create
-        @config = get_region_config options
-        @p_attrs = @config[:attributes]
+        get_config
       end
 
       def create
         begin
           @dployr = Dployr::Init.new @attrs
           @dployr.load_config @options[:file]
-        rescue Exception => e
+        rescue => e
           raise "Cannot load the config: #{e}"
         end
       end
@@ -46,6 +41,13 @@ module Dployr
 
       def get_region_config(options)
         @dployr.config.get_region options[:name], options[:provider], options[:region]
+      end
+
+      private
+
+      def get_config
+        @config = get_region_config @options
+        @p_attrs = @config[:attributes]
       end
 
     end

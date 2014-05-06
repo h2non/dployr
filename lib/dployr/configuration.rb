@@ -37,7 +37,7 @@ module Dployr
     def get_config(name, attributes = {})
       instance = get_instance name
       attributes = @attributes.merge (attributes or {})
-      fail "Instance '#{name.to_s}' do not exists" if instance.nil?
+      raise "Instance do not exists" if instance.nil?
       render_config name, instance, attributes
     end
 
@@ -54,7 +54,9 @@ module Dployr
       if config.is_a? Hash
         config = config[get_real_key(config, :providers)]
         if config.is_a? Hash
-          return config[get_real_key(config, provider)]
+          provider_data = config[get_real_key(config, provider)]
+          raise "Provider #{provider} for #{name} do not exists" unless provider_data
+          provider_data
         end
       end
     end
@@ -63,7 +65,9 @@ module Dployr
       provider = get_provider name, provider, attributes
       if provider.is_a? Hash
         regions = get_by_key provider, :regions
-        return get_by_key regions, region
+        region_data = get_by_key regions, region
+        raise "Region #{region} for #{name} do not exists" unless region_data
+        region_data
       end
     end
 
@@ -160,7 +164,7 @@ module Dployr
         current = deep_copy get_by_key(parent, type)
         source = get_by_key child, type
         if current and source
-          fail "Cannot merge different types: #{parent}" if current.class != source.class
+          raise "Cannot merge different types: #{parent}" if current.class != source.class
         end
         if type.to_sym == :scripts and current.is_a? Array
           current = [] unless current.is_a? Array

@@ -6,12 +6,7 @@ module Dployr
 
       def initialize(options)
         super options
-        begin
-          render_file
-        rescue Exception => e
-          @log.error e
-          exit 1
-        end
+        render_file
       end
 
       private
@@ -19,13 +14,7 @@ module Dployr
       def render_file
         raise "Dployrfile was not found" if @dployr.file_path.nil?
         raise "Configuration is missing" unless @dployr.config.exists?
-
-        begin
-          print_config
-        rescue Exception => e
-          puts "Cannot generate the config: #{e}"
-          exit 1
-        end
+        print_config
       end
 
       def print_config

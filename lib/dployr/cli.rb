@@ -45,9 +45,13 @@ opt_parser = OptionParser.new do |opt|
   opt.on("-r", "--region REGION", "region to use (allow multiple values comma-separated)") do |v|
     options[:region] = v
   end
-  
+
   opt.on("-i", "--public-ip", "use public ip instead of private ip to when access instances") do |v|
     options[:public_ip] = v
+  end
+
+  opt.on("--debug", "enable debug mode") do
+    options[:debug] = true
   end
 
   opt.on("-v",  "-V", "--version", "version") do
@@ -65,31 +69,47 @@ end
 
 opt_parser.parse!
 
+def run(command, options, arg = nil)
+  begin
+    cmd = Dployr::Commands.const_get command
+    raise "Command not supported: #{command}" unless cmd
+    if arg
+      cmd.new options, arg
+    else
+      cmd.new options
+    end
+  rescue => e
+    puts "Error: #{e}".red
+    puts e.backtrace if e.backtrace and options[:debug]
+    exit 1
+  end
+end
+
 case command
 when "start"
-  Dployr::Commands::Start.new options
+  run :Start, options
 when "halt"
-  Dployr::Commands::StopDestroy.new options, "halt"
+  run :StopDestroy, options, "halt"
 when "destroy"
-  Dployr::Commands::StopDestroy.new options, "destroy"
+  run :StopDestroy, options, "destroy"
 when "status"
   puts "Command currently not available"
 when "info"
-  Dployr::Commands::Info.new options
+  run :Info, options
 when "provision"
-  Dployr::Commands::ProvisionTest.new options, "provision"
+  run :ProvisionTest, options, "provision"
 when "test"
-  Dployr::Commands::ProvisionTest.new options, "test"
+  run :ProvisionTest, options, "test"
 when "deploy"
-  Dployr::Commands::Start.new options
-  Dployr::Commands::ProvisionTest.new options, "provision"
-  Dployr::Commands::ProvisionTest.new options, "test"
+  run :Start, options
+  run :ProvisionTest, options, "provision"
+  run :ProvisionTest, options, "test"
 when "execute"
-  Dployr::Commands::Execute.new options, ARGV[1..-1]
+  run :Execute, options, ARGV[1..-1]
 when "ssh"
-  Dployr::Commands::Ssh.new options
+  run :Ssh, options
 when "config"
-  Dployr::Commands::Config.new options
+  run :Config, options
 when "init"
   Dployr::Config::Create.write_file
 else
