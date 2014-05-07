@@ -21,7 +21,7 @@ and deployment across different providers
 You can setup your project cloud infraestructure from a
 simple configuration file which support built-in rich features
 
-Dployr provides a featured [command-line interface](#command-line-interface) and [programmatic API]
+Dployr provides a featured [command-line interface](#command-line-interface) and [programmatic API](#programmatic-api)
 
 ## Installation
 
