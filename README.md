@@ -57,6 +57,12 @@ Dployr is still a alpha project, so there are only a few providers supported
 - Google Compute Engine (`gce`)
 - Baremetal
 
+Upcoming providers
+
+- OpenStack
+- Verizon
+- Azure
+
 ## Configuration
 
 Configuration file must be called `Dployrfile`. It can be also a standard Ruby file
