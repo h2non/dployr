@@ -51,7 +51,7 @@ Requires Ruby 1.9.3+
 
 ## Supported providers
 
-Note that as Dployr is still in alpha stage, there are only a few providers supported
+Dployr is still a alpha project, so there are only a few providers supported
 
 - Amazon Web Services (`aws`)
 - Google Compute Engine (`gce`)

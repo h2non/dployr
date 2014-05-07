@@ -20,7 +20,7 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  "    provision instance provisioning"
   opt.separator  "    config    generate configuration in YAML from Dployrfile"
   opt.separator  "    execute   run custom stages"
-  opt.separator  "    ssh       ssh into machine"
+  opt.separator  "    ssh       ssh into machine (only Unix-like OS)"
   opt.separator  "    init      create a sample Dployrfile"
   opt.separator  ""
   opt.separator  "  Options"
