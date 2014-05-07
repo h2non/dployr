@@ -17,7 +17,7 @@ module Dployr
         @log = Logger.new STDOUT
         @attrs = parse_attributes @options[:attributes]
         @options[:public_ip] = false if !options[:public_ip]
-        @provider = options[:provider].upcase
+        @provider = options[:provider].upcase if options[:provider]
         create
         get_config
       end
