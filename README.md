@@ -71,7 +71,6 @@ Each configuration level supports the followings members:
 - **attributes** `Object` Custom attrbutes to apply to the current template
 - **scripts** `Array|Object`
 - **providers** `Object`
-- **authentication** `Object` (optional)
 - **extends** `String|Array` Allows to inherits the current config object from others
 
 #### Templating
