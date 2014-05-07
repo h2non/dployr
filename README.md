@@ -68,10 +68,10 @@ or a YAML file (adding the `.yml` or `.yaml` extension)
 
 Each configuration level supports the followings members:
 
-- **attributes** `Object` Custom attrbutes to apply to the current template
-- **scripts** `Array|Object`
-- **providers** `Object`
-- **extends** `String|Array` Allows to inherits the current config object from others
+- **attributes** `Object` Custom attributes to apply to the current template
+- **scripts** `Object` Scripts hooks per phase to run (start, stop, test...)
+- **providers** `Object` Nested configuration provider-specific (aws, gce...)
+- **extends** `String|Array` Allows to inherits the current template from other templates
 
 #### Templating
 
