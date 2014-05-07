@@ -157,39 +157,38 @@ default:
         path: ./scripts/updatedns.sh
 
 custom:
-  name: 1
-  web-server:
-    attributes:
-      prefix: zeus-dev
-    providers:
-      aws:
-        regions:
-        attributes:
-          instance_type: m1.medium
-      gce:
-        attributes:
-          instance_type: m1.large
-    scripts:
-      pre-start:
-        -
-          args:
-            - "%{name}"
-            - "%{type}"
-            - "%{domain}"
-          path: ./scripts/pre-start.sh
-      start:
-        -
-          args:
-            - "%{hydra}"
-          path: ./scripts/configure.sh
-      provision:
-        -
-          args:
-            - "%{$provider}-%{region}"
-            - "%{type}"
-          path: ./scripts/provision.sh
-      test:
-        - path: ./scripts/serverspec.sh
+  attributes:
+    prefix: zeus-dev
+  providers:
+    aws:
+      regions:
+      attributes:
+        instance_type: m1.medium
+        public_ip: new # create a elastic IP
+    gce:
+      attributes:
+        instance_type: m1.large
+  scripts:
+    pre-start:
+      -
+        args:
+          - "%{name}"
+          - "%{type}"
+          - "%{domain}"
+        path: ./scripts/pre-start.sh
+    start:
+      -
+        args:
+          - "%{hydra}"
+        path: ./scripts/configure.sh
+    provision:
+      -
+        args:
+          - "%{$provider}-%{region}"
+          - "%{type}"
+        path: ./scripts/provision.sh
+    test:
+      - path: ./scripts/serverspec.sh
 ```
 
 ## Command-line interface

@@ -53,7 +53,7 @@ module Dployr
             end
 
             channel.on_extended_data do |ch,type,data|
-              stderr_data+=data
+              stderr_data += data
               #print "[#{@host}] #{data}".red
               print "#{data}".red
             end

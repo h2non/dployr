@@ -10,7 +10,7 @@ module Dployr
 
         @action = action
         puts "Connecting to #{@provider}...".yellow
-        @client = Dployr::Compute.const_get(@provider.to_sym).new(@options, @p_attrs)
+        @client = Dployr::Compute.const_get(@provider.to_sym).new @options, @p_attrs
 
         puts "Looking for #{@p_attrs["name"]} in #{@options[:region]}...".yellow
         @ip = @client.get_ip
@@ -25,7 +25,7 @@ module Dployr
 
       def action
         puts "#{@action.capitalize}ing #{@p_attrs["name"]} in #{@options[:region]}...".yellow
-        @client.send(@action.to_sym)
+        @client.send @action.to_sym
         puts "#{@p_attrs["name"]} #{@action}ed sucesfully".yellow
         @ip
       end
