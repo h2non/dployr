@@ -7,24 +7,20 @@ module Dployr
 
       def initialize(options, stages)
         super options
-        begin
-          puts "Connecting to #{@provider}...".yellow
-          @client = Dployr::Compute.const_get(@provider.to_sym).new(@options, @p_attrs)
 
-          puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip
-          if @ip
-            puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
-          else
-            raise "#{@p_attrs["name"]} not found"
-          end
+        puts "Connecting to #{@provider}...".yellow
+        @client = Dployr::Compute.const_get(@provider.to_sym).new @options, @p_attrs
 
-          stages.each do |stage|
-            Dployr::Scripts::Hook.new @ip, @config, stage
-          end
-        rescue Exception => e
-          self.log.error e
-          exit 1
+        puts "Looking for #{@name} in #{@region}...".yellow
+        @ip = @client.get_ip
+        if @ip
+          puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
+        else
+          raise "#{@p_attrs["name"]} not found"
+        end
+
+        stages.each do |stage|
+          Dployr::Scripts::Hook.new @ip, @config, stage
         end
       end
 
