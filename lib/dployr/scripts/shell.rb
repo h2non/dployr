@@ -20,6 +20,7 @@ module Dployr
         Net::SSH.start(@ip, @username, :keys => [@private_key_path]) do |ssh|
           command = @script["remote_path"]
           arguments = @script["args"]
+          arguments = arguments.join ' ' if arguments.is_a? Array
 
           puts "Running remote script '#{command} #{arguments}'".yellow
           total_command = command
@@ -63,7 +64,7 @@ module Dployr
               exit_code = data.read_long
               @channel.close
             end
-            
+
           end
         end
         ssh.loop

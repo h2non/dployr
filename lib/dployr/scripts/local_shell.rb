@@ -14,15 +14,15 @@ module Dployr
       def start
         command = @script["local_path"]
         arguments = @script["args"]
+        arguments = arguments.join ' ' if arguments.is_a? Array
 
         puts "Running local script '#{command} #{arguments}'".yellow
         total_command = command
-          if arguments
-            total_command =  command + ' ' + arguments
-          end
-        result = system(total_command)
+        total_command =  command + ' ' + arguments if arguments
+
+        result = system total_command
         if result == false
-          raise "Exit code non zero when running local script '#{total_command}'".yellow
+          raise "Exit code non zero when running local script '#{total_command}'"
         else
           puts "Local script '#{command} #{arguments}' finished succesfully".yellow
         end
