@@ -2,7 +2,7 @@
 
 > Multicloud management and deployment made simple
 
-> **Spoiler! Alpha project. Use it by your own risk**
+> **Alpha project, use it by your own risk**
 
 <table>
 <tr>
@@ -21,7 +21,7 @@ and deployment across different providers
 You can configure your infraestructure and deployment from a
 simple configuration file which support built-in rich features
 
-Dployr only works in Ruby >= `1.9.x`
+Dployr requires Ruby >= `1.9.x`
 
 ## Installation
 
@@ -33,7 +33,7 @@ If you need to use it from another Ruby package,
 add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '>= 0.0.3'
+spec.add_dependency 'dployr', '~> 0.0.3'
 # Gemfile
 gem 'dployr', '>= 0.0.3'
 ```
@@ -45,8 +45,9 @@ Dployr documentation and API is available from [RubyDoc][rubydoc]
 ## Features
 
 - Fully configurable from Ruby or YAML file with rich features like templating
-- Supports deployment to multiple providers
-- Built-in support for defailted instances configuration
+- Supports deployment to multiple cloud providers
+- Supports default instances and inherited configuration values
+- Full control of virtual instances (start, restart, stop, test, provision)
 - Local and remote scripts execution per stage phase (start, test, provision, update, stop...)
 - Featured command-line and programmatic API
 
@@ -56,6 +57,7 @@ Note that as Dployr is still in alpha stage, there are only a few providers supp
 
 - Amazon Web Services (`aws`)
 - Google Compute Engine (`gce`)
+- Baremetal
 
 ## Configuration
 
@@ -107,15 +109,12 @@ Notation: `${HOME}`
 Featured example configuration file (YAML)
 ```yml
 ---
+# general configuration applied to templates
 default:
   attributes:
     name: "default"
     prefix: dev
     private_key_path: ~/pems/private.pem
-  authentication:
-    private_key_path: ~/.ssh/id_rsa
-    public_key_path: ~/.ssh/id_rsa.pub
-    username: ubuntu
   providers:
     aws:
       attributes:
@@ -163,10 +162,6 @@ custom:
   web-server:
     attributes:
       prefix: zeus-dev
-    authentication:
-      private_key_path: ~/.ssh/id_rsa
-      public_key_path: ~/.ssh/id_rsa.pub
-      username: ubuntu
     providers:
       aws:
         regions:
@@ -209,6 +204,7 @@ Commands
   halt      stop instances
   destroy   destroy instances
   status    retrieve the instances status
+  info      retrieve instance information and output it in YAML format
   test      run remote test in instances
   deploy    start, provision and test running instances
   provision instance provisioning
@@ -221,9 +217,11 @@ Options
 
   -n, --name NAME                  template name identifier to load
   -f, --file PATH                  custom config file path to load
-  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query
+  -a, --attributes ATTRS           aditional attributes to pass to the configuration in matrix query format
   -p, --provider VALUES            provider to use (allow multiple values comma-separated)
   -r, --region REGION              region to use (allow multiple values comma-separated)
+  -i, --public-ip                  use public ip instead of private ip to when access instances
+      --debug                      enable debug mode
   -v, -V, --version                version
   -h, --help                       help
 ```
@@ -243,6 +241,11 @@ $ dployr provision -n name -p aws -r eu-west-1 -a 'env=dev'
 Test a working instance
 ```bash
 $ dployr test -n name -p aws -r eu-west-1 -a 'env=dev'
+```
+
+Generate config in YAML format
+```bash
+$ dployr config -n name -p aws -r eu-west-1 -a 'env=dev'
 ```
 
 ## Programmatic API
