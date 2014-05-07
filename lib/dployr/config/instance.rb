@@ -49,7 +49,7 @@ module Dployr
       end
 
       def add_script(script)
-        @scripts << script if script.is_a? Hash
+        @scripts.merge! script if script.is_a? Hash
       end
 
       def add_provider(name, provider)
