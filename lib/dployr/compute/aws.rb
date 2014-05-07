@@ -11,8 +11,8 @@ module Dployr
         @aws_options = {
           region: options[:region][0..-2],
           provider: 'AWS',
-          aws_access_key_id: ENV["AWS_ACCESS_KEY"],
-          aws_secret_access_key: ENV["AWS_SECRET_KEY"],
+          aws_access_key_id: attrs["aws_access_key"] or ENV["AWS_ACCESS_KEY"],
+          aws_secret_access_key: attrs["aws_secret_key"] or ENV["AWS_SECRET_KEY"],
         }
         @compute = Fog::Compute.new @aws_options
         @attrs = attrs
@@ -31,7 +31,7 @@ module Dployr
       end
 
       def get_info
-        get_instance(["running", "stopped", "stopping"])
+        get_instance ["running", "stopped", "stopping"]
       end
 
       def destroy

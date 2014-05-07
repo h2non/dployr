@@ -10,9 +10,9 @@ module Dployr
       def initialize(options, attrs)
         @gce_options = {
           provider: 'Google',
-          google_project: ENV["GOOGLE_PROJECT_ID"],
-          google_client_email: ENV["GOOGLE_CLIENT_EMAIL"],
-          google_key_location: ENV["GOOGLE_KEY_LOCATION"],
+          google_project: attrs["google_project_id"] or ENV["GOOGLE_PROJECT_ID"],
+          google_client_email: attrs["google_client_email"] or ENV["GOOGLE_CLIENT_EMAIL"],
+          google_key_location: attrs["google_key_location"] or ENV["GOOGLE_KEY_LOCATION"],
         }
         @compute = Fog::Compute.new @gce_options
         @attrs = attrs

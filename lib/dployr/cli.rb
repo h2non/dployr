@@ -46,7 +46,7 @@ opt_parser = OptionParser.new do |opt|
     options[:region] = v
   end
 
-  opt.on("-i", "--public-ip", "use public ip instead of private ip to when access instances") do |v|
+  opt.on("-i", "--public-ip", "use public ip instead of private ip to when access to instances") do |v|
     options[:public_ip] = v
   end
 
