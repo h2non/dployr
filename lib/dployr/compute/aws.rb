@@ -23,9 +23,9 @@ module Dployr
         instance = get_instance ["running"] # TODO: add starting states
         if instance
           if @options[:public_ip]
-            return instance.public_ip_address
+            instance.public_ip_address
           else
-            return instance.private_ip_address
+            instance.private_ip_address
           end
         end
       end
