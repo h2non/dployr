@@ -170,20 +170,17 @@ custom:
         instance_type: m1.large
   scripts:
     pre-start:
-      -
-        args:
+      - args:
           - "%{name}"
           - "%{type}"
           - "%{domain}"
         path: ./scripts/pre-start.sh
     start:
-      -
-        args:
+      - args:
           - "%{hydra}"
         path: ./scripts/configure.sh
     provision:
-      -
-        args:
+      - args:
           - "%{$provider}-%{region}"
           - "%{type}"
         path: ./scripts/provision.sh
