@@ -18,10 +18,10 @@
 **Dployr** is a Ruby utility that simplifies cloud management
 and deployment across different providers
 
-You can configure your infraestructure and deployment from a
+You can setup your project cloud infraestructure from a
 simple configuration file which support built-in rich features
 
-Dployr requires Ruby >= `1.9.x`
+Dployr provides a featured [command-line interface](#command-line-interface) and [programmatic API]
 
 ## Installation
 
@@ -33,14 +33,12 @@ If you need to use it from another Ruby package,
 add it as dependency in your `Gemfile` or `.gemspec` file
 ```ruby
 # gemspec
-spec.add_dependency 'dployr', '~> 0.0.3'
+spec.add_dependency 'dployr', '~> 0.0.1'
 # Gemfile
-gem 'dployr', '>= 0.0.3'
+gem 'dployr', '>= 0.0.1'
 ```
 
-## Documentation
-
-Dployr documentation and API is available from [RubyDoc][rubydoc]
+Requires Ruby 1.9.3+
 
 ## Features
 
@@ -105,7 +103,7 @@ Notation: `${HOME}`
 
 #### Example
 
-Featured example configuration file (YAML)
+Featured example configuration file in YAML
 ```yml
 ---
 # general configuration applied to templates
@@ -244,6 +242,14 @@ $ dployr config -n name -p aws -r eu-west-1 -a 'env=dev'
 ```
 
 ## Programmatic API
+
+You can use the Ruby programmatic API to integrate it in your own implementation
+
+### API
+
+Dployr API documentation is available from [RubyDoc][rubydoc]
+
+### Configuration
 
 ```ruby
 Dployr::configure do |dployr|
