@@ -101,6 +101,32 @@ module Dployr
         wait_ssh @attrs, server, @options[:public_ip]
       end
 
+      def create_network(network_name, network_range, firewalls, routes)
+        create_subnet(network_name, network_range)
+
+        if firewalls.respond_to?("each")
+          firewalls.each do |key, value|
+            add_firewall(key , network_name, value["address"], value["protocol"], value["port"])
+          end
+        end
+      end
+
+      def delete_network(network_name, network_range, firewalls, routes)
+        if exists("network", network_name)
+          delete_routes(routes)
+
+          if firewalls.respond_to?("each")
+            firewalls.each do |key, value|
+              delete_firewall(key)
+            end
+          end
+
+          delete_subnet(network_name)
+        else
+          puts "\tNetwork #{network_name} not found. Nothing to delete!"
+        end
+      end
+
       private
 
       def external_ip
@@ -149,6 +175,93 @@ module Dployr
         end
         nil
       end
+
+      def create_subnet(network_name, private_net)
+        if ! exists("network", network_name)
+          @compute.insert_network(network_name, private_net)
+          puts "\tNetwork #{network_name} created"
+      else
+        puts "\tNetwork #{network_name} already exists. Nothing to create!"
+      end
+      end
+
+      def add_firewall(fw_name, network_name, source_range, ip_protocol, allowed_ports)
+        allowed = [
+            {
+              IPProtocol: "#{ip_protocol}",
+              ports: ["#{allowed_ports}"]
+            }
+        ]
+        options = {}
+        options[:source_ranges] = source_range
+
+        @compute.insert_firewall(fw_name, allowed, network_name, options)
+        puts "\tFirewall #{fw_name} created"
+      end
+
+      def exists(type, name)   
+        if type == "network"
+          list = @compute.list_networks.data[:body]
+        elsif type == "route"
+          list = @compute.list_routes.data[:body]
+        else
+          list = @compute.list_firewalls.data[:body]
+          puts "name #{name}"
+        end
+
+        items = list["items"]
+        if items.respond_to?("each")
+          items.each do |item|
+            if item["name"] == name
+              return true
+            end
+          end
+        end
+
+        return false
+      end
+
+      def add_route(route_name, network_name, dest_range, priority, vm_name)
+        # Get VM url --> https://www.googleapis.com/compute/..../vm_name
+        server = @compute.get_server(vm_name,"europe-west1-a").data[:body]
+        url_next_hop = server["selfLink"]
+
+          network = @compute.get_network(network_name).data[:body]
+        network_url = network["selfLink"]
+
+        options = {}
+        options[:description] = ""
+        options[:next_hop_instance] = "#{url_next_hop}"
+        # options[:next_hop_gateway] = ""
+        # options[:next_hop_ip] = ""
+
+        @compute.insert_route(route_name, network_url, dest_range, priority, options)
+        puts "\tRoute #{route_name} created"
+      end
+
+      def delete_routes(routes)
+        if routes.respond_to?("each")
+          routes.each do |route|
+            if gce_exist("route", route)
+              @compute.delete_route(route) 
+              puts "\tRoute #{route} deleted"
+            else
+              puts "\tRoute #{route} not found. Nothing to delete!"
+          end
+          end
+        end
+      end
+
+      def delete_firewall(key)
+        @compute.delete_firewall(key) 
+        puts "\tFirewall #{key} deleted"
+      end
+
+      def delete_subnet(network_name)
+        @compute.delete_network(network_name)
+        puts "\tNetwork #{network_name} deleted"
+      end
+
     end
   end
 end

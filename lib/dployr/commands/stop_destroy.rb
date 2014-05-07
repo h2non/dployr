@@ -12,15 +12,21 @@ module Dployr
         puts "Connecting to #{@provider}...".yellow
         @client = Dployr::Compute.const_get(@provider.to_sym).new @options, @p_attrs
 
-        puts "Looking for #{@p_attrs["name"]} in #{@options[:region]}...".yellow
-        @ip = @client.get_ip
-        if @ip
-          puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
+        if @p_attrs["type"] == "network"
+          puts "Destroying network in #{@options[:provider]}: #{@options[:region]}...".yellow
+          @network = @client.delete_network(@p_attrs["name"], @p_attrs["private_net"], @p_attrs["firewalls"], [])          
         else
-          puts "#{@p_attrs["name"]} not found".yellow
+          puts "Looking for #{@p_attrs["name"]} in #{@options[:region]}...".yellow
+          @ip = @client.get_ip
+          if @ip
+            puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
+          else
+            puts "#{@p_attrs["name"]} not found".yellow
+          end
+
+          Dployr::Scripts::Default_Hooks.new @ip, @config, action, self
         end
 
-        Dployr::Scripts::Default_Hooks.new @ip, @config, action, self
       end
 
       def action
