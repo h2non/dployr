@@ -22,7 +22,7 @@ module Dployr
           arguments = @script["args"]
           arguments = arguments.join ' ' if arguments.is_a? Array
           total_command = command
-          total_command =  command + ' ' + arguments if arguments
+          total_command = command + ' ' + arguments if arguments
 
           puts "Running remote script '#{command} #{arguments}'".yellow
           result = ssh_exec!(ssh, total_command)
