@@ -21,12 +21,10 @@ module Dployr
           command = @script["remote_path"]
           arguments = @script["args"]
           arguments = arguments.join ' ' if arguments.is_a? Array
+          total_command = command
+          total_command =  command + ' ' + arguments if arguments
 
           puts "Running remote script '#{command} #{arguments}'".yellow
-          total_command = command
-          if arguments
-            total_command =  command + ' ' + arguments
-          end
           result = ssh_exec!(ssh, total_command)
           if result[:exit_code] > 0
             raise "Exit code #{result[:exit_code]} when running script '#{total_command}'".yellow

@@ -4,9 +4,9 @@ require 'dployr/compute/common'
 module Dployr
   module Compute
     class AWS
-      
+
       include Dployr::Compute::Common
-      
+
       def initialize(options, attrs)
         @aws_options = {
           region: options[:region][0..-2],
@@ -19,8 +19,8 @@ module Dployr
         @options = options
       end
 
-      def get_ip()
-        instance = get_instance(["running"]) # TODO: add starting states
+      def get_ip
+        instance = get_instance ["running"] # TODO: add starting states
         if instance
           if @options[:public_ip]
             return instance.public_ip_address
@@ -29,13 +29,13 @@ module Dployr
           end
         end
       end
-      
-      def get_info()
+
+      def get_info
         get_instance(["running", "stopped", "stopping"])
       end
 
-      def destroy()
-        instance = get_instance(["running", "stopped", "stopping"])
+      def destroy
+        instance = get_instance ["running", "stopped", "stopping"]
         if instance
           instance.destroy
         else
@@ -43,8 +43,8 @@ module Dployr
         end
       end
 
-      def halt()
-        instance = get_instance(["running"])
+      def halt
+        instance = get_instance ["running"]
         if instance
           instance.stop
         else
@@ -52,8 +52,8 @@ module Dployr
         end
       end
 
-      def start()
-        server = get_instance(["stopped", "stopping"])
+      def start
+        server = get_instance ["stopped", "stopping"]
         if server
           puts "Starting stopped instance for #{@attrs["name"]} in #{@options[:region]}...".yellow
           server.start
@@ -69,17 +69,17 @@ module Dployr
             tags: { Name: @attrs["name"] }
           }
           puts options.to_yaml
-          server = @compute.servers.create(options)
+          server = @compute.servers.create options
         end
         print "Wait for instance to get online".yellow
         server.wait_for { print ".".yellow; ready? }
         print "\n"
-        elastic_ip(server)
-        wait_ssh(@attrs, server, @options[:public_ip])
+        elastic_ip server
+        wait_ssh @attrs, server, @options[:public_ip]
       end
-      
+
       private
-      
+
       def get_instance(states)
         servers = @compute.servers.all
         servers.each do |instance|
@@ -89,21 +89,21 @@ module Dployr
         end
         nil
       end
-      
+
       def elastic_ip(server)
         if @attrs["public_ip"]
           if @attrs["public_ip"] == "new"
             puts "Creating new elastic ip...".yellow
-            response = @compute.allocate_address(server.vpc_id)
+            response = @compute.allocate_address server.vpc_id
             allocation_id = response[:body]["allocationId"]
             @attrs["public_ip"] = response[:body]["publicIp"]
           else
             puts "Looking for elastic ip #{@attrs["public_ip"]}...".yellow
-            eip = @compute.addresses.get(@attrs["public_ip"])
+            eip = @compute.addresses.get @attrs["public_ip"]
             allocation_id = eip.allocation_id
           end
           puts "Associating elastic ip #{@attrs["public_ip"]}...".yellow
-          @compute.associate_address(server.id,nil,nil,allocation_id)
+          @compute.associate_address server.id, nil, nil, allocation_id
         end
       end
 
