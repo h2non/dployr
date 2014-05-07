@@ -7,8 +7,8 @@ module Dployr
 
       def initialize(options, action)
         super options
-        @action = action
 
+        @action = action
         puts "Connecting to #{@provider}...".yellow
         @client = Dployr::Compute.const_get(@provider.to_sym).new(@options, @p_attrs)
 
