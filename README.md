@@ -15,13 +15,17 @@
 
 ## About
 
-**Dployr** is a Ruby utility that simplifies cloud management
-and deployment across different providers
+**Dployr** is a Ruby utility that **simplifies cloud management
+and deployment** across different providers
 
-You can setup your project cloud infraestructure from a
-simple configuration file which support built-in rich features
+You can setup all your project cloud infraestructure from a
+simple configuration file and deploy it into multiple clouds easily
 
-Dployr provides a featured [command-line interface](#command-line-interface) and [programmatic API](#programmatic-api)
+Aditionally, it provides full control and low-level cloud configuration
+to define multiple deployment stages which covers full infraestructure workflow,
+such as instances creation, network configuration, provisioning, testing and halting
+
+It provides a featured [command-line interface](#command-line-interface) and [programmatic API](#programmatic-api)
 
 ## Installation
 
@@ -38,15 +42,16 @@ spec.add_dependency 'dployr', '~> 0.0.1'
 gem 'dployr', '>= 0.0.1'
 ```
 
-Requires Ruby 1.9.3+
+It requires Ruby `1.9.3+`
 
 ## Features
 
-- Fully configurable from Ruby or YAML file with rich features like templating
-- Supports deployment to multiple cloud providers
+- Fully configurable from Ruby or YAML file with built-in rich features like templating
+- Simplifies deployment to multiple cloud providers
+- Allows to create the same infraestructe into multiple cloud providers from one command
 - Supports default instances and inherited configuration values
 - Full control of virtual instances (start, restart, stop, test, provision)
-- Local and remote scripts execution per stage phase (start, test, provision, update, stop...)
+- Allows to run local and remote scripts execution per stage with pre and post hooks
 - Featured command-line and programmatic API
 
 ## Supported providers
@@ -57,11 +62,13 @@ Dployr is still a alpha project, so there are only a few providers supported
 - Google Compute Engine (`gce`)
 - Baremetal
 
-Upcoming providers
+Upcoming supported providers by priority
 
 - OpenStack
 - Verizon
 - Azure
+- Rackspace
+- XenServer
 
 ## Configuration
 
@@ -75,13 +82,16 @@ Each configuration level supports the followings members:
 - **attributes** `Object` Custom attributes to apply to the current template
 - **scripts** `Object` Scripts hooks per phase to run (start, stop, test...)
 - **providers** `Object` Nested configuration provider-specific (aws, gce...)
-- **extends** `String|Array` Allows to inherits the current template from other templates
+- **extends** `String|Array` Allows to inherits from other template
 
 #### Templating
 
-Dployr allows templating features inside configuration values, in order
-to provide an easy and clean way to dynamically replace values and self-referenced variables
-inside the same configuration
+Dployr allows templating powerful features inside configuration values, in order
+to provide an easy, non-redundant and clean way to dynamically replace values for different usage contexts,
+such as specific context cloud provider, deployment region or environment variables
+
+Configuration templates can inherits from others templates,
+so you can reuse environments for multiple projects or environments
 
 Supported template values notations
 
@@ -257,14 +267,15 @@ Dployr API documentation is available from [RubyDoc][rubydoc]
 
 ### Configuration
 
+Example Dployrfile in Ruby which uses the API to configure your project
 ```ruby
 Dployr::configure do |dployr|
 
-  dployr.config.add_instance({
+  dployr.config.add_instance(:zeus, {
     attributes: {
-      name: "example",
       instance_type: "m1.small",
-      version: "${VERSION}"
+      version: "${VERSION}",
+      env: 'dev'
     },
     scripts: [
       { path: "configure.sh" }
@@ -272,18 +283,29 @@ Dployr::configure do |dployr|
     providers: {
       aws: {
         attributes: {
-          network_id: "be457fca",
-          instance_type: "m1.small",
-          "type-%{name}" => "small"
+          ami: 'ami-370daf2a', # centos-base-v7
+          keypair: 'vagrant-aws-saopaulo',
+          security_groups: ['sg-3cf3e45e'],
+          subnet_id: 'subnet-1eebe07c'
+          public_ip: 'new'
         },
         regions: {
           "eu-west-1a" => {
             attributes: {
+              instance_type: "m1.medium",
               keypair: "vagrant-aws-ireland"
             },
-            scripts: [
-              { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
-            ]
+            scripts: {
+              start: [
+                { path: "router.sh", args: ["${name}", "${region}", "${provider}"] }
+              ]
+              provision: [
+                { path: "puppet.sh", args: ["${name}", "${region}", "${provider}", '--env %{env}'] }
+              ]
+              post-provision: [
+                { path: "clean.sh" }
+              ]
+            }
           }
         }
       }
@@ -328,9 +350,9 @@ To build a new version of the gem:
 $ rake build
 ````
 
-To publish the new version to Rubygems:
+Publish the new version to Rubygems:
 ```
-$ rake release
+$ gem push pkg/dployr-0.1.0.gem
 ```
 
 ## Contributors
