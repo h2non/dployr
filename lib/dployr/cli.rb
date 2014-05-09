@@ -5,6 +5,22 @@ require 'dployr/version'
 command = ARGV[0]
 options = {}
 
+def run(command, options, arg = nil)
+  begin
+    cmd = Dployr::Commands.const_get command
+    raise "Command not supported: #{command}" unless cmd
+    if arg
+      cmd.new options, arg
+    else
+      cmd.new options
+    end
+  rescue => e
+    puts "Error: #{e}".red
+    puts e.backtrace if e.backtrace and options[:debug]
+    exit 1
+  end
+end
+
 opt_parser = OptionParser.new do |opt|
   opt.banner   = "\n  Usage: dployr <command> [options]"
   opt.separator  ""
@@ -68,22 +84,6 @@ opt_parser = OptionParser.new do |opt|
 end
 
 opt_parser.parse!
-
-def run(command, options, arg = nil)
-  begin
-    cmd = Dployr::Commands.const_get command
-    raise "Command not supported: #{command}" unless cmd
-    if arg
-      cmd.new options, arg
-    else
-      cmd.new options
-    end
-  rescue => e
-    puts "Error: #{e}".red
-    puts e.backtrace if e.backtrace and options[:debug]
-    exit 1
-  end
-end
 
 case command
 when "start"

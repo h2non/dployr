@@ -87,7 +87,7 @@ module Dployr
 
       def delete_network(network_name, network_range, firewalls, routes)
         # Network_name, firewalls and routes not used. We only need "vpc_id"
-        if exist_vpc(network_range)
+        if exist_vpc network_range
           vpcId = get_vpcId(network_range)
 
           delete_route_tables(vpcId)
