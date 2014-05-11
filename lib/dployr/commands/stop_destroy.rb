@@ -7,38 +7,32 @@ module Dployr
 
       def initialize(options, action)
         super options
-        begin
-          create
-          config = get_region_config options
 
-          @name = config[:attributes]["name"]
-          @provider = options[:provider].upcase
-          @region = options[:region]
-          @attributes = config[:attributes]
-          @action = action
+        @action = action
+        puts "Connecting to #{@provider}...".yellow
+        @client = Dployr::Compute.const_get(@provider.to_sym).new @options, @p_attrs
 
-          puts "Connecting to #{@provider}...".yellow
-          @client = Dployr::Compute.const_get(@provider.to_sym).new @region
-
-          puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip(@name, options[:public_ip])
+        if @p_attrs["type"] == "network"
+          puts "Destroying network in #{@options[:provider]}: #{@options[:region]}...".yellow
+          @network = @client.delete_network(@p_attrs["name"], @p_attrs["private_net"], @p_attrs["firewalls"], [])          
+        else
+          puts "Looking for #{@p_attrs["name"]} in #{@options[:region]}...".yellow
+          @ip = @client.get_ip
           if @ip
-            puts "#{@name} found with IP #{@ip}".yellow
+            puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
           else
-            puts "#{@name} not found".yellow
+            puts "#{@p_attrs["name"]} not found".yellow
           end
 
-          Dployr::Scripts::Default_Hooks.new @ip, config, action, self
-        rescue Exception => e
-          @log.error e
-          exit 1
+          Dployr::Scripts::Default_Hooks.new @ip, @config, action, self
         end
+
       end
 
       def action
-        puts "#{@action.capitalize}ing #{@name} in #{@region}...".yellow
-        @client.send(@action.to_sym, @name)
-        puts "#{@name} #{@action}ed sucesfully".yellow
+        puts "#{@action.capitalize}ing #{@p_attrs["name"]} in #{@options[:region]}...".yellow
+        @client.send @action.to_sym
+        puts "#{@p_attrs["name"]} #{@action}ed sucesfully".yellow
         @ip
       end
 

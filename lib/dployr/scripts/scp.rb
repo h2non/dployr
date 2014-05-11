@@ -13,8 +13,8 @@ module Dployr
             puts "Copying #{source} -> #{target}".yellow
             scp.upload(source, target, :recursive => true, :preserve => true)
           end
-        rescue Exception => e
-          raise Error.new "Cannot copy to remote: #{e}"
+        rescue => e
+          raise "Cannot copy to remote: #{e}"
         end
       end
 

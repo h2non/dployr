@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "fog", "~> 1.21"
   s.add_dependency "deep_merge", "~> 1.0"
-  s.add_dependency "net-ssh", "~> 2.8.0"
+  s.add_dependency "net-ssh", "~> 2.9.0"
   s.add_dependency "net-scp", "~> 1.2.0"
   s.add_dependency "colorize", "~> 0.7.2"
 

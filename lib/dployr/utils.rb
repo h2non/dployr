@@ -13,7 +13,7 @@ module Dployr
     end
 
     def get_by_key(hash, key)
-      if hash.is_a? Hash
+      if hash.is_a? Hash and key
         hash[key] or hash[key.to_sym] or hash[key.to_s]
       end
     end

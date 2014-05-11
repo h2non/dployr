@@ -7,30 +7,19 @@ module Dployr
 
       def initialize(options, action)
         super options
-        begin
-          create
-          config = get_region_config options
 
-          @name = config[:attributes]["name"]
-          @provider = options[:provider].upcase
-          @region = options[:region]
+        puts "Connecting to #{@provider}...".yellow
+        @client = Dployr::Compute.const_get(@provider.to_sym).new(@options, @p_attrs)
 
-          puts "Connecting to #{@provider}...".yellow
-          @client = Dployr::Compute.const_get(@provider.to_sym).new @region
-
-          puts "Looking for #{@name} in #{@region}...".yellow
-          @ip = @client.get_ip(@name, options[:public_ip])
-          if @ip
-            puts "#{@name} found with IP #{@ip}".yellow
-          else
-            raise "#{@name} not found"
-          end
-
-          Dployr::Scripts::Default_Hooks.new @ip, config, action, self
-        rescue Exception => e
-          @log.error e
-          exit 1
+        puts "Looking for #{@p_attrs["name"]} in #{@options[:region]}...".yellow
+        @ip = @client.get_ip
+        if @ip
+          puts "#{@p_attrs["name"]} found with IP #{@ip}".yellow
+        else
+          raise "#{@p_attrs["name"]} not found"
         end
+
+        Dployr::Scripts::Default_Hooks.new @ip, @config, action, self
       end
 
       def action

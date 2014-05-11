@@ -14,37 +14,39 @@ describe Dployr::Configuration do
     end
 
     describe "default values" do
-      let(:defaults) do
-        {
-          attributes: {
-            name: "example",
-            instance_type: "m1.small",
-            version: "${DPLOYR}"
-          },
-          scripts: [
-            { path: "configure.sh" }
-          ],
-          providers: {
-            aws: {
-              attributes: {
-                network_id: "be457fca",
-                instance_type: "m1.small",
-                "type-%{name}" => "small"
-              },
-              scripts: [
-                { path: "router.sh", args: ["%{name}", "${region}", "${provider}"] }
-              ],
-              regions: {
-                "eu-west-1a" => {
-                  attributes: {
-                    keypair: "vagrant-aws-ireland"
-                  }
+      defaults = {
+        attributes: {
+          name: "example",
+          instance_type: "m1.small",
+          version: "${DPLOYR}"
+        },
+        scripts: [
+          { path: "configure.sh" }
+        ],
+        providers: {
+          aws: {
+            attributes: {
+              network_id: "be457fca",
+              instance_type: "m1.small",
+              "type-%{name}" => "small",
+              mixed: "%{network_id}-%{instance_type}"
+            },
+            scripts: [
+              {
+                path: "router.sh",
+                args: [ "%{name}", "${region}", "${provider}" ]
+              }
+            ],
+            regions: {
+              "eu-west-1a" => {
+                attributes: {
+                  keypair: "vagrant-aws-ireland"
                 }
               }
             }
           }
         }
-      end
+      }
 
       describe "add default values" do
         before do
@@ -105,12 +107,12 @@ describe Dployr::Configuration do
         attributes: {
           name: "zeus"
         },
-        authentication: {
-          user: "admin",
-          key_path: "path/to/key.pem"
-        },
         scripts: [
-          { path: "setup.sh", args: ["--id ${index}", "--name ${name}"], remote: true }
+          {
+            path: "setup.sh",
+            args: ["--id ${index}", "--name ${name}", "%{name}-%{instance_type}-%{version}", "%{mixed}"],
+            remote: true
+          }
         ],
         providers: {
           aws: {
@@ -202,20 +204,6 @@ describe Dployr::Configuration do
         end
       end
 
-      describe "autentication" do
-        it "should exists" do
-          zeus[:authentication].should be_a Hash
-        end
-
-        it "should have a valid number of values" do
-          zeus[:authentication].should have(2).items
-        end
-
-        it "should have a valid authentication values" do
-          zeus[:authentication][:user].should eql 'admin'
-        end
-      end
-
       describe "providers" do
         it "should exists" do
           zeus[:providers].should be_a Hash
@@ -264,10 +252,6 @@ describe Dployr::Configuration do
               it "should have inherited scripts" do
                 region[:scripts].should have(2).items
               end
-
-              it "should have inherited autentication" do
-                region[:authentication].should have(2).items
-              end
             end
           end
 
@@ -275,7 +259,7 @@ describe Dployr::Configuration do
 
         describe "aws" do
           it "should have the expected values" do
-            zeus[:providers][:aws].should have(4).items
+            zeus[:providers][:aws].should have(3).items
           end
 
           describe "attributes" do
@@ -284,7 +268,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of attributes" do
-              zeus[:providers][:aws][:attributes].should have(5).items
+              zeus[:providers][:aws][:attributes].should have(6).items
             end
 
             it "should have a valid instance_type" do
@@ -307,6 +291,10 @@ describe Dployr::Configuration do
               it "should have a type key with valid replacement" do
                 zeus[:providers][:aws][:attributes]["type-zeus"].should eql "small"
               end
+
+              it "should have a mixed attribute with self-referenced values" do
+                zeus[:providers][:aws][:attributes][:mixed].should eql "be457fca-m1.small"
+              end
             end
           end
 
@@ -328,7 +316,7 @@ describe Dployr::Configuration do
             end
 
             it "should have a valid number of arguments" do
-              zeus[:providers][:aws][:scripts][1][:args].should have(2).items
+              zeus[:providers][:aws][:scripts][1][:args].should have(4).items
             end
 
             it "should have a remote property" do
@@ -346,6 +334,14 @@ describe Dployr::Configuration do
 
               it "should replace the name context value" do
                 zeus[:providers][:aws][:scripts][1][:args][1].should eql "--name zeus"
+              end
+
+              it "should replace the multiple attributes" do
+                zeus[:providers][:aws][:scripts][1][:args][2].should eql "zeus-m1.small-0.1.0"
+              end
+
+              it "should replace the self-referenced attribute with other attributes" do
+                zeus[:providers][:aws][:scripts][1][:args][3].should eql "be457fca-m1.small"
               end
             end
           end
@@ -433,24 +429,6 @@ describe Dployr::Configuration do
                   end
                 end
               end
-
-              describe "authentication" do
-                it "should exists" do
-                  region[:authentication].should be_a Hash
-                end
-
-                it "should have a valid number" do
-                  region[:authentication].should have(2).items
-                end
-
-                it "should have a valid user" do
-                  region[:authentication][:user].should eql "admin"
-                end
-
-                it "should have a valid key_path" do
-                  region[:authentication][:key_path].should eql "path/to/key.pem"
-                end
-              end
             end
           end
         end
@@ -469,8 +447,8 @@ describe Dployr::Configuration do
           @config.should be_a Hash
         end
 
-        it "should have one provider" do
-          @config.should have(4).items
+        it "should have a valid number of keys" do
+          @config.should have(3).items
         end
 
         it "should have two regions" do
@@ -512,7 +490,7 @@ describe Dployr::Configuration do
         end
 
         it "should have a valid number of keys" do
-          @config.should have(3).items
+          @config.should have(2).items
         end
 
         it "should have a attributes" do

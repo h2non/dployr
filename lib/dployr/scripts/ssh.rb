@@ -15,7 +15,7 @@ module Dployr
 
       def run
         puts "ssh -i #{@private_key_path} #{@username}@#{@ip}"
-        system("ssh -i #{@private_key_path} #{@username}@#{@ip}")
+        system "ssh -i #{@private_key_path} #{@username}@#{@ip}"
       end
 
     end
