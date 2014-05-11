@@ -22,7 +22,7 @@ You can setup all your project cloud infraestructure from a
 simple configuration file and deploy it into multiple clouds easily
 
 Through Dployr you can take full control about the multiple stages phases
-which covers the full deployment infrastructure workflow,
+which covers the complete infrastructure workflow,
 such as instances creation, network configuration, provisioning, testing and halting
 
 It provides a featured [command-line interface](#command-line-interface) and [programmatic API](#programmatic-api)
