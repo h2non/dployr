@@ -1,7 +1,5 @@
 # dployr [![Build Status](https://secure.travis-ci.org/innotech/dployr.svg?branch=master)][travis] [![Dependency Status](https://gemnasium.com/innotech/dployr.svg)][gemnasium] [![Gem](https://badge.fury.io/rb/dployr.svg)][gem]
 
-> Multicloud management and deployment made simple
-
 > **Alpha project, use it by your own risk**
 
 <table>
