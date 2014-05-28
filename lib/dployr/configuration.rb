@@ -125,6 +125,26 @@ module Dployr
       attrs
     end
 
+    # Pending refactor
+    def get_inherited_attributes(config, provider, region)
+      config = merge_defaults(config)
+      attrs = config[:attributes].is_a?(Hash) ? deep_copy(config[:attributes]) : {}
+
+      if current = get_by_key(config, :providers)
+        attrs.merge! current[:attributes] if current[:attributes].is_a? Hash
+        if current = get_by_key(current, provider)
+          attrs.merge! get_by_key(current, :attributes) if get_by_key(current, :attributes).is_a? Hash
+          if (regions = get_by_key current, :regions).is_a? Hash
+            attrs.merge! get_by_key(regions, :attributes) if get_by_key(regions, :attributes).is_a? Hash
+            if (region = get_by_key regions, region).is_a? Hash
+              attrs.merge! get_by_key(region, :attributes) if get_by_key(region, :attributes).is_a? Hash
+            end
+          end
+        end
+      end
+      attrs
+    end
+
     def merge_config(instance, attributes = {})
       config = merge_defaults instance.get_values
       config[:attributes] =
@@ -140,11 +160,13 @@ module Dployr
     def merge_providers(config)
       key = get_real_key config, :providers
       if config[key].is_a? Hash
-        config[key].each do |name, provider|
-          provider = replace_keywords 'provider', name, inherit_config(provider, config)
+        config[key].each do |provider_name, provider|
+          provider = replace_keywords 'provider', provider_name, inherit_config(provider, config)
           regions = get_by_key provider, get_real_key(provider, :regions)
           regions.each do |name, region|
             regions[name] = replace_keywords 'region', name, inherit_config(region, provider)
+            attrs = get_inherited_attributes config, provider_name, name
+            regions[name] = replace_variables regions[name], attrs
           end if regions
         end
       end

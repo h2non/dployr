@@ -18,7 +18,9 @@ describe Dployr::Configuration do
         attributes: {
           name: "example",
           instance_type: "m1.small",
-          version: "${DPLOYR}"
+          version: "${DPLOYR}",
+          network_id: "be457fca",
+          mixed: "%{network_id}-%{instance_type}"
         },
         scripts: [
           { path: "configure.sh" }
@@ -28,8 +30,7 @@ describe Dployr::Configuration do
             attributes: {
               network_id: "be457fca",
               instance_type: "m1.small",
-              "type-%{name}" => "small",
-              mixed: "%{network_id}-%{instance_type}"
+              "type-%{name}" => "small"
             },
             scripts: [
               {
@@ -60,7 +61,7 @@ describe Dployr::Configuration do
 
           it "should have valid attributes" do
             config.default.attributes.should be_a Hash
-            config.default.attributes.should have(3).items
+            config.default.attributes.should have(5).items
           end
 
           it "should have scripts" do
@@ -225,7 +226,7 @@ describe Dployr::Configuration do
             }
 
             it "should have a valid number of attributes" do
-              gce[:attributes].should have(3).items
+              gce[:attributes].should have(5).items
             end
 
             it "should have the instance_type attributes" do
@@ -246,7 +247,7 @@ describe Dployr::Configuration do
               }
 
               it "should have a valid number of attributes" do
-                region[:attributes].should have(4).items
+                region[:attributes].should have(6).items
               end
 
               it "should have inherited scripts" do
