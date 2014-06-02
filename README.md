@@ -198,6 +198,38 @@ custom:
         path: ./scripts/provision.sh
     test:
       - path: ./scripts/serverspec.sh
+
+network-template:
+  attributes:
+    type: network
+    name: "net"
+    firewalls:
+      ssh-all:
+        address: 
+          - "0.0.0.0/0"
+        protocol: tcp
+        port: "22"
+      fw-acess:
+        address: 
+          - "1.2.3.4/24"
+        protocol: tcp
+        port: "1-65535"
+      fw-openvpn:
+        address: 
+          - "0.0.0.0/0"
+        protocol: udp
+        port: "1194"
+  providers: 
+    aws:
+      regions:
+        ap-southeast-1a:
+          attributes:
+            private_net:  10.10.0.0/16
+    gce:
+      regions:
+        europe-west1-a:
+          attributes:
+            private_net:  10.11.0.0/16
 ```
 
 ## Command-line interface
@@ -207,9 +239,9 @@ Usage: dployr <command> [options]
 
 Commands
 
-  start     start instances
+  start     start instances or create network
   halt      stop instances
-  destroy   destroy instances
+  destroy   destroy instances or network
   status    retrieve the instances status
   info      retrieve instance information and output it in YAML format
   test      run remote test in instances
